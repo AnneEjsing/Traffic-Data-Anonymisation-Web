@@ -1,0 +1,8 @@
+version: "3.5" # We use version 3.5 syntax
+
+services: # Here we define our service(s)
+  angular-service: # The name of the service
+    container_name: angularcontainer # Container name
+    build: ./frontend # Location of our Dockerfile
+    ports: # Port mapping
+      - "80:80"
