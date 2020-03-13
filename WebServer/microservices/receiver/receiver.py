@@ -4,10 +4,18 @@ import urllib
 import cv2
 import numpy as np
 import threading
+from time import localtime, strftime
+import subprocess
 
 queue = []
 queueLock = threading.Lock()
 
+framesSaved = 0
+videoLengthSeconds = 600
+height = None
+width = None
+fps = 24
+proc = None
 
 def receive(ip, port):
     queryString = 'http://' + ip + ':' + str(port)
@@ -28,6 +36,51 @@ def receive(ip, port):
             queueLock.release()
 
 
+
+def initiate_file_save(img):
+    height, width, _ = img.shape
+
+    dimension = '{}x{}'.format(width, height)
+    nowStr = strftime("%Y_%m_%d_%H_%M_%S", localtime())
+    output_file = './' + nowStr + ".avi"
+
+    print(dimension)
+
+    command = ['ffmpeg',
+        '-y',
+        '-f', 'rawvideo',
+        '-vcodec','rawvideo',
+        '-s', dimension,
+        '-pix_fmt', 'bgr24',
+        '-r', str(fps),
+        '-i', '-',
+        '-an',
+        '-vcodec', 'mjpeg',
+        '-b:v', '5000k',
+        output_file ]
+
+    return subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+
+def save_frame_to_file(data):
+    global framesSaved, proc
+
+    img = cv2.imdecode(np.fromstring(data, dtype=np.uint8), cv2.IMREAD_COLOR) 
+    
+    if(proc == None):
+        proc = initiate_file_save(img)
+    
+    proc.stdin.write(img)
+    framesSaved += 1
+
+    print(framesSaved)
+
+    if(framesSaved == fps * videoLengthSeconds):
+        proc.stdin.close()
+        proc.stderr.close()
+        proc.wait()
+        framesSaved = 0
+        proc = None
+
 def save_to_database(data):
     return
 
@@ -44,6 +97,7 @@ def worker():
         data = queue.pop(0)
         queueLock.release()
 
+        save_frame_to_file(data)
         save_to_database(data)
         broadcast(data)
 
