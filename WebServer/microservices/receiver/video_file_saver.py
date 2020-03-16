@@ -1,7 +1,8 @@
 import cv2
 import numpy as np
 from time import localtime, strftime
-import subprocess
+import imageio_ffmpeg as ffmpeg
+
 
 class video_file_saver:
 
@@ -28,7 +29,7 @@ class video_file_saver:
         if(self.proc == None):
             self.proc = self.initiate_file_save(img)
 
-        self.proc.stdin.write(img)
+        self.proc.send(img)
         self.frames_saved += 1
 
         if((self.video_length != None) and (self.frames_saved == self.fps * self.video_length)):
@@ -38,23 +39,17 @@ class video_file_saver:
 
     def initiate_file_save(self, first_frame_data):
         height, width, _ = first_frame_data.shape
-
-        dimension = '{}x{}'.format(width, height)
         output_file = self.get_file_name()
 
-        command = ['ffmpeg',
-            '-y',
-            '-f', 'rawvideo',
-            '-codec:v','rawvideo',
-            '-s', dimension,
-            '-pix_fmt', 'bgr24',
-            '-r', str(self.fps),
-            '-i', '-',
-            '-an',
-            '-codec:v', 'libx264',
-            output_file ]
+        writer = ffmpeg.write_frames(output_file, 
+                                    (width, height),
+                                    fps=self.fps,
+                                    pix_fmt_in="bgr24",
+                                    ffmpeg_log_level="error",
+                                    output_params=['-an'])
+        writer.send(None)
 
-        return subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+        return writer
 
 
     def get_file_name(self):
@@ -66,9 +61,6 @@ class video_file_saver:
 
 
     def stop_file_save(self):
-        self.proc.stdin.close()
-        self.proc.stderr.close()
-        self.proc.wait()
-        self.proc.terminate()
+        self.proc.close()
         self.frames_saved = 0
         self.proc = None
