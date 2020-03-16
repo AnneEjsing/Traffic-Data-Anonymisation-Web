@@ -2,20 +2,11 @@ import argparse
 import requests
 import urllib
 import cv2
-import numpy as np
 import threading
-from time import localtime, strftime
-import subprocess
+import video_file_saver as vfs
 
 queue = []
 queueLock = threading.Lock()
-
-framesSaved = 0
-videoLengthSeconds = 600
-height = None
-width = None
-fps = 24
-proc = None
 
 def receive(ip, port):
     queryString = 'http://' + ip + ':' + str(port)
@@ -36,50 +27,6 @@ def receive(ip, port):
             queueLock.release()
 
 
-
-def initiate_file_save(img):
-    height, width, _ = img.shape
-
-    dimension = '{}x{}'.format(width, height)
-    nowStr = strftime("%Y_%m_%d_%H_%M_%S", localtime())
-    output_file = './' + nowStr + ".mp4"
-
-    print(dimension)
-
-    command = ['ffmpeg',
-        '-y',
-        '-f', 'rawvideo',
-        '-codec:v','rawvideo',
-        '-s', dimension,
-        '-pix_fmt', 'bgr24',
-        '-r', str(fps),
-        '-i', '-',
-        '-an',
-        '-codec:v', 'libx264',
-        output_file ]
-
-    return subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
-
-def save_frame_to_file(data):
-    global framesSaved, proc
-
-    img = cv2.imdecode(np.fromstring(data, dtype=np.uint8), cv2.IMREAD_COLOR) 
-    
-    if(proc == None):
-        proc = initiate_file_save(img)
-    
-    proc.stdin.write(img)
-    framesSaved += 1
-
-    print(framesSaved)
-
-    if(framesSaved == fps * videoLengthSeconds):
-        proc.stdin.close()
-        proc.stderr.close()
-        proc.wait()
-        framesSaved = 0
-        proc = None
-
 def save_to_database(data):
     return
 
@@ -88,7 +35,7 @@ def broadcast(data):
     return
 
 
-def worker():
+def worker(functions_to_run):
     while True:
         if len(queue) <= 0:
             continue
@@ -96,9 +43,8 @@ def worker():
         data = queue.pop(0)
         queueLock.release()
 
-        save_frame_to_file(data)
-        save_to_database(data)
-        broadcast(data)
+        for func in functions_to_run:
+            func(data)
 
 
 if __name__ == "__main__":
@@ -114,7 +60,30 @@ if __name__ == "__main__":
                         metavar='integer',
                         required=True,
                         help='port to access the camera through')
+    parser.add_argument('-o', '--output_file_path',
+                        metavar='string',
+                        required=False,
+                        help='record video files to directory')
+    parser.add_argument('-l', '--video_length',
+                        metavar='integer',
+                        type=int,
+                        required=False,
+                        help="length of videos to be saved in seconds")
+    parser.add_argument('--max_video_count',
+                        metavar='integer',
+                        type=int,
+                        required=False,
+                        help="maximum amount of videos to save")
     args = parser.parse_args()
 
+    worker_functions = []
+    worker_functions.append(save_to_database)
+    worker_functions.append(broadcast)
+
+    vid_saver = None
+    if(args.output_file_path != None):
+        vid_saver = vfs.video_file_saver(args.output_file_path, args.video_length, args.max_video_count)
+        worker_functions.append(vid_saver.push_frame)
+
     threading.Thread(target=receive, args=(args.ip, args.port)).start()
-    threading.Thread(target=worker).start()
+    threading.Thread(target=worker, args=(worker_functions,)).start()
