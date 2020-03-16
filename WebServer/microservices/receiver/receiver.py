@@ -88,8 +88,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     database_save = args.saveToDatabase
 
-    queueIndex = 0
-
     threading.Thread(target=receive, args=(
         args.inputip, args.inputport, args.saveToDatabase)).start()
     app.run(host='0.0.0.0', port=args.port, debug=True)
