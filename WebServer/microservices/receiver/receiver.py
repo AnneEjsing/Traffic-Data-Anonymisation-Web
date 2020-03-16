@@ -60,11 +60,11 @@ if __name__ == "__main__":
                         metavar='integer',
                         required=True,
                         help='port to access the camera through')
-    parser.add_argument('-o', '--output_file_path',
-                        metavar='string',
+    parser.add_argument('--output_file_path', '-o',
+                        metavar='path',
                         required=False,
                         help='record video files to directory')
-    parser.add_argument('-l', '--video_length',
+    parser.add_argument('--video_length', '-l',
                         metavar='integer',
                         type=int,
                         required=False,
@@ -73,7 +73,7 @@ if __name__ == "__main__":
                         metavar='integer',
                         type=int,
                         required=False,
-                        help="maximum amount of videos to save")
+                        help="maximum amount of videos to save. Ignored if no video length is given")
     args = parser.parse_args()
 
     worker_functions = []
