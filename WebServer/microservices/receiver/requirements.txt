@@ -1,0 +1,4 @@
+requests==2.18.4
+imageio_ffmpeg==0.4.1
+opencv_python==4.2.0.32
+numpy==1.18.1
