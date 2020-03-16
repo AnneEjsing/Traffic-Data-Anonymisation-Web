@@ -42,21 +42,20 @@ def initiate_file_save(img):
 
     dimension = '{}x{}'.format(width, height)
     nowStr = strftime("%Y_%m_%d_%H_%M_%S", localtime())
-    output_file = './' + nowStr + ".avi"
+    output_file = './' + nowStr + ".mp4"
 
     print(dimension)
 
     command = ['ffmpeg',
         '-y',
         '-f', 'rawvideo',
-        '-vcodec','rawvideo',
+        '-codec:v','rawvideo',
         '-s', dimension,
         '-pix_fmt', 'bgr24',
         '-r', str(fps),
         '-i', '-',
         '-an',
-        '-vcodec', 'mjpeg',
-        '-b:v', '5000k',
+        '-codec:v', 'libx264',
         output_file ]
 
     return subprocess.Popen(command, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
