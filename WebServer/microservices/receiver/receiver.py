@@ -2,8 +2,8 @@ import argparse
 import requests
 import urllib
 import cv2
-import numpy as np
 import threading
+import video_file_saver as vfs
 from flask import Response, Flask
 
 queueSize = 100
@@ -12,12 +12,10 @@ queue = {}
 queueLock = threading.Lock()
 app = Flask(__name__)
 
-
-def receive(ip, port, database_save):
+def receive(ip, port, functions_to_run):
     # Tells python to access the global queueIndex variable
     # https://www.pythoncircle.com/post/680/solving-python-error-unboundlocalerror-local-variable-x-referenced-before-assignment/
     global queueIndex
-
     queryString = 'http://' + ip + ':' + str(port)
     stream = urllib.request.urlopen(queryString)
     total_bytes = b''
@@ -35,13 +33,12 @@ def receive(ip, port, database_save):
             # Save the jpeg to the image buffer
             queue[queueIndex] = jpg
             queueIndex = (queueIndex + 1) % queueSize
-            if database_save:
-                save_to_database(jpg)
+            for func in functions_to_run:
+              func(jpg)
 
-
-def save_to_database(data):
-    return
-
+def save_to_database():
+  return
+              
 
 def broadcast():
     localIndex = queueIndex
@@ -75,6 +72,20 @@ if __name__ == "__main__":
                         metavar='integer',
                         required=False,
                         help='port to access the camera through')
+    parser.add_argument('--output_file_path', '-o',
+                        metavar='path',
+                        required=False,
+                        help='record video files to directory')
+    parser.add_argument('--video_length', '-l',
+                        metavar='integer',
+                        type=int,
+                        required=False,
+                        help="length of videos to be saved in seconds")
+    parser.add_argument('--max_video_count',
+                        metavar='integer',
+                        type=int,
+                        required=False,
+                        help="maximum amount of videos to save. Ignored if no video length is given")
     parser.add_argument('--port',
                         default=4000,
                         metavar='integer',
@@ -88,6 +99,14 @@ if __name__ == "__main__":
     args = parser.parse_args()
     database_save = args.saveToDatabase
 
+    worker_functions = []
+    worker_functions.append(save_to_database)
+
+    vid_saver = None
+    if(args.output_file_path != None):
+        vid_saver = vfs.video_file_saver(args.output_file_path, args.video_length, args.max_video_count)
+        worker_functions.append(vid_saver.push_frame)
+
     threading.Thread(target=receive, args=(
-        args.inputip, args.inputport, args.saveToDatabase)).start()
+        args.inputip, args.inputport, worker_functions)).start()
     app.run(host='0.0.0.0', port=args.port, debug=True)
