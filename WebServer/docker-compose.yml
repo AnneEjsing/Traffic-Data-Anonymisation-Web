@@ -6,3 +6,11 @@ services: # Here we define our service(s)
     build: ./Webserver/frontend # Location of our Dockerfile
     ports: # Port mapping
       - "80:80"
+
+  receiver:
+    container_name: receivercontainer
+    build:
+      context: ./microservices/Receiver/
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"

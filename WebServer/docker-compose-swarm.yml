@@ -10,3 +10,17 @@ services: # Here we define our service(s)
         replicas: 2
         placement:
           constraints: [node.role == manager]
+    receiver:
+      image: anneejsing/receiver:latest
+      ports:
+        - "443:443"   
+      deploy:
+        mode: replicated
+        replicas: 2
+        restart_policy:
+          condition: on-failure
+          delay: 5s
+          max_attempts: 3
+          window: 120s
+        placement:
+          constraints: [node.role == worker]
