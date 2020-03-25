@@ -6,11 +6,25 @@
            [vgDash]="currentStream.source"
            [vgHls]="currentStream.source"
            id="singleVideo"
+           autoplay
            crossorigin
            controls>
     </video>
     
 </vg-player>
+
+<div>
+    <label>
+        Media Url: <input type="text" [(ngModel)]="currentStream.source">
+    </label>
+    <div>
+        <button (click)="startRecord(time.value)">Record</button>
+        <input #time
+        (keyup.enter)="startRecord(time.value)"
+        (blur)="startRecord(time.value); time.value='' ">
+    </div>
+</div>
+
 <!-- this button is not needed, just press the one in the video... -->
 <button (click)="onClickPausePlay()">
 {{pausePlayText}}
