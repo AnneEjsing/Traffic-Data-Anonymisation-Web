@@ -5,14 +5,23 @@
            [vgMedia]="media"
            [vgHls]="currentStream.source"
            id="singleVideo"
+           autoplay
            crossorigin
            controls>
     </video>
 </vg-player>
 
-<label>
-    Media Url: <input type="text" [(ngModel)]="currentStream.source">
-</label>
+<div>
+    <label>
+        Media Url: <input type="text" [(ngModel)]="currentStream.source">
+    </label>
+    <div>
+        <button (click)="startRecord(time.value)">Record</button>
+        <input #time
+        (keyup.enter)="startRecord(time.value)"
+        (blur)="startRecord(time.value); time.value='' ">
+    </div>
+</div>
 
 <ul>
     <li *ngFor="let stream of streams" (click)="onClickStream(stream)" [ngClass]="{'selected': currentStream === stream}">{{ stream.label }}</li>
