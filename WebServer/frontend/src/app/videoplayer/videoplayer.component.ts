@@ -19,6 +19,8 @@ export class VideoplayerComponent implements OnInit {
 
   currentStream: IMediaStream;
   api: VgAPI;
+  pausePlayText: String = "pause";
+  isPaused: boolean = false;
 
   bitrates: BitrateOption[];
 
@@ -58,6 +60,15 @@ export class VideoplayerComponent implements OnInit {
 
   ngOnInit() {
     this.currentStream = this.streams[0];
+      this.api = api;
+
+      //Whenever we play after a pause, we go to 100% time, so always live.
+      //If not showing livestream dont have this.
+      this.api.getDefaultMedia().subscriptions.play.subscribe(
+        () => {
+          this.api.seekTime(100, true);
+        }
+      )
   }
 
   setBitrate(option: BitrateOption) {
@@ -65,13 +76,28 @@ export class VideoplayerComponent implements OnInit {
   }
 
   onClickStream(stream: IMediaStream) {
-    this.api.pause();
-    this.bitrates = null;
+      this.api.pause();
+      this.bitrates = null;
 
-    let t: Subscription = timer(0, 10).subscribe(() => {
-      this.currentStream = stream;
-      t.unsubscribe();
-    });
+      let t: Subscription = timer(0, 10).subscribe(
+          () => {
+              this.currentStream = stream;
+              t.unsubscribe();
+          }
+      );
+      this.api.getDefaultMedia().play();
+  }
+  onClickPausePlay(){
+    if(this.isPaused){
+      this.api.getDefaultMedia().play();
+      this.pausePlayText = "pause";
+      this.isPaused = false;
+    }
+    else{
+      this.api.getDefaultMedia().pause();
+      this.pausePlayText = "play";
+      this.isPaused = true;
+    }
   }
 
   async startRecord(time: string) {
