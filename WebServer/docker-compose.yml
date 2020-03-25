@@ -22,6 +22,18 @@ services: # Here we define our service(s)
     ports:
       - "443:443"
 
+  dbresolver:
+    container_name: dbresolver
+    build:
+      context: ./microservices/db/
+      dockerfile: Dockerfile
+    ports:
+      - "1337:1337"
+    links:
+      - postgres
+    networks:
+      - traffic_net
+
   postgres: #Query this: docker exec -it <containerID> psql -U postgres -a Nightlife -c 'select users.firstname from users, attendees, events where users.id = attendees.userid and attendees.eventid = 1;'
     image: "postgres:latest"
     container_name: "postgresdb"
@@ -36,5 +48,4 @@ services: # Here we define our service(s)
       POSTGRES_PASSWORD: "postgres"
       POSTGRES_DB: "Traffic_Annonymisation_DB"
     networks:
-      traffic_net:
-        ipv4_address: 172.28.1.4
+      - traffic_net
