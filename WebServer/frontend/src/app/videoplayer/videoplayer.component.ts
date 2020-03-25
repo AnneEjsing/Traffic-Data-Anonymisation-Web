@@ -20,6 +20,8 @@ export class VideoplayerComponent implements OnInit {
 
   currentStream: IMediaStream;
   api: VgAPI;
+  pausePlayText: String = "pause";
+  isPaused: boolean = false;
 
   bitrates: BitrateOption[];
 
@@ -28,7 +30,7 @@ export class VideoplayerComponent implements OnInit {
           type: 'hls',
           label: 'HLS: Streaming',
           /*source: 'http://192.168.1.107:8080/hls/stream.m3u8'*/
-          source: 'https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8'
+          source: 'https://d2zihajmogu5jn.cloudfront.net/bipbop-advanced/bipbop_16x9_variant.m3u8'
       },
       {
         type: 'hls',
@@ -42,10 +44,19 @@ export class VideoplayerComponent implements OnInit {
 
   onPlayerReady(api: VgAPI) {
       this.api = api;
+
+      //Whenever we play after a pause, we go to 100% time, so always live.
+      //If not showing livestream dont have this.
+      this.api.getDefaultMedia().subscriptions.play.subscribe(
+        () => {
+          this.api.seekTime(100, true);
+        }
+      )
   }
 
   ngOnInit() {
       this.currentStream = this.streams[0];
+      this.api.getDefaultMedia().play();
   }
 
   setBitrate(option: BitrateOption) {
@@ -54,7 +65,7 @@ export class VideoplayerComponent implements OnInit {
   }
 
   onClickStream(stream: IMediaStream) {
-      this.api.pause();
+
       this.bitrates = null;
 
       let t: Subscription = timer(0, 10).subscribe(
@@ -63,5 +74,18 @@ export class VideoplayerComponent implements OnInit {
               t.unsubscribe();
           }
       );
+      this.api.getDefaultMedia().play();
+  }
+  onClickPausePlay(){
+    if(this.isPaused){
+      this.api.getDefaultMedia().play();
+      this.pausePlayText = "pause";
+      this.isPaused = false;
+    }
+    else{
+      this.api.getDefaultMedia().pause();
+      this.pausePlayText = "play";
+      this.isPaused = true;
+    }
   }
 }

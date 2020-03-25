@@ -3,13 +3,18 @@
     <video #media
            (onGetBitrates)="bitrates = $event"
            [vgMedia]="media"
+           [vgDash]="currentStream.source"
            [vgHls]="currentStream.source"
            id="singleVideo"
            crossorigin
            controls>
     </video>
+    
 </vg-player>
-
+<!-- this button is not needed, just press the one in the video... -->
+<button (click)="onClickPausePlay()">
+{{pausePlayText}}
+</button>
 <label>
     Media Url: <input type="text" [(ngModel)]="currentStream.source">
 </label>
