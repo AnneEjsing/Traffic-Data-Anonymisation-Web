@@ -1,0 +1,3 @@
+<ul>
+    <li *ngFor="let stream of streams" (click)="onClickStream(stream)" [ngClass]="{'selected': currentStream === stream}">{{ stream.label }}</li>
+</ul> 
