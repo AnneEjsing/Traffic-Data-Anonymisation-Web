@@ -2,12 +2,7 @@ import { Component, OnInit, ViewChild } from "@angular/core";
 import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
 import { RecordService } from "../_services/record.service";
-
-export interface IMediaStream {
-  type: "vod" | "hls";
-  source: string;
-  label: string;
-}
+import {StreamMessageService, IMediaStream} from "../_services/streamMessage.service"
 
 @Component({
   selector: "app-videoplayer",
@@ -21,35 +16,7 @@ export class VideoplayerComponent implements OnInit {
   api: VgAPI;
   bitrates: BitrateOption[];
 
-  streams: IMediaStream[] = [
-    {
-      type: "hls",
-      label: "Camera 1",
-      /*source: 'http://192.168.1.107:8080/hls/stream.m3u8'*/
-      source:
-        "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
-    },
-    {
-      type: "hls",
-      label: "Camera 2",
-      source:
-        "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    },
-    {
-      type: "hls",
-      label: "Camera 3",
-      source:
-        "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
-    },
-    {
-      type: "hls",
-      label: "Camera 4",
-      source:
-        "https://mnmedias.api.telequebec.tv/m3u8/29880.m3u8"
-    }
-  ];
-
-  constructor(private recordService: RecordService) {}
+  constructor(private recordService: RecordService, private streamService: StreamMessageService) {}
 
   onPlayerReady(api: VgAPI) {
     this.api = api;
@@ -58,31 +25,42 @@ export class VideoplayerComponent implements OnInit {
     //If not showing livestream dont have this.
     this.api.getDefaultMedia().subscriptions.play.subscribe(
       () => {
-        this.api.seekTime(100, true);
+        if(this.api.isLive){
+          this.api.seekTime(100, true);
+        }
+      }
+    )
+    //If not a live video just start playing asap
+    //If live this will make it a few seconds behind idk why so you have to manually press play.
+    this.api.getDefaultMedia().subscriptions.canPlay.subscribe(
+      () => {
+        if(!this.api.isLive){
+          this.api.play();
+        }
       }
     )
   }
 
   ngOnInit() {
-    this.currentStream = this.streams[0];
+    this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
   }
 
   setBitrate(option: BitrateOption) {
     if (this.currentStream.type == "hls") this.vgHls.setBitrate(option);
   }
 
-  onClickStream(stream: IMediaStream) {
-      this.api.pause();
-      this.bitrates = null;
+  // onClickStream(stream: IMediaStream) {
+  //     this.api.pause();
+  //     this.bitrates = null;
 
-      let t: Subscription = timer(0, 10).subscribe(
-          () => {
-              this.currentStream = stream;
-              t.unsubscribe();
-          }
-      );
-      this.api.getDefaultMedia().play();
-  }
+  //     let t: Subscription = timer(0, 10).subscribe(
+  //         () => {
+  //             this.currentStream = stream;
+  //             t.unsubscribe();
+  //         }
+  //     );
+  //     this.api.getDefaultMedia().play();
+  // }
 
   async startRecord(time: string) {
     let res = await this.recordService.postRecordInfo(
