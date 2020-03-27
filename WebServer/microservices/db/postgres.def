@@ -2,9 +2,8 @@ BootStrap: docker
 From: postgres:alpine
 
 %help
-    inspired by https://github.com/verysure/postgres-alpine
-    build: sudo singularity build postgres.simg postgres.recipe
-    run: sudo singularity run -B pgData:/var/lib/postgresql/data,/var/run/postgresql postgres.simg
+    build: sudo singularity build postgres.sif postgres.def
+    run: sudo singularity run -B pgData:/var/lib/postgresql/data,/var/run/postgresql postgres.sif
 
 %files
     data.sql /docker-entrypoint-initdb.d/seed.sql
