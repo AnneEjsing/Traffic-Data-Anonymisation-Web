@@ -5,6 +5,9 @@ From: postgres:alpine
     build: sudo singularity build postgres.sif postgres.def
     run: sudo singularity run -B pgData:/var/lib/postgresql/data,/var/run/postgresql postgres.sif
 
+%setup
+    mkdir -p pgData
+
 %files
     data.sql /docker-entrypoint-initdb.d/seed.sql
 
