@@ -3,10 +3,11 @@ FROM python:jessie
 
 COPY requirements.txt requirements.txt
 
-RUN pip install -r requirements.txt
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install -r requirements.txt
 
 ADD ./ /app
 
 WORKDIR /app
 
-ENTRYPOINT [ "python", "-u", "dbresolver.py"]
+ENTRYPOINT [ "python3", "-u", "dbresolver.py"]
