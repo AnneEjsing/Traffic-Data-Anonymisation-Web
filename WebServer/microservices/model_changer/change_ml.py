@@ -26,23 +26,4 @@ async def remote_change_ml(data):
     return web.Response(status=200)
 
 app = web.Application()
-
-# Configure default CORS settings.
-resources = [
-    '*',
-]
-
-cors = aiohttp_cors.setup(app, defaults={
-    resource: aiohttp_cors.ResourceOptions(
-        allow_credentials=True,
-        expose_headers='*',
-        allow_methods='*',
-        allow_headers='*',
-    ) for resource in resources
-})
-app.add_routes(routes)
-
-for route in app.router.routes():
-    cors.add(route)
-
-web.run_app(app, host='0.0.0.0', port=443)
+web.run_app(app, host='0.0.0.0', port=5000)
