@@ -7,10 +7,18 @@ services: # Here we define our service(s)
     ports: # Port mapping
       - "80:80"
 
-  receiver:
-    container_name: receivercontainer
+  modelchanger:
+    container_name: modelchangercontainer
     build:
-      context: ./microservices/Receiver/
+      context: ./microservices/model_changer/
       dockerfile: Dockerfile
     ports:
-      - "443:443"
+      - "5000:5000"
+
+  videodownload:
+    container_name: videodownloadcontainer
+    build:
+      context: ./microservices/video_download/
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
