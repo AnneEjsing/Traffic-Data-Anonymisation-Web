@@ -15,7 +15,7 @@ def right_update():
 
     result, error = executeQuery(query, expiry, camera_id, user_id)
     if error: return Response(str(error), 500)
-    return hasOneResult(result, "There is no access right for that user and camera.", 404)
+    return hasOneResult(result, "There are no access rights for that user and camera.", 404)
 
 @app.route('/right/get', methods=['GET'])
 def right_get():
@@ -50,7 +50,7 @@ def right_delete():
     result, error = executeQuery(query, camera_id, user_id)
     if error: return Response(str(error),500)
     
-    return hasOneResult(result, "There is no access for that user and camera.", 404)
+    return hasOneResult(result, "There are no access for that user and camera.", 404)
 
 @app.route('/right/create',methods=['POST'])
 def right_create():
