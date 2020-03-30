@@ -35,6 +35,9 @@ def executeQuery(query,*inputs):
 
     except errors.UniqueViolation as e:
         error = e.diag.message_detail 
+
+    except errors.InvalidDatetimeFormat as e:
+        error = "The data time format is invalid. An example of a correct date is: '2020-04-30 11:06:50'."
     
     
     finally:
@@ -69,6 +72,7 @@ def hasOneResult(result, errorString, errorCode):
 ####### Endpoints
 exec(open("user.py").read())
 exec(open("camera.py").read())
+exec(open("access-right.py").read())
 
 
 if __name__ == "__main__":
