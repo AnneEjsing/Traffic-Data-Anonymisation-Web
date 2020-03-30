@@ -38,7 +38,7 @@ CREATE TABLE public.cameras (
 );
 
 CREATE TABLE public.recorded_videos (
-    videoid uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
+    video_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     user_id uuid NOT NULL REFERENCES public.users(user_id),
     camera_id uuid NOT NULL REFERENCES public.cameras(camera_id),
     video_file text NOT NULL,

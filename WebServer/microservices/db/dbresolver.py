@@ -73,6 +73,7 @@ def hasOneResult(result, errorString, errorCode):
 exec(open("user.py").read())
 exec(open("camera.py").read())
 exec(open("access-right.py").read())
+exec(open("video.py").read())
 
 
 if __name__ == "__main__":
