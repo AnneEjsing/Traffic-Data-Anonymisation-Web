@@ -32,7 +32,7 @@ def right_get():
 
     result, error = executeQuery(query, camera_id, user_id)
     if error: return Response(str(error), 500)
-    return hasOneResult(result, "There are no access right for that user and camera.", 404)
+    return str(result)
 
 
 @app.route('/right/delete', methods=['DELETE'])

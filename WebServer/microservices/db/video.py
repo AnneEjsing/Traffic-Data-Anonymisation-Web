@@ -33,7 +33,7 @@ def video_get():
 
     result, error = executeQuery(query, video_id)
     if error: return Response(str(error), 500)
-    return hasOneResult(result, "There is no video with that id.", 404)
+    return str(result)
 
 
 @app.route('/video/delete', methods=['DELETE'])

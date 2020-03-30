@@ -50,7 +50,7 @@ def camera_get():
 
     result, error = executeQuery(query, id)
     if error: return Response(str(error), 500)
-    return hasOneResult(result, "There are no camera with that id.", 404)
+    return str(result)
 
 
 @app.route('/camera/delete', methods=['DELETE'])
