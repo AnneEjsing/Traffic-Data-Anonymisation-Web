@@ -26,8 +26,7 @@ CREATE TABLE public.users (
     user_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     email text UNIQUE NOT NULL,
     role rights NOT NULL,
-    password text NOT NULL,
-    salt text NOT NULL
+    password text NOT NULL
 );
 
 CREATE TABLE public.cameras (
@@ -62,3 +61,5 @@ ALTER TABLE public.users OWNER TO postgres;
 ALTER TABLE public.recorded_videos OWNER TO postgres;
 ALTER TABLE public.cameras OWNER TO postgres;
 ALTER TABLE public.access_rights OWNER TO postgres;
+
+

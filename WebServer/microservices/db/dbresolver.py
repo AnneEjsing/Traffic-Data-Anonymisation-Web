@@ -1,5 +1,5 @@
 import argparse
-from psycopg2 import connect
+from psycopg2 import connect, errors
 from flask import Response, Flask, request
 
 # Sends a query to the database and returns the response.
@@ -15,6 +15,7 @@ def executeQuery(query,*inputs):
     )
 
     results = []
+    error = None
 
     try:
         # declare a cursor object from the connection
@@ -23,14 +24,19 @@ def executeQuery(query,*inputs):
         # execute an SQL statement using the psycopg2 cursor object.
         # By seperating the query and the inputs, psycopg2 does sanitation.
         cursor.execute(query,inputs)
+        conn.commit()
 
         # enumerate() over the PostgreSQL records
         for i, record in enumerate(cursor):
             results.append(record)
 
-    except Error as e:
-        eprint("Error when connecting to Postgresql: ", e)
+    except errors.InvalidTextRepresentation as e:
+        error = e
 
+    except errors.UniqueViolation as e:
+        error = e.diag.message_detail 
+    
+    
     finally:
         # close the cursor object to avoid memory leaks
         cursor.close()
@@ -38,28 +44,31 @@ def executeQuery(query,*inputs):
         # close the connection as well
         conn.close()
 
-    return results
-
-def sanitise(input):
-    return input
+    return (results,error)
 
 #Create the web app
 app = Flask(__name__)
 
-@app.route('/login',methods=['POST'])
-def login():
-    username = request.form['username']    
-    password = request.form['password']
-    query = """
-    SELECT * 
-    FROM users 
-    WHERE users.email = %s
-        AND users.password = md5(CONCAT(%s,users.salt));
-    """
-    if len(executeQuery(query,username,password)) == 1:
-        return Response("success",200)
+
+####### Helper functions
+def fieldCheck(requiredFields, request):
+    fieldsNotFound = []
+    for i in requiredFields:
+        if i not in request.form:
+            fieldsNotFound.append(i)
+    if fieldsNotFound: return Response("Field(s) " + str(fieldsNotFound) + " not found in the request to the database resolver.",500)
+    return None
+
+def hasOneResult(result, errorString, errorCode):
+    if len(result) == 1:
+        return Response("Success",200)
     else:
-        return Response("Not success", 401)
+        return Response(errorString, errorCode)
+
+####### Endpoints
+
+exec(open("user.py").read())
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
