@@ -2,7 +2,7 @@ BootStrap: docker
 From: python:jessie
 
 %files
-    dbresolver.py /
+    *.py /
     requirements.txt /
 
 %post
@@ -11,4 +11,4 @@ From: python:jessie
     python3 -m pip install -r requirements.txt
 
 %runscript
-    python dbresolver.py
+    python3 dbresolver.py
