@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
+import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
 import { RecordService } from "../_services/record.service";
 import {StreamMessageService, IMediaStream} from "../_services/streamMessage.service"
 
 @Component({
+  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: "app-videoplayer",
   templateUrl: "./videoplayer.component.html",
   styleUrls: ["./videoplayer.component.scss"]
@@ -15,6 +16,7 @@ export class VideoplayerComponent implements OnInit {
   currentStream: IMediaStream;
   api: VgAPI;
   bitrates: BitrateOption[];
+
 
   constructor(private recordService: RecordService, private streamService: StreamMessageService) {}
 
@@ -30,19 +32,24 @@ export class VideoplayerComponent implements OnInit {
         }
       }
     )
-    //If not a live video just start playing asap
-    //If live this will make it a few seconds behind idk why so you have to manually press play.
-    this.api.getDefaultMedia().subscriptions.canPlay.subscribe(
-      () => {
-        if(!this.api.isLive){
-          this.api.play();
-        }
-      }
-    )
+    // //If not a live video just start playing asap
+    // //If live this will make it a few seconds behind idk why so you have to manually press play.
+    // this.api.getDefaultMedia().subscriptions.canPlay.subscribe(
+    //   () => {
+    //     if(!this.api.isLive){
+    //       this.api.play();
+    //     }
+    //   }
+    // )
+
   }
 
   ngOnInit() {
-    this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+    this.streamService.selectedStream.subscribe(
+      selectedStream => 
+      {
+        this.currentStream = selectedStream;
+    })
   }
 
   setBitrate(option: BitrateOption) {
