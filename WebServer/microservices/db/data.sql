@@ -33,7 +33,7 @@ CREATE TABLE public.cameras (
     camera_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     description text,
     ip text,
-    last_sign_of_life timestamp NOT NULL,
+    last_sign_of_life timestamp,
     owner uuid NOT NULL REFERENCES public.users(user_id)
 );
 

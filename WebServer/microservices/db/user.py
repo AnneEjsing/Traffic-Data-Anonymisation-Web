@@ -1,6 +1,6 @@
 
 @app.route('/user/login',methods=['POST'])
-def login():
+def user_login():
     f = fieldCheck(['email','password'], request)
     if f: return f
     
@@ -16,7 +16,7 @@ def login():
     return hasOneResult(result,"Login credentials are not valid", 401)
 
 @app.route('/user/update', methods=['POST'])
-def update():
+def user_update():
     f = fieldCheck(['id', 'email', 'password', 'rights'], request)
     if f: return f
 
@@ -33,10 +33,10 @@ def update():
 
     result, error = executeQuery(query, email, password, role, id)
     if error: return Response(str(error), 500)
-    return hasOneResult(result, "There is no user with that id.", 500)
+    return hasOneResult(result, "There is no user with that id.", 404)
 
 @app.route('/user/get', methods=['GET'])
-def get():
+def user_get():
     f = fieldCheck(['id'], request)
     if f: return f
     
@@ -49,11 +49,11 @@ def get():
 
     result, error = executeQuery(query, id)
     if error: return Response(str(error), 500)
-    return hasOneResult(result, "There are no user with that id.", 500)
+    return hasOneResult(result, "There are no user with that id.", 404)
 
 
 @app.route('/user/delete', methods=['DELETE'])
-def delete():
+def user_delete():
     f = fieldCheck(['id'], request)
     if f: return f
 
@@ -66,10 +66,10 @@ def delete():
     result, error = executeQuery(query, id)
     if error: return Response(str(error),500)
     
-    return hasOneResult(result, "There is no user with this id.", 401)
+    return hasOneResult(result, "There is no user with this id.", 404)
 
 @app.route('/user/signup',methods=['POST'])
-def signup():
+def user_signup():
     f = fieldCheck(['email', 'password', 'rights'], request)
     if f: return f
     
@@ -88,8 +88,8 @@ def signup():
     return str(result)
 
 @app.route('/user/list',methods=['GET'])
-def users():
-    query = "SELECT * FROM users"
+def user_list():
+    query = "SELECT * FROM users;"
     result, error =executeQuery(query)
     if error: return Response(str(error),500)
     return str(result)

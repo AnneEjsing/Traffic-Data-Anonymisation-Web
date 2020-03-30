@@ -65,9 +65,10 @@ def hasOneResult(result, errorString, errorCode):
     else:
         return Response(errorString, errorCode)
 
-####### Endpoints
 
+####### Endpoints
 exec(open("user.py").read())
+exec(open("camera.py").read())
 
 
 if __name__ == "__main__":
