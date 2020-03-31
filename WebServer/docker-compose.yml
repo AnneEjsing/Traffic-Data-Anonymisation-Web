@@ -34,6 +34,18 @@ services: # Here we define our service(s)
     networks:
       - traffic_net
 
+  profile_service:
+    container_name: profile_service
+    build:
+      context: ./microservices/profileService/
+      dockerfile: Dockerfile
+    ports:
+      - "1440:1440"
+    links:
+      - dbresolver
+    networks:
+      - traffic_net
+
   postgres: #Query this: docker exec -it <containerID> psql -U postgres -a Nightlife -c 'select users.firstname from users, attendees, events where users.id = attendees.userid and attendees.eventid = 1;'
     image: "postgres:latest"
     container_name: "postgresdb"
