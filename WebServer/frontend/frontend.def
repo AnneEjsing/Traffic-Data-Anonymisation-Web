@@ -37,11 +37,7 @@ BootStrap: docker
 From: nginx:1.14.1-alpine
 
 %help
-    run: sudo singularity run -B /var/cache/nginx,/var/run/nginx.pid frontend.sif
-
-%setup
-    mkdir -p /var/cache/nginx
-    touch /var/run/nginx.pid
+    run: mkdir -p singularity_nginx && singularity run --fakeroot -B singularity_nginx:/var frontend.sif
 
 %files from build
     /ng-app/dist /
@@ -54,4 +50,10 @@ From: nginx:1.14.1-alpine
     mv dist /usr/share/nginx/html
 
 %runscript
+    mkdir -p /var/cache/nginx/client_temp
+    mkdir -p /var/log/nginx
+    mkdir -p /var/run
+    touch /var/run/nginx.pid
+    
+    echo "Launching nginx"
     nginx -g 'daemon off;'
