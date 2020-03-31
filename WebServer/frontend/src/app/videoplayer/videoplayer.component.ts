@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { Component, OnInit, AfterViewInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
 import { RecordService } from "../_services/record.service";
@@ -10,13 +10,14 @@ import {StreamMessageService, IMediaStream} from "../_services/streamMessage.ser
   templateUrl: "./videoplayer.component.html",
   styleUrls: ["./videoplayer.component.scss"]
 })
-export class VideoplayerComponent implements OnInit {
+export class VideoplayerComponent implements AfterViewInit {
   @ViewChild(VgHLS) vgHls: VgHLS;
 
-  currentStream: IMediaStream;
+  //Needs to be inizialised to something or it break...
+  currentStream: IMediaStream = this.streamService.defaultStream;
+  
   api: VgAPI;
   bitrates: BitrateOption[];
-
 
   constructor(private recordService: RecordService, private streamService: StreamMessageService) {}
 
@@ -44,11 +45,20 @@ export class VideoplayerComponent implements OnInit {
 
   }
 
-  ngOnInit() {
+  ngAfterViewInit() {
     this.streamService.selectedStream.subscribe(
       selectedStream => 
       {
-        this.currentStream = selectedStream;
+        this.api.pause();
+        this.bitrates = null;
+        
+        //IDK why we need this Subscription thingy, but the buffer breaks if not...
+        let t: Subscription = timer(0, 10).subscribe(
+            () => {
+                this.currentStream = selectedStream;
+                t.unsubscribe();
+            }
+        );
     })
   }
 
@@ -66,7 +76,6 @@ export class VideoplayerComponent implements OnInit {
   //             t.unsubscribe();
   //         }
   //     );
-  //     this.api.getDefaultMedia().play();
   // }
 
   async startRecord(time: string) {

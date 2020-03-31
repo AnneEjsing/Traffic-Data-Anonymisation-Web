@@ -11,6 +11,8 @@ import {StreamMessageService, IMediaStream} from "../_services/streamMessage.ser
 
 export class SidemenuComponent implements OnInit {
   currentStream: IMediaStream;
+
+  //Change this to something that fetches it from a microservice.
   streams: IMediaStream[] = [
     {
       type: "hls",

@@ -1,3 +1,4 @@
-<ul>
+<h1 style="text-align: center;">ICU</h1>
+<ul style="padding-left: 0%;">
     <li *ngFor="let stream of streams" (click)="onClickStream(stream)" [ngClass]="{'selected': currentStream === stream}">{{ stream.label }}</li>
 </ul> 

@@ -12,11 +12,12 @@ export class StreamMessageService {
   defaultStream:IMediaStream =
   {
     type: "hls",
-    label: "Camera 1",
-    /*source: 'http://192.168.1.107:8080/hls/stream.m3u8'*/
+    label: "NotLiveCamera 2",
     source:
-    "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
-  }
+      "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+  };
+
+  //use defaultStream to learn type and set default, i think..
   private streamSource = new BehaviorSubject( this.defaultStream
     );
   selectedStream = this.streamSource.asObservable();
