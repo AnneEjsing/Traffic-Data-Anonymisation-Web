@@ -55,6 +55,8 @@ services: # Here we define our service(s)
     build:
       context: ./microservices/video-deleter/
       dockerfile: Dockerfile
+    volumes:
+      - "./videodata:/var/lib/videodata"
     networks:
       - traffic_net
     depends_on:

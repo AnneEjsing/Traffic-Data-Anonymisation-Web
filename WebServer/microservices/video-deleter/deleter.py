@@ -6,13 +6,13 @@ import time
 import os
 
 dbr = "http://dbresolver:1337/"
+path = "/var/lib/videodata/"
 
 def periodically_delete(delay,days):
     queryString = dbr + "video/list"
     while True:
         #Query the database
-        try:
-            response = requests.get(queryString)
+        response = requests.get(queryString)
         if response.status_code != 200:
             print(str(response.status_code) +": "+response.content.decode('utf-8'))
         
@@ -34,9 +34,9 @@ def periodically_delete(delay,days):
 
             #Delete the video
             #In the file system
-            if not os.exists(file_path):
+            if not os.path.exists(path+file_path):
                 continue
-            os.remove(file_path)
+            os.remove(path+file_path)
 
             #In the database
             response = requests.delete(dbr+"video/delete",data={"video_id":v_id})
