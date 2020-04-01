@@ -23,7 +23,7 @@ def periodically_delete(delay,days):
 
         #Delete too old videos
         now = datetime.datetime.utcnow()
-        for v_id,_,_,file_path,_,date in videos:
+        for v_id,_,_,_,date in videos:
             #Extract date
             y,mo,d,h,min,s,ms = date
             save_time = datetime.datetime(y,mo,d,h,min,s,ms)
@@ -35,9 +35,9 @@ def periodically_delete(delay,days):
 
             #Delete the video
             #In the file system
-            if not os.path.exists(path+file_path):
+            if not os.path.exists(path+v_id+".mp4"):
                 continue
-            os.remove(path+file_path)
+            os.remove(path+v_id+".mp4")
 
             #In the database
             response = requests.delete(dbr+"video/delete",headers={'Content-type': 'application/json'},json={"video_id":v_id})
@@ -57,7 +57,7 @@ if __name__ == "__main__":
                         required=False,
                         help='The interval in seconds between removing old videos from the database')
     parser.add_argument('--days',
-                        default=0,
+                        default=7,
                         metavar='integer',
                         required=False,
                         help='Number of days to store videos before deleting them.')

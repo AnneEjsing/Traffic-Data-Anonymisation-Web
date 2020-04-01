@@ -1,22 +1,21 @@
 @routes.post('/video/update')
 async def video_update(request):
     data = await request.json()
-    f = fieldCheck(['video_id', 'user_id', 'camera_id', 'file_path', 'video_thumbnail'], data)
+    f = fieldCheck(['video_id', 'user_id', 'camera_id', 'video_thumbnail'], data)
     if f != None: return f
 
     video_id = data['video_id']
     user_id = data['user_id']
     camera_id = data['camera_id']
-    file_path = data['file_path']
     video_thumbnail = data['video_thumbnail']
     query = """
     UPDATE recorded_videos 
-    SET user_id = %s, camera_id = %s, video_file= %s, video_thumbnail = %s
+    SET user_id = %s, camera_id = %s, video_thumbnail = %s
     WHERE video_id = %s
     RETURNING *;
     """
 
-    result, error = executeQuery(query, user_id, camera_id, file_path, video_thumbnail, video_id)
+    result, error = executeQuery(query, user_id, camera_id, video_thumbnail, video_id)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "There is no video with that id.", 404)
 
@@ -59,22 +58,21 @@ async def video_delete(request):
 @routes.post('/video/create')
 async def video_create(request):
     data = await request.json()
-    f = fieldCheck(['user_id', 'camera_id', 'file_path', 'video_thumbnail'], data)
+    f = fieldCheck(['user_id', 'camera_id', 'video_thumbnail'], data)
     if f != None: return f
     
     user_id = data['user_id']
     camera_id = data['camera_id']
-    file_path = data['file_path']
     video_thumbnail = data['video_thumbnail']
 
     query = """
-    INSERT INTO recorded_videos (user_id, camera_id, video_file, video_thumbnail, save_time)
+    INSERT INTO recorded_videos (user_id, camera_id, video_thumbnail, save_time)
     VALUES (
-        %s, %s, %s, %s, NOW()
+        %s, %s, %s, NOW()
     )
     RETURNING *;
     """
-    result, error = executeQuery(query, user_id, camera_id, file_path, video_thumbnail)
+    result, error = executeQuery(query, user_id, camera_id, video_thumbnail)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=str(result), status=200)
 
