@@ -61,3 +61,15 @@ services: # Here we define our service(s)
       POSTGRES_DB: "Traffic_Annonymisation_DB"
     networks:
       - traffic_net
+
+  videodeleter:
+    container_name: videodeleter
+    build:
+      context: ./microservices/video-deleter/
+      dockerfile: Dockerfile
+    volumes:
+      - "./videodata:/var/lib/videodata"
+    networks:
+      - traffic_net
+    depends_on:
+      - dbresolver
