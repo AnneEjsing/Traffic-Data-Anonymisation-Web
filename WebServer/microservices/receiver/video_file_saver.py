@@ -4,20 +4,6 @@ import aiohttp_cors
 import subprocess as sp
 import requests
 
-# This is if you want to do it dynamically
-# def video_file_saver(stream, video_length_seconds):
-# stream = "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
-# name = "test"
-# i = 0
-#
-# sp.call("mkdir test", shell=True)
-# for i in range(2):
-#    sp.call("ffmpeg -i "+ stream +" -r 25 -t 30 "+'test/'+name+str(i)+".mp4;", shell=True)
-#    sp.call("echo file \'"+name+str(i)+".mp4\' >>  test/input.txt", shell=True)
-#
-# sp.call("ffmpeg -y -f concat -safe 0 -i 'test/input.txt' -c copy test/output.mp4" ,shell=True)
-# sp.call("rm test/test* test/input.txt", shell=True)
-
 routes = web.RouteTableDef()
 
 
