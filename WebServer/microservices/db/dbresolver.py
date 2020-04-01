@@ -1,6 +1,7 @@
 import argparse
 from psycopg2 import connect, errors
-from flask import Response, Flask, request
+from aiohttp import web, BasicAuth, ClientSession
+import asyncio
 
 # Sends a query to the database and returns the response.
 # Inspired by: #https://kb.objectrocket.com/postgresql/python-and-postgresql-docker-container-part-2-1063
@@ -50,8 +51,7 @@ def executeQuery(query,*inputs):
     return (results,error)
 
 #Create the web app
-app = Flask(__name__)
-
+routes = web.RouteTableDef()
 
 ####### Helper functions
 def fieldCheck(requiredFields, request):
@@ -59,14 +59,14 @@ def fieldCheck(requiredFields, request):
     for i in requiredFields:
         if i not in request.form:
             fieldsNotFound.append(i)
-    if fieldsNotFound: return Response("Field(s) " + str(fieldsNotFound) + " not found in the request to the database resolver.",500)
+    if fieldsNotFound: return web.Response("Field(s) " + str(fieldsNotFound) + " not found in the request to the database resolver.",500)
     return None
 
 def hasOneResult(result, errorString, errorCode):
     if len(result) == 1:
-        return Response("Success",200)
+        return web.Response("Success",200)
     else:
-        return Response(errorString, errorCode)
+        return web.Response(errorString, errorCode)
 
 
 ####### Endpoints
@@ -82,4 +82,6 @@ if __name__ == "__main__":
     )
 
     args = parser.parse_args()
-    app.run(host='0.0.0.0',port=1337,debug=True)
+    app = web.Application()
+    web.run_app(app, host='0.0.0.0', port=1337)
+

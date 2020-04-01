@@ -1,9 +1,9 @@
-@app.route('/camera/updateLSOL', methods=['POST'])
-def camera_updatelsoĺ():
+@routes.post('/camera/updateLSOL')
+def camera_updatelsoĺ(request):
     f = fieldCheck(['id'], request)
     if f: return f
 
-    id = request.form['id']
+    id = request['id']
     query = """
     UPDATE cameras 
     SET last_sign_of_life = NOW()
@@ -12,19 +12,19 @@ def camera_updatelsoĺ():
     """
 
     result, error = executeQuery(query, id)
-    if error: return Response(str(error), 500)
+    if error: return web.Response(str(error), 500)
     return hasOneResult(result, "There is no camera with that id.", 404)
 
 
-@app.route('/camera/updateInfo', methods=['POST'])
-def camera_update():
+@routes.post('/camera/updateInfo')
+def camera_update(request):
     f = fieldCheck(['id', 'owner', 'description', 'ip'], request)
     if f: return f
 
-    id = request.form['id']
-    owner = request.form['owner']
-    description = request.form['description']
-    ip = request.form['ip']
+    id = request['id']
+    owner = request['owner']
+    description = request['description']
+    ip = request['ip']
     query = """
     UPDATE cameras 
     SET owner = %s, description = %s, ip = %s
@@ -33,15 +33,15 @@ def camera_update():
     """
 
     result, error = executeQuery(query, owner, description, ip, id)
-    if error: return Response(str(error), 500)
+    if error: return web.Response(str(error), 500)
     return hasOneResult(result, "There is no camera with that id.", 404)
 
-@app.route('/camera/get', methods=['GET'])
-def camera_get():
+@routes.get('/camera/get', methods=['GET'])
+def camera_get(request):
     f = fieldCheck(['id'], request)
     if f: return f
     
-    id = request.form['id']
+    id = request['id']
     query = """
     SELECT *
     FROM cameras
@@ -49,34 +49,34 @@ def camera_get():
     """
 
     result, error = executeQuery(query, id)
-    if error: return Response(str(error), 500)
+    if error: return web.Response(str(error), 500)
     return str(result)
 
 
-@app.route('/camera/delete', methods=['DELETE'])
-def camera_delete():
+@routes.delete('/camera/delete', methods=['DELETE'])
+def camera_delete(request):
     f = fieldCheck(['id'], request)
     if f: return f
 
-    id = request.form['id']
+    id = request['id']
     query = """
     DELETE FROM cameras
     WHERE camera_id = %s
     RETURNING *;
     """
     result, error = executeQuery(query, id)
-    if error: return Response(str(error),500)
+    if error: return web.Response(str(error),500)
     
     return hasOneResult(result, "There is no camera with this id.", 404)
 
-@app.route('/camera/create',methods=['POST'])
-def camera_create():
+@routes.post('/camera/create')
+def camera_create(request):
     f = fieldCheck(['owner', 'description', 'ip'], request)
     if f: return f
     
-    owner = request.form['owner']    
-    description = request.form['description']
-    ip = request.form['ip']
+    owner = request['owner']    
+    description = request['description']
+    ip = request['ip']
     query = """
     INSERT INTO cameras (owner,description,ip)
     VALUES (
@@ -85,12 +85,12 @@ def camera_create():
     RETURNING *;
     """
     result, error = executeQuery(query,owner,description,ip)
-    if error: return Response(str(error),500)
+    if error: return web.Response(str(error),500)
     return str(result)
 
-@app.route('/camera/list',methods=['GET'])
+@routes.get('/camera/list')
 def camera_list():
     query = "SELECT * FROM cameras;"
-    result, error =executeQuery(query)
-    if error: return Response(str(error),500)
+    result, error = executeQuery(query)
+    if error: return web.Response(str(error),500)
     return str(result)

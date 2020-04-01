@@ -1,4 +1,4 @@
-@app.route('/right/update', methods=['POST'])
+@routes.post('/right/update')
 def right_update():
     f = fieldCheck(['camera_id', 'user_id', 'expiry'], request)
     if f: return f
@@ -17,7 +17,7 @@ def right_update():
     if error: return Response(str(error), 500)
     return hasOneResult(result, "There are no access rights for that user and camera.", 404)
 
-@app.route('/right/get', methods=['GET'])
+@routes.get('/right/get')
 def right_get():
     f = fieldCheck(['camera_id', 'user_id'], request)
     if f: return f
@@ -35,7 +35,7 @@ def right_get():
     return str(result)
 
 
-@app.route('/right/delete', methods=['DELETE'])
+@routes.delete('/right/delete')
 def right_delete():
     f = fieldCheck(['camera_id', 'user_id'], request)
     if f: return f
@@ -52,7 +52,7 @@ def right_delete():
     
     return hasOneResult(result, "There are no access for that user and camera.", 404)
 
-@app.route('/right/create',methods=['POST'])
+@routes.post('/right/create',methods=['POST'])
 def right_create():
     f = fieldCheck(['camera_id', 'user_id', 'expiry'], request)
     if f: return f
@@ -71,9 +71,9 @@ def right_create():
     if error: return Response(str(error),500)
     return str(result)
 
-@app.route('/right/list',methods=['GET'])
+@routes.get('/right/list',methods=['GET'])
 def right_list():
     query = "SELECT * FROM access_rights;"
-    result, error =executeQuery(query)
+    result, error = executeQuery(query)
     if error: return Response(str(error),500)
     return str(result)

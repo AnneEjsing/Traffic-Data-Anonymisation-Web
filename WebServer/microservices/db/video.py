@@ -1,13 +1,13 @@
-@app.route('/video/update', methods=['POST'])
-def video_update():
+@routes.post('/video/update')
+def video_update(request):
     f = fieldCheck(['video_id', 'user_id', 'camera_id', 'file_path', 'video_thumbnail'], request)
     if f: return f
 
-    video_id = request.form['video_id']
-    user_id = request.form['user_id']
-    camera_id = request.form['camera_id']
-    file_path = request.form['file_path']
-    video_thumbnail = request.form['video_thumbnail']
+    video_id = request['video_id']
+    user_id = request['user_id']
+    camera_id = request['camera_id']
+    file_path = request['file_path']
+    video_thumbnail = request['video_thumbnail']
     query = """
     UPDATE recorded_videos 
     SET user_id = %s, camera_id = %s, video_file= %s, video_thumbnail = %s
@@ -16,15 +16,15 @@ def video_update():
     """
 
     result, error = executeQuery(query, user_id, camera_id, file_path, video_thumbnail, video_id)
-    if error: return Response(str(error), 500)
+    if error: return web.Response(str(error), 500)
     return hasOneResult(result, "There is no video with that id.", 404)
 
-@app.route('/video/get', methods=['GET'])
-def video_get():
+@routes.get('/video/get')
+def video_get(request):
     f = fieldCheck(['video_id'], request)
     if f: return f
     
-    video_id = request.form['video_id']
+    video_id = request['video_id']
     query = """
     SELECT *
     FROM recorded_videos
@@ -32,12 +32,12 @@ def video_get():
     """
 
     result, error = executeQuery(query, video_id)
-    if error: return Response(str(error), 500)
+    if error: return web.Response(str(error), 500)
     return str(result)
 
 
-@app.route('/video/delete', methods=['DELETE'])
-def video_delete():
+@routes.delete('/video/delete')
+def video_delete(request):
     f = fieldCheck(['video_id'], request)
     if f: return f
 
@@ -52,15 +52,15 @@ def video_delete():
     
     return hasOneResult(result, "There is no video with this id.", 404)
 
-@app.route('/video/create',methods=['POST'])
-def video_create():
+@routes.post('/video/create')
+def video_create(request):
     f = fieldCheck(['user_id', 'camera_id', 'file_path', 'video_thumbnail'], request)
     if f: return f
     
-    user_id = request.form['user_id']
-    camera_id = request.form['camera_id']
-    file_path = request.form['file_path']
-    video_thumbnail = request.form['video_thumbnail']
+    user_id = request['user_id']
+    camera_id = request['camera_id']
+    file_path = request['file_path']
+    video_thumbnail = request['video_thumbnail']
 
     query = """
     INSERT INTO recorded_videos (user_id, camera_id, video_file, video_thumbnail, save_time)
@@ -70,12 +70,12 @@ def video_create():
     RETURNING *;
     """
     result, error = executeQuery(query, user_id, camera_id, file_path, video_thumbnail)
-    if error: return Response(str(error),500)
+    if error: return web.Response(str(error),500)
     return str(result)
 
-@app.route('/video/list',methods=['GET'])
-def video_list():
+@routes.get('/video/list')
+def video_list(request):
     query = "SELECT * FROM recorded_videos;"
-    result, error =executeQuery(query)
-    if error: return Response(str(error),500)
+    result, error = executeQuery(query)
+    if error: return web.Response(str(error),500)
     return str(result)
