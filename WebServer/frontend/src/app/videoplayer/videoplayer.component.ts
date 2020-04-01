@@ -33,16 +33,6 @@ export class VideoplayerComponent implements AfterViewInit {
         }
       }
     )
-    // //If not a live video just start playing asap
-    // //If live this will make it a few seconds behind idk why so you have to manually press play.
-    // this.api.getDefaultMedia().subscriptions.canPlay.subscribe(
-    //   () => {
-    //     if(!this.api.isLive){
-    //       this.api.play();
-    //     }
-    //   }
-    // )
-
   }
 
   ngAfterViewInit() {
@@ -65,18 +55,6 @@ export class VideoplayerComponent implements AfterViewInit {
   setBitrate(option: BitrateOption) {
     if (this.currentStream.type == "hls") this.vgHls.setBitrate(option);
   }
-
-  // onClickStream(stream: IMediaStream) {
-  //     this.api.pause();
-  //     this.bitrates = null;
-
-  //     let t: Subscription = timer(0, 10).subscribe(
-  //         () => {
-  //             this.currentStream = stream;
-  //             t.unsubscribe();
-  //         }
-  //     );
-  // }
 
   async startRecord(time: string) {
     let res = await this.recordService.postRecordInfo(
