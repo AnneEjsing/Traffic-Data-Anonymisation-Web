@@ -4,6 +4,7 @@ import ast
 import datetime
 import time
 import os
+import json
 
 dbr = "http://dbresolver:1337/"
 path = "/var/lib/videodata/"
@@ -39,7 +40,7 @@ def periodically_delete(delay,days):
             os.remove(path+file_path)
 
             #In the database
-            response = requests.delete(dbr+"video/delete",data={"video_id":v_id})
+            response = requests.delete(dbr+"video/delete",headers={'Content-type': 'application/json'},json={"video_id":v_id})
             if response.status_code != 200:
                 print(str(response.status_code) +": "+response.content.decode('utf-8'))
 
@@ -56,7 +57,7 @@ if __name__ == "__main__":
                         required=False,
                         help='The interval in seconds between removing old videos from the database')
     parser.add_argument('--days',
-                        default=1,
+                        default=0,
                         metavar='integer',
                         required=False,
                         help='Number of days to store videos before deleting them.')

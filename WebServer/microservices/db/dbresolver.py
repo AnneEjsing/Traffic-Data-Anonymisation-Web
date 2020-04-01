@@ -1,8 +1,6 @@
-import argparse
 from psycopg2 import connect, errors
-from aiohttp import web, BasicAuth, ClientSession
+from aiohttp import web
 import asyncio
-
 # Sends a query to the database and returns the response.
 # Inspired by: #https://kb.objectrocket.com/postgresql/python-and-postgresql-docker-container-part-2-1063
 def executeQuery(query,*inputs):
@@ -54,19 +52,19 @@ def executeQuery(query,*inputs):
 routes = web.RouteTableDef()
 
 ####### Helper functions
-def fieldCheck(requiredFields, request):
+def fieldCheck(requiredFields, data):
     fieldsNotFound = []
     for i in requiredFields:
-        if i not in request.form:
+        if i not in data:
             fieldsNotFound.append(i)
-    if fieldsNotFound: return web.Response("Field(s) " + str(fieldsNotFound) + " not found in the request to the database resolver.",500)
+    if fieldsNotFound: return web.Response(text="Field(s) " + str(fieldsNotFound) + " not found in the request to the database resolver.",status=500)
     return None
 
 def hasOneResult(result, errorString, errorCode):
     if len(result) == 1:
-        return web.Response("Success",200)
+        return web.Response(text="Success",status=200)
     else:
-        return web.Response(errorString, errorCode)
+        return web.Response(text=errorString, status=errorCode)
 
 
 ####### Endpoints
@@ -77,11 +75,7 @@ exec(open("video.py").read())
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description='Provides different function calls to retrieve data from the database.'
-    )
-
-    args = parser.parse_args()
     app = web.Application()
+    app.add_routes(routes)
     web.run_app(app, host='0.0.0.0', port=1337)
 
