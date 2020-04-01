@@ -14,14 +14,6 @@ services: # Here we define our service(s)
     ports: # Port mapping
       - "80:80"
 
-  receiver:
-    container_name: receivercontainer
-    build:
-      context: ./microservices/receiver/
-      dockerfile: Dockerfile
-    ports:
-      - "443:443"
-
   dbresolver:
     container_name: dbresolver
     build:
