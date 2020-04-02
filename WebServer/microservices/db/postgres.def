@@ -1,0 +1,17 @@
+BootStrap: docker
+From: postgres:alpine
+
+%help
+    build: sudo singularity build postgres.sif postgres.def
+    run: sudo singularity run -B pgData:/var/lib/postgresql/data,/var/run/postgresql postgres.sif
+
+%setup
+    mkdir -p pgData
+
+%files
+    data.sql /docker-entrypoint-initdb.d/seed.sql
+
+%environment
+    export POSTGRES_USER='postgres'
+    export POSTGRES_PASSWORD='postgres'
+    export HOSTNAME=localhost
