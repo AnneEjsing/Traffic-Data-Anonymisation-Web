@@ -14,13 +14,19 @@ services: # Here we define our service(s)
     ports: # Port mapping
       - "80:8080"
 
-  receiver:
-    container_name: receivercontainer
+  downloader:
+    container_name: videodownloader
     build:
-      context: ./microservices/receiver/
+      context: ./microservices/video-download/
       dockerfile: Dockerfile
     ports:
-      - "443:443"
+      - "1336:1336"
+    volumes:
+      - "./videodata:/var/lib/videodata"
+    networks:
+      - traffic_net
+    depends_on:
+      - dbresolver
 
   dbresolver:
     container_name: dbresolver
@@ -31,6 +37,18 @@ services: # Here we define our service(s)
       - "1337:1337"
     links:
       - postgres
+    networks:
+      - traffic_net
+
+  profileservice:
+    container_name: profileservice
+    build:
+      context: ./microservices/profile-service/
+      dockerfile: Dockerfile
+    ports:
+      - "1338:1338"
+    links:
+      - dbresolver
     networks:
       - traffic_net
 
@@ -49,3 +67,15 @@ services: # Here we define our service(s)
       POSTGRES_DB: "Traffic_Annonymisation_DB"
     networks:
       - traffic_net
+
+  videodeleter:
+    container_name: videodeleter
+    build:
+      context: ./microservices/video-deleter/
+      dockerfile: Dockerfile
+    volumes:
+      - "./videodata:/var/lib/videodata"
+    networks:
+      - traffic_net
+    depends_on:
+      - dbresolver

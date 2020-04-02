@@ -26,23 +26,21 @@ CREATE TABLE public.users (
     user_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     email text UNIQUE NOT NULL,
     role rights NOT NULL,
-    password text NOT NULL,
-    salt text NOT NULL
+    password text NOT NULL
 );
 
 CREATE TABLE public.cameras (
     camera_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     description text,
     ip text,
-    last_sign_of_life timestamp NOT NULL,
+    last_sign_of_life timestamp,
     owner uuid NOT NULL REFERENCES public.users(user_id)
 );
 
 CREATE TABLE public.recorded_videos (
-    videoid uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
+    video_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     user_id uuid NOT NULL REFERENCES public.users(user_id),
     camera_id uuid NOT NULL REFERENCES public.cameras(camera_id),
-    video_file text NOT NULL,
     video_thumbnail text,
     save_time timestamp NOT NULL
 );
@@ -62,3 +60,5 @@ ALTER TABLE public.users OWNER TO postgres;
 ALTER TABLE public.recorded_videos OWNER TO postgres;
 ALTER TABLE public.cameras OWNER TO postgres;
 ALTER TABLE public.access_rights OWNER TO postgres;
+
+
