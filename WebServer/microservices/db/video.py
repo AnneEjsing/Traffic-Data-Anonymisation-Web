@@ -1,13 +1,14 @@
-@app.route('/video/update', methods=['POST'])
-def video_update():
-    f = fieldCheck(['video_id', 'user_id', 'camera_id', 'file_path', 'video_thumbnail'], request)
-    if f: return f
+@routes.post('/video/update')
+async def video_update(request):
+    data = await request.json()
+    f = fieldCheck(['video_id', 'user_id', 'camera_id', 'file_path', 'video_thumbnail'], data)
+    if f != None: return f
 
-    video_id = request.form['video_id']
-    user_id = request.form['user_id']
-    camera_id = request.form['camera_id']
-    file_path = request.form['file_path']
-    video_thumbnail = request.form['video_thumbnail']
+    video_id = data['video_id']
+    user_id = data['user_id']
+    camera_id = data['camera_id']
+    file_path = data['file_path']
+    video_thumbnail = data['video_thumbnail']
     query = """
     UPDATE recorded_videos 
     SET user_id = %s, camera_id = %s, video_file= %s, video_thumbnail = %s
@@ -16,15 +17,17 @@ def video_update():
     """
 
     result, error = executeQuery(query, user_id, camera_id, file_path, video_thumbnail, video_id)
-    if error: return Response(str(error), 500)
+    if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "There is no video with that id.", 404)
 
-@app.route('/video/get', methods=['GET'])
-def video_get():
-    f = fieldCheck(['video_id'], request)
-    if f: return f
+@routes.get('/video/get')
+async def video_get(request):
+    data = await request.json()
+    print(data['video_id'])
+    f = fieldCheck(['video_id'], data)
+    if f != None: return f
     
-    video_id = request.form['video_id']
+    video_id = data['video_id']
     query = """
     SELECT *
     FROM recorded_videos
@@ -32,35 +35,37 @@ def video_get():
     """
 
     result, error = executeQuery(query, video_id)
-    if error: return Response(str(error), 500)
-    return str(result)
+    if error: return web.Response(text=str(error), status=500)
+    return web.Response(text=str(result), status=200)
 
 
-@app.route('/video/delete', methods=['DELETE'])
-def video_delete():
-    f = fieldCheck(['video_id'], request)
-    if f: return f
+@routes.delete('/video/delete')
+async def video_delete(request):
+    data = await request.json()
+    f = fieldCheck(['video_id'], data)
+    if f != None: return f
 
-    video_id = request.form['video_id']
+    video_id = data['video_id']
     query = """
     DELETE FROM recorded_videos
     WHERE video_id = %s
     RETURNING *;
     """
     result, error = executeQuery(query, video_id)
-    if error: return Response(str(error),500)
+    if error: return web.Response(text=str(error),status=500)
     
     return hasOneResult(result, "There is no video with this id.", 404)
 
-@app.route('/video/create',methods=['POST'])
-def video_create():
-    f = fieldCheck(['user_id', 'camera_id', 'file_path', 'video_thumbnail'], request)
-    if f: return f
+@routes.post('/video/create')
+async def video_create(request):
+    data = await request.json()
+    f = fieldCheck(['user_id', 'camera_id', 'file_path', 'video_thumbnail'], data)
+    if f != None: return f
     
-    user_id = request.form['user_id']
-    camera_id = request.form['camera_id']
-    file_path = request.form['file_path']
-    video_thumbnail = request.form['video_thumbnail']
+    user_id = data['user_id']
+    camera_id = data['camera_id']
+    file_path = data['file_path']
+    video_thumbnail = data['video_thumbnail']
 
     query = """
     INSERT INTO recorded_videos (user_id, camera_id, video_file, video_thumbnail, save_time)
@@ -70,12 +75,12 @@ def video_create():
     RETURNING *;
     """
     result, error = executeQuery(query, user_id, camera_id, file_path, video_thumbnail)
-    if error: return Response(str(error),500)
-    return str(result)
+    if error: return web.Response(text=str(error),status=500)
+    return web.Response(text=str(result), status=200)
 
-@app.route('/video/list',methods=['GET'])
-def video_list():
+@routes.get('/video/list')
+def video_list(request):
     query = "SELECT * FROM recorded_videos;"
-    result, error =executeQuery(query)
-    if error: return Response(str(error),500)
-    return str(result)
+    result, error = executeQuery(query)
+    if error: return web.Response(text=str(error),status=500)
+    return web.Response(text=str(result),status=200)

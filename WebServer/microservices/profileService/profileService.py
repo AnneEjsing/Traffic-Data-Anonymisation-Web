@@ -1,52 +1,44 @@
 import argparse
 import requests
-from flask import Response, Flask, request
 from urllib3._collections import HTTPHeaderDict
+from aiohttp import web
+import asyncio
+import json
 
 #Create the web app
-app = Flask(__name__)
+routes = web.RouteTableDef()
 
 url = "http://dbresolver:1337/user/"
-@app.route('/login',methods=['POST'])
-def login():
-    response = requests.post(url + "login", data=request.form)
-    return Response(response.text, response.status_code)
 
-@app.route('/update', methods=['POST'])
-def update():
-    response = requests.post(url + "update", data=request.form)
-    return Response(response.text, response.status_code)
+@routes.post('/login')
+async def login(request):
+    return await send_request("login", request, requests.post)
 
-@app.route('/get', methods=['GET'])
-def get():
-    response = requests.get(url + "get", data=request.form)
-    return Response(response.text, response.status_code)
+@routes.post('/update')
+async def update(request):
+    return await send_request("update", request, requests.post)
 
+@routes.get('/get')
+async def get(request):
+    return await send_request("get", request,requests.get)
 
-@app.route('/delete', methods=['DELETE'])
-def delete():
-    response = requests.delete(url + "delete", data=request.form)
-    return Response(response.text, response.status_code)
+@routes.delete('/delete')
+async def delete(request):
+    return await send_request("delete", request, requests.delete)
 
-@app.route('/signup',methods=['POST'])
-def signup():
-    response = requests.post(url + "signup", data=request.form)
-    return Response(response.text, response.status_code)
+@routes.post('/signup')
+async def signup(request):
+    return await send_request("signup", request, requests.post)
 
-@app.route('/list',methods=['GET'])
-def users():
-    response = requests.get(url + "list", data=request.form)
-    return Response(response.text, response.status_code)
+@routes.get('/list')
+async def users(request):
+    return await send_request("list", request, requests.get)
 
+async def send_request(path, request, query_function):
+    response = query_function(url + path,headers={'Content-type': 'application/json'}, json=(await request.json()))
+    return web.Response(text=response.text, status=response.status_code)
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description='Provides different function calls to retrieve data from the database.'
-    )
-
-    args = parser.parse_args()
-    app.run(host='0.0.0.0',port=1440,debug=True)
-
-
-
-
+    app = web.Application()
+    app.add_routes(routes)
+    web.run_app(app, host='0.0.0.0', port=1440)

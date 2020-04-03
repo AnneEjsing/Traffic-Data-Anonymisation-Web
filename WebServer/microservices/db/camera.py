@@ -1,9 +1,10 @@
-@app.route('/camera/updateLSOL', methods=['POST'])
-def camera_updatelsoĺ():
-    f = fieldCheck(['id'], request)
-    if f: return f
+@routes.post('/camera/updateLSOL')
+async def camera_updatelsoĺ(request):
+    data = await request.json()
+    f = fieldCheck(['id'], data)
+    if f != None: return f
 
-    id = request.form['id']
+    id = data['id']
     query = """
     UPDATE cameras 
     SET last_sign_of_life = NOW()
@@ -12,19 +13,20 @@ def camera_updatelsoĺ():
     """
 
     result, error = executeQuery(query, id)
-    if error: return Response(str(error), 500)
+    if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "There is no camera with that id.", 404)
 
 
-@app.route('/camera/updateInfo', methods=['POST'])
-def camera_update():
-    f = fieldCheck(['id', 'owner', 'description', 'ip'], request)
-    if f: return f
+@routes.post('/camera/updateInfo')
+async def camera_update(request):
+    data = await request.json()
+    f = fieldCheck(['id', 'owner', 'description', 'ip'], data)
+    if f != None: return f
 
-    id = request.form['id']
-    owner = request.form['owner']
-    description = request.form['description']
-    ip = request.form['ip']
+    id = data['id']
+    owner = data['owner']
+    description = data['description']
+    ip = data['ip']
     query = """
     UPDATE cameras 
     SET owner = %s, description = %s, ip = %s
@@ -33,15 +35,16 @@ def camera_update():
     """
 
     result, error = executeQuery(query, owner, description, ip, id)
-    if error: return Response(str(error), 500)
+    if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "There is no camera with that id.", 404)
 
-@app.route('/camera/get', methods=['GET'])
-def camera_get():
-    f = fieldCheck(['id'], request)
-    if f: return f
+@routes.get('/camera/get')
+async def camera_get(request):
+    data = await request.json()
+    f = fieldCheck(['id'], data)
+    if f != None: return f
     
-    id = request.form['id']
+    id = data['id']
     query = """
     SELECT *
     FROM cameras
@@ -49,34 +52,36 @@ def camera_get():
     """
 
     result, error = executeQuery(query, id)
-    if error: return Response(str(error), 500)
-    return str(result)
+    if error: return web.Response(text=str(error), status=500)
+    return web.Response(text=str(result),status=200)
 
 
-@app.route('/camera/delete', methods=['DELETE'])
-def camera_delete():
-    f = fieldCheck(['id'], request)
-    if f: return f
+@routes.delete('/camera/delete')
+async def camera_delete(request):
+    data = await request.json()
+    f = fieldCheck(['id'], data)
+    if f != None: return f
 
-    id = request.form['id']
+    id = data['id']
     query = """
     DELETE FROM cameras
     WHERE camera_id = %s
     RETURNING *;
     """
     result, error = executeQuery(query, id)
-    if error: return Response(str(error),500)
+    if error: return web.Response(text=str(error),status=500)
     
     return hasOneResult(result, "There is no camera with this id.", 404)
 
-@app.route('/camera/create',methods=['POST'])
-def camera_create():
-    f = fieldCheck(['owner', 'description', 'ip'], request)
-    if f: return f
+@routes.post('/camera/create')
+async def camera_create(request):
+    data = await request.json()
+    f = fieldCheck(['owner', 'description', 'ip'], data)
+    if f != None: return f
     
-    owner = request.form['owner']    
-    description = request.form['description']
-    ip = request.form['ip']
+    owner = data['owner']    
+    description = data['description']
+    ip = data['ip']
     query = """
     INSERT INTO cameras (owner,description,ip)
     VALUES (
@@ -85,12 +90,12 @@ def camera_create():
     RETURNING *;
     """
     result, error = executeQuery(query,owner,description,ip)
-    if error: return Response(str(error),500)
-    return str(result)
+    if error: return web.Response(text=str(error),status=500)
+    return web.Response(text=str(result),status=200)
 
-@app.route('/camera/list',methods=['GET'])
+@routes.get('/camera/list')
 def camera_list():
     query = "SELECT * FROM cameras;"
-    result, error =executeQuery(query)
-    if error: return Response(str(error),500)
-    return str(result)
+    result, error = executeQuery(query)
+    if error: return web.Response(text=str(error),status=500)
+    return web.Response(text=str(result),status=200)

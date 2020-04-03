@@ -1,11 +1,12 @@
-@app.route('/right/update', methods=['POST'])
-def right_update():
-    f = fieldCheck(['camera_id', 'user_id', 'expiry'], request)
-    if f: return f
+@routes.post('/right/update')
+async def right_update(request):
+    data = await request.json()
+    f = fieldCheck(['camera_id', 'user_id', 'expiry'], data)
+    if f != None: return f
 
-    camera_id = request.form['camera_id']
-    user_id = request.form['user_id']
-    expiry = request.form['expiry']
+    camera_id = data['camera_id']
+    user_id = data['user_id']
+    expiry = data['expiry']
     query = """
     UPDATE access_rights 
     SET expiry = %s
@@ -14,16 +15,17 @@ def right_update():
     """
 
     result, error = executeQuery(query, expiry, camera_id, user_id)
-    if error: return Response(str(error), 500)
+    if error: return web.Response(text=str(error),status=500)
     return hasOneResult(result, "There are no access rights for that user and camera.", 404)
 
-@app.route('/right/get', methods=['GET'])
-def right_get():
-    f = fieldCheck(['camera_id', 'user_id'], request)
-    if f: return f
+@routes.get('/right/get')
+async def right_get(request):
+    data = await request.json()
+    f = fieldCheck(['camera_id', 'user_id'], data)
+    if f != None: return f
     
-    camera_id = request.form['camera_id']
-    user_id = request.form['user_id']
+    camera_id = data['camera_id']
+    user_id = data['user_id']
     query = """
     SELECT *
     FROM access_rights
@@ -31,35 +33,37 @@ def right_get():
     """
 
     result, error = executeQuery(query, camera_id, user_id)
-    if error: return Response(str(error), 500)
-    return str(result)
+    if error: return web.Response(text=str(error),status=500)
+    return web.Response(text=str(result), status=200)
 
 
-@app.route('/right/delete', methods=['DELETE'])
-def right_delete():
-    f = fieldCheck(['camera_id', 'user_id'], request)
-    if f: return f
+@routes.delete('/right/delete')
+async def right_delete(request):
+    data = await request.json()
+    f = fieldCheck(['camera_id', 'user_id'], data)
+    if f != None: return f
 
-    camera_id = request.form['camera_id']
-    user_id = request.form['user_id']
+    camera_id = data['camera_id']
+    user_id = data['user_id']
     query = """
     DELETE FROM access_rights
     WHERE camera_id = %s AND user_id = %s
     RETURNING *;
     """
     result, error = executeQuery(query, camera_id, user_id)
-    if error: return Response(str(error),500)
+    if error: return web.Response(text=str(error),status=500)
     
     return hasOneResult(result, "There are no access for that user and camera.", 404)
 
-@app.route('/right/create',methods=['POST'])
-def right_create():
-    f = fieldCheck(['camera_id', 'user_id', 'expiry'], request)
-    if f: return f
+@routes.post('/right/create')
+async def right_create(request):
+    data = await request.json()
+    f = fieldCheck(['camera_id', 'user_id', 'expiry'], data)
+    if f != None: return f
     
-    camera_id = request.form['camera_id']    
-    user_id = request.form['user_id']
-    expiry = request.form['expiry']
+    camera_id = data['camera_id']    
+    user_id = data['user_id']
+    expiry = data['expiry']
     query = """
     INSERT INTO access_rights (camera_id,user_id,expiry)
     VALUES (
@@ -68,12 +72,12 @@ def right_create():
     RETURNING *;
     """
     result, error = executeQuery(query,camera_id,user_id,expiry)
-    if error: return Response(str(error),500)
-    return str(result)
+    if error: return web.Response(text=str(error),status=500)
+    return web.Response(text=str(result), status=200)
 
-@app.route('/right/list',methods=['GET'])
-def right_list():
+@routes.get('/right/list')
+def right_list(request):
     query = "SELECT * FROM access_rights;"
-    result, error =executeQuery(query)
-    if error: return Response(str(error),500)
-    return str(result)
+    result, error = executeQuery(query)
+    if error: return web.Response(text=str(error),status=500)
+    return web.Response(text=str(result), status=200)
