@@ -18,8 +18,7 @@ export class StreamMessageService {
   };
 
   //use defaultStream to learn type and set default, i think..
-  private streamSource = new BehaviorSubject( this.defaultStream
-    );
+  private streamSource = new BehaviorSubject( this.defaultStream );
   selectedStream = this.streamSource.asObservable();
 
   constructor() { }

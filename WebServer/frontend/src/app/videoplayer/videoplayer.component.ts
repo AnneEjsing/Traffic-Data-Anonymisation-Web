@@ -1,7 +1,6 @@
 import { Component, OnInit, AfterViewInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
-import { RecordService } from "../_services/record.service";
 import {StreamMessageService, IMediaStream} from "../_services/streamMessage.service"
 
 @Component({
@@ -19,7 +18,7 @@ export class VideoplayerComponent implements AfterViewInit {
   api: VgAPI;
   bitrates: BitrateOption[];
 
-  constructor(private recordService: RecordService, private streamService: StreamMessageService) {}
+  constructor(private streamService: StreamMessageService) {}
 
   onPlayerReady(api: VgAPI) {
     this.api = api;
@@ -54,14 +53,5 @@ export class VideoplayerComponent implements AfterViewInit {
 
   setBitrate(option: BitrateOption) {
     if (this.currentStream.type == "hls") this.vgHls.setBitrate(option);
-  }
-
-  async startRecord(time: string) {
-    let res = await this.recordService.postRecordInfo(
-      this.currentStream.source,
-      time
-    );
-    if (res === 200) console.log("success");
-    else console.log("error");
   }
 }

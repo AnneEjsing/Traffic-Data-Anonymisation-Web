@@ -10,13 +10,15 @@ import { RecordService } from './_services/record.service';
 import { HttpClientModule } from "@angular/common/http";
 import { SidemenuComponent } from './sidemenu/sidemenu.component';
 import { StreamMessageService } from './_services/streamMessage.service';
+import { VideoUtilsComponent } from './video-utils/video-utils.component';
 
 @NgModule({
   declarations: [
     HomepageComponent,
     LoginComponent,
     VideoplayerComponent,
-    SidemenuComponent
+    SidemenuComponent,
+    VideoUtilsComponent
   ],
   imports: [
     BrowserModule,
