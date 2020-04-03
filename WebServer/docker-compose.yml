@@ -41,8 +41,20 @@ services: # Here we define our service(s)
       dockerfile: Dockerfile
     ports:
       - "1440:1440"
-    links:
+    depends_on:
       - dbresolver
+    networks:
+      - traffic_net
+
+  dispatcher:
+    container_name: dispatcher
+    depends_on:
+      - profile_service
+    build:
+      context: ./microservices/dispatcher/
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"
     networks:
       - traffic_net
 

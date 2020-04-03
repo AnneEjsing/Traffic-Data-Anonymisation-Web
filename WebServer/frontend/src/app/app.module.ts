@@ -6,13 +6,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomepageComponent } from './homepage/homepage.component';
 import { LoginComponent } from './login/login.component';
 import { VideoplayerComponent } from './videoplayer/videoplayer.component';
-import { VgCoreModule, VgControlsModule, VgStreamingModule, VgOverlayPlayModule, VgBufferingModule} from 'ngx-videogular';
+import { VgCoreModule, VgControlsModule, VgStreamingModule, VgOverlayPlayModule, VgBufferingModule } from 'ngx-videogular';
+import { ProfileService } from './_services/profile.service';
+import { HttpClientModule } from "@angular/common/http";
+import { LoginService } from './_services/login.service';
 
 @NgModule({
   declarations: [
     HomepageComponent,
     LoginComponent,
-    VideoplayerComponent,                          
+    VideoplayerComponent,
     HomepageComponent,
   ],
   imports: [
@@ -23,9 +26,13 @@ import { VgCoreModule, VgControlsModule, VgStreamingModule, VgOverlayPlayModule,
     VgControlsModule,
     VgOverlayPlayModule,
     VgBufferingModule,
-    VgStreamingModule
+    VgStreamingModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [
+    ProfileService,
+    LoginService
+  ],
   bootstrap: [HomepageComponent]
 })
 export class AppModule { }
