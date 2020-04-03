@@ -8,12 +8,15 @@ import { VideoplayerComponent } from './videoplayer/videoplayer.component';
 import { VgCoreModule, VgControlsModule, VgStreamingModule, VgOverlayPlayModule, VgBufferingModule} from 'ngx-videogular';
 import { RecordService } from './_services/record.service';
 import { HttpClientModule } from "@angular/common/http";
+import { SidemenuComponent } from './sidemenu/sidemenu.component';
+import { StreamMessageService } from './_services/streamMessage.service';
 
 @NgModule({
   declarations: [
     HomepageComponent,
     LoginComponent,
-    VideoplayerComponent
+    VideoplayerComponent,
+    SidemenuComponent
   ],
   imports: [
     BrowserModule,
@@ -27,7 +30,8 @@ import { HttpClientModule } from "@angular/common/http";
     HttpClientModule
   ],
   providers: [
-    RecordService
+    RecordService,
+    StreamMessageService
   ],
   bootstrap: [HomepageComponent]
 })

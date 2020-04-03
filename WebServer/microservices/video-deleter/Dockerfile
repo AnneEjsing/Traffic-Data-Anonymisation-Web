@@ -9,4 +9,4 @@ ADD ./ /app
 
 WORKDIR /app
 
-ENTRYPOINT [ "python3", "-u", "change_ml.py"]
+ENTRYPOINT [ "python", "-u", "deleter.py"]

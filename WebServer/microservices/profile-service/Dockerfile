@@ -9,4 +9,4 @@ ADD ./ /app
 
 WORKDIR /app
 
-ENTRYPOINT [ "python3", "-u", "change_ml.py"]
+ENTRYPOINT [ "python3", "-u", "profileService.py"]
