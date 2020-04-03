@@ -18,14 +18,14 @@ export class FileuploadService {
     formData.forEach((value,key) => {
       console.log(key+" "+value)
     });
-    //var endpoint: string = this.dispatcherUrl + "model/upload"
-    var endpoint: string = "http://localhost:1339/model/upload" 
+    
+    var endpoint: string = this.dispatcherUrl + "model/upload"
 
     let res = await this.http
       .post(endpoint, formData, { headers: new HttpHeaders(), responseType: "text" })
       .toPromise()
       .then(
-        data => { return 200; },
+        data => { return '200'; },
         error => { return error.status; }
       );
 

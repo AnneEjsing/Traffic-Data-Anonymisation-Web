@@ -36,7 +36,7 @@ export class VideoUtilsComponent implements OnInit {
       this.source,
       time
     );
-    if (res === 200) console.log("success");
+    if (res === '200') console.log("success");
     else console.log("error");
   }
 

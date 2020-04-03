@@ -11,8 +11,7 @@ readonly dispatcherUrl = global.dispatcherUrl;
 
   async postRecordInfo(url: string, seconds: string) {
       var obj: any = { "url": url, "length": seconds };
-      //var endpoint: string = this.dispatcherUrl + "video/record";
-      var endpoint: string = "http://videodownloader:1336/record/interval"
+      var endpoint: string = this.dispatcherUrl + "record/interval";
 
       let res = await this.http.post( endpoint, obj,
           { headers: new HttpHeaders({
