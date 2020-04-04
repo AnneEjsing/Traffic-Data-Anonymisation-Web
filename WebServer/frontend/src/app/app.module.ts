@@ -10,9 +10,11 @@ import { RecordService } from './_services/record.service';
 import { HttpClientModule } from "@angular/common/http";
 import { SidemenuComponent } from './sidemenu/sidemenu.component';
 import { StreamMessageService } from './_services/streamMessage.service';
+import { AppComponent } from './app.component';
 
 @NgModule({
   declarations: [
+    AppComponent,
     HomepageComponent,
     LoginComponent,
     VideoplayerComponent,
@@ -33,6 +35,6 @@ import { StreamMessageService } from './_services/streamMessage.service';
     RecordService,
     StreamMessageService
   ],
-  bootstrap: [HomepageComponent]
+  bootstrap: [AppComponent]
 })
 export class AppModule { }

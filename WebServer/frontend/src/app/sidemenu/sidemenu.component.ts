@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Subscription, timer } from "rxjs";
 import {StreamMessageService, IMediaStream} from "../_services/streamMessage.service"
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-sidemenu',
@@ -41,7 +42,10 @@ export class SidemenuComponent implements OnInit {
     }
   ];
 
-  constructor(private streamService: StreamMessageService) { }
+  constructor(
+    private streamService: StreamMessageService,
+    private router: Router,
+    ) { }
   
 
   
