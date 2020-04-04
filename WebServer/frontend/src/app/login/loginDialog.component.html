@@ -1,0 +1,20 @@
+<h1 mat-dialog-title>Login</h1>
+<div *ngIf="failedLogin" mat-dialog-content>
+  <p style="color: red;">Failed Login</p>
+</div>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>email</mat-label>
+    <input matInput [(ngModel)]="data.email">
+  </mat-form-field>
+</div>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>password</mat-label>
+    <input matInput [(ngModel)]="data.password">
+  </mat-form-field>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">No Thanks</button>
+  <button mat-button [disabled]="requesting" (click)="awaitLogin()" cdkFocusInitial>Ok</button>
+</div>

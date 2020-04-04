@@ -1,8 +1,8 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { Component, AfterViewInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
 import { RecordService } from "../_services/record.service";
-import {StreamMessageService, IMediaStream} from "../_services/streamMessage.service"
+import {StreamMessageService, IMediaStream} from "../_services/streamMessage.service";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,7 +19,8 @@ export class VideoplayerComponent implements AfterViewInit {
   api: VgAPI;
   bitrates: BitrateOption[];
 
-  constructor(private recordService: RecordService, private streamService: StreamMessageService) {}
+  constructor(private recordService: RecordService,
+     private streamService: StreamMessageService,) {}
 
   onPlayerReady(api: VgAPI) {
     this.api = api;

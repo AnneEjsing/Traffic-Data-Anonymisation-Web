@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject} from '@angular/core';
 import { Subscription, timer } from "rxjs";
 import {StreamMessageService, IMediaStream} from "../_services/streamMessage.service"
 import { Router } from '@angular/router';
+import { LoginDialog, DialogData } from "../login/loginDialog.component";
+import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-sidemenu',
@@ -41,15 +44,36 @@ export class SidemenuComponent implements OnInit {
         "https://mnmedias.api.telequebec.tv/m3u8/29880.m3u8"
     }
   ];
-
+  
+  loggedIn:boolean = false;
+  email:string;
+  
   constructor(
     private streamService: StreamMessageService,
     private router: Router,
+    public dialog: MatDialog,
     ) { }
   
+  openDialog(): void {
+    const dialogRef = this.dialog.open(LoginDialog, {
+      width: '250px',
+      data: {email: "", password: ""}
+    });
 
-  
+    dialogRef.afterClosed().subscribe( data => {
+      console.log('The dialog was closed');
+      if (localStorage.getItem('email') != null){
+        this.loggedIn = true;
+        this.email = data;
+      }
+    });
+  }
+
   ngOnInit(): void {
+    //This just while testing.
+    localStorage.clear();
+
+
     this.streamService.changeStream(this.streams[0])
     this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
   }
@@ -61,6 +85,5 @@ export class SidemenuComponent implements OnInit {
             t.unsubscribe();
         }
     );
-}
-
+  }
 }
