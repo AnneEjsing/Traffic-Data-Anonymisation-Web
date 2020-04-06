@@ -103,8 +103,12 @@ async def authenticator(request):
 ###### Video downloader endpoints
 @routes.post("/record/interval")
 async def record_continuous(request):
-    #Maybe authenticate???
-    return postQueryAsync("/record/interval", request.json())
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised = authenticate(token)
+    if (isAuthorised):
+        return postQueryAsync("/record/interval", request.json())
+    else:
+        return web.Response(text="User must be logged in to downloade a video", status=401)
 
 
 app = web.Application()

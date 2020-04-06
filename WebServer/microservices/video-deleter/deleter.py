@@ -14,6 +14,7 @@ def periodically_delete(delay,days):
     while True:
         #Query the database
         response = requests.get(queryString)
+        # TODO: fix....
         if response.status_code != 200:
             print(str(response.status_code) +": "+response.content.decode('utf-8'))
         
@@ -41,6 +42,7 @@ def periodically_delete(delay,days):
 
             #In the database
             response = requests.delete(dbr+"video/delete",headers={'Content-type': 'application/json'},json={"video_id":v_id})
+            # TODO: fix....
             if response.status_code != 200:
                 print(str(response.status_code) +": "+response.content.decode('utf-8'))
 

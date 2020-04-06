@@ -9,20 +9,18 @@ export class RecordService {
 
   constructor(private http: HttpClient) { }
 
-  async postRecordInfo(url: string, seconds: string) {
-    var obj: any = {
+  async postRecordInfo(url: string, seconds: string, userId: string, cameraId: string) {
+    var data: any = {
       "url": url,
-      "length": seconds
+      "length": seconds,
+      "user_id": userId,
+      "camera_id": cameraId,
     };
 
     let res = await this.http.post(
       global.dispatcherUrl + "/record/interval",
-      obj,
-      {
-        headers: new HttpHeaders({
-          'Content-Type': 'application/json',
-        }), responseType: 'text'
-      })
+      data,
+      this.constructHttpOptions())
       .toPromise().then(
         data => { return '200' },
         error => { return error.status }
@@ -35,6 +33,7 @@ export class RecordService {
     const httpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + localStorage.getItem('session_token'),
       })
     };
 

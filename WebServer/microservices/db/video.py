@@ -22,7 +22,6 @@ async def video_update(request):
 @routes.get('/video/get')
 async def video_get(request):
     data = await request.json()
-    print(data['video_id'])
     f = fieldCheck(['video_id'], data)
     if f != None: return f
     
