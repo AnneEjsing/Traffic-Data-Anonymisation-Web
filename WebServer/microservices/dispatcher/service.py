@@ -127,5 +127,5 @@ app.add_routes(routes)
 for route in app.router.routes():
     cors.add(route)
 
-print("Dispatcher is running")
+
 web.run_app(app, host='0.0.0.0', port=443)

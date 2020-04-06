@@ -3,10 +3,10 @@ FROM python:jessie
 
 COPY requirements.txt requirements.txt
 
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 ADD ./ /app
 
 WORKDIR /app
 
-ENTRYPOINT [ "python", "-u", "deleter.py"]
+ENTRYPOINT [ "python3", "-u", "deleter.py"]

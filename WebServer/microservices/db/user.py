@@ -109,7 +109,5 @@ async def user_signup(request):
 def user_list(request):
     query = "SELECT * FROM users;"
     result, error = executeQuery(query)
-    print("Result: " + str(result))
-    print("Error: " + str(result))
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=str(result), status=200)

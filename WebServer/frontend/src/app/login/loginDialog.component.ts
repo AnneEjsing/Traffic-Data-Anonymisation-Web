@@ -27,7 +27,7 @@ export class LoginDialog {
 
   async awaitLogin() {
     this.requesting = true;
-    const res = await (await this.loginService.login(this.data.email, this.data.password));
+    const res = await this.loginService.login(this.data.email, this.data.password);
     this.requesting = false;
 
     if (res == 200) {
