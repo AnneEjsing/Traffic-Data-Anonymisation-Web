@@ -27,5 +27,4 @@ export class StreamMessageService {
   changeStream(stream: IMediaStream) {
     this.streamSource.next(stream)
   }
-
 }
