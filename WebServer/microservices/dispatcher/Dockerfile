@@ -9,4 +9,4 @@ ADD ./ /app
 
 WORKDIR /app
 
-ENTRYPOINT [ "python3", "-u", "profile-service.py"]
+ENTRYPOINT [ "python3", "-u", "service.py", "--urls", "http://*:443"]
