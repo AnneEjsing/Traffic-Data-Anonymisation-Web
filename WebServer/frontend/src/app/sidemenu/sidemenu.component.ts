@@ -6,7 +6,7 @@ import { LoginDialog, DialogData } from "../login/loginDialog.component";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from '../_services/auth.service';
 import { ProfileService } from '../_services/profile.service';
-
+import { Rights } from "../_models/user";
 
 @Component({
   selector: 'app-sidemenu',
@@ -84,7 +84,7 @@ export class SidemenuComponent implements OnInit {
             this.email = user.email;
           });
         }
-        else if (rights = "admin") {
+        else if (rights = Rights.admin) {
           this.profileService.getAdmin().then(user => {
             this.email = user.email;
           })
