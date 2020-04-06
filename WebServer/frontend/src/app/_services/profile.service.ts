@@ -16,6 +16,10 @@ export class ProfileService {
         return this.http.get<user>(this.dispatcherUrl + 'get/user', this.constructHttpOptions()).toPromise();
     }
 
+    async getAdmin(): Promise<user> {
+        return this.http.get<user>(this.dispatcherUrl + 'get/admin', this.constructHttpOptions()).toPromise();
+    }
+
     async listUsers(): Promise<string> {
         return this.http.get<string>(this.dispatcherUrl + "user/list").toPromise();
     }

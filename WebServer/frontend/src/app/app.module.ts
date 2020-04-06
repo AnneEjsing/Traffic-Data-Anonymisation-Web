@@ -17,6 +17,8 @@ import { DemoMaterialModule } from './material-module';
 import { LoginDialog } from "./login/loginDialog.component";
 import { MatDialogModule } from '@angular/material/dialog';
 import { LoginService } from './_services/login.service';
+import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
+import { AuthService } from './auth/auth.service';
 
 @NgModule({
   declarations: [
@@ -24,11 +26,11 @@ import { LoginService } from './_services/login.service';
     HomepageComponent,
     LoginComponent,
     VideoplayerComponent,
-    HomepageComponent,
     SidemenuComponent,
-    LoginDialog
+    LoginDialog,
   ],
   imports: [
+    MatDialogModule, //IDK why this needs to be explicit imported when part of DemoMatherialModule, the rest does not
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
@@ -46,10 +48,11 @@ import { LoginService } from './_services/login.service';
     LoginService,
     RecordService,
     StreamMessageService,
+    JwtHelperService,
+    AuthService,
+    { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
   ],
   bootstrap: [
-    HomepageComponent,
-    MatDialogModule, //IDK why this needs to be explicit imported when part of DemoMatherialModule, the rest does not
     AppComponent,
   ],
 })

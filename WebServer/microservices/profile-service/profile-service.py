@@ -2,7 +2,6 @@ import argparse
 import requests
 from urllib3._collections import HTTPHeaderDict
 from aiohttp import web
-import aiohttp_cors
 import asyncio
 import json
 
@@ -42,23 +41,6 @@ async def send_request(path, json, query_function):
 
 app = web.Application()
 
-#Temp to allow CORS (we dont have a dispatcher right?)
-# Configure default CORS settings.
-# resources = [
-#     '*',
-# ]
-
-aiohttp_cors.setup(app, defaults={
-    "*": aiohttp_cors.ResourceOptions(
-        allow_credentials=True,
-        expose_headers='*',
-        allow_methods='*',
-        allow_headers='*',
-    )
-})
 app.add_routes(routes)
-
-for route in app.router.routes():
-    app['aiohttp_cors'].add(route)
 
 web.run_app(app, host='0.0.0.0', port=1338)

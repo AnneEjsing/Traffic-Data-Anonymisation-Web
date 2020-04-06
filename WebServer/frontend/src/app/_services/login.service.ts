@@ -7,16 +7,15 @@ export class LoginService {
     constructor(private http: HttpClient) { }
 
     //readonly dispatcherUrl = global.dispatcherUrl;
-    readonly ProfileServiceUrl = "http://192.168.99.100:1338/"
+    readonly dispatcherUrl = "http://localhost:443/"
+
     async login(email: string, password: string) {
         const headers = this.constructHttpHeader(email, password);
-        let res = await this.http.post(this.ProfileServiceUrl + "login",
-            { "email": email, "password": password },
+        let res = await this.http.get(this.dispatcherUrl + "login",
             { headers, responseType: 'text' }
         ).toPromise().then(
             data => {
                 localStorage.setItem('session_token', data);
-                localStorage.setItem('email', email);
                 return 200;
             },
             error => {

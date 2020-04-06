@@ -1,9 +1,11 @@
-import { Component, OnInit, Inject} from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { Subscription, timer } from "rxjs";
-import {StreamMessageService, IMediaStream} from "../_services/streamMessage.service"
+import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service"
 import { Router } from '@angular/router';
 import { LoginDialog, DialogData } from "../login/loginDialog.component";
-import {MatDialog, MatDialogRef, MAT_DIALOG_DATA} from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { AuthService } from '../auth/auth.service';
+import { ProfileService } from '../_services/profile.service';
 
 
 @Component({
@@ -44,35 +46,53 @@ export class SidemenuComponent implements OnInit {
         "https://mnmedias.api.telequebec.tv/m3u8/29880.m3u8"
     }
   ];
-  
-  loggedIn:boolean = false;
-  email:string;
-  
+
+  loggedIn: boolean = false;
+  email: string;
+
   constructor(
     private streamService: StreamMessageService,
     private router: Router,
     public dialog: MatDialog,
-    ) { }
-  
+    private auth: AuthService,
+    private profileService: ProfileService,
+  ) { }
+
   openDialog(): void {
     const dialogRef = this.dialog.open(LoginDialog, {
       width: '250px',
-      data: {email: "", password: ""}
+      data: { email: "", password: "" }
     });
 
-    dialogRef.afterClosed().subscribe( data => {
-      console.log('The dialog was closed');
-      if (localStorage.getItem('email') != null){
-        this.loggedIn = true;
-        this.email = data;
-      }
+    dialogRef.afterClosed().subscribe(data => {
+      this.auth.isAuthenticated().toPromise().then(response => {
+        if (response) {
+          this.loggedIn = true;
+          this.email = data;
+        }
+      });
     });
   }
 
   ngOnInit(): void {
-    //This just while testing.
-    localStorage.clear();
-
+    this.auth.isAuthenticated().toPromise().then(response => {
+      if (response) {
+        this.loggedIn = true;
+        var rights = "admin";
+        if (rights == "user") {
+          this.profileService.getUser().then(user => {
+            this.email = user.email;
+            console.log("Im in here");
+          });
+        }
+        else if (rights = "admin") {
+          this.profileService.getAdmin().then(user => {
+            this.email = user.email;
+            console.log("I am an admin!!!");
+          })
+        }
+      }
+    });
 
     this.streamService.changeStream(this.streams[0])
     this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
@@ -80,10 +100,10 @@ export class SidemenuComponent implements OnInit {
 
   onClickStream(stream: IMediaStream) {
     let t: Subscription = timer(0, 10).subscribe(
-        () => {
-            this.streamService.changeStream(stream);
-            t.unsubscribe();
-        }
+      () => {
+        this.streamService.changeStream(stream);
+        t.unsubscribe();
+      }
     );
   }
 }

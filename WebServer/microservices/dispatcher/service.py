@@ -10,7 +10,10 @@ from authToken import create_token, verify_credentials, verify_token, get_user_i
 routes = web.RouteTableDef()
 
 profileService = "http://profileservice:1338"
+videoDownloadService = "http://videodownloader:1336"
 
+
+###### Standard Get, Post, Delete, Out Requests
 async def getQueryAsync(queryString, json):
     async with ClientSession() as session:
         async with session.get(queryString, json=json) as response:
@@ -42,7 +45,7 @@ async def putQueryAsync(queryString, data):
                 return web.Response(text=await response.text())
             return web.Response(status=response.status)
 
-
+###### Userservice endpoints
 @routes.get('/login')
 async def login(request):
     auth = request.headers['Authorization']
@@ -89,10 +92,19 @@ async def listUsers(request):
     listString = profileService + "/list"
     return await getQueryAsync(listString, json.dumps({}))
 
+
+###### Authenticate endpoint
 @routes.get("/auth/authenticate")
 async def authenticator(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
     return web.Response(text=json.dumps((authenticate(token))))
+
+
+###### Video downloader endpoints
+@routes.post("/record/interval")
+async def record_continuous(request):
+    #Maybe authenticate???
+    return postQueryAsync("/record/interval", request.json())
 
 
 app = web.Application()
