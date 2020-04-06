@@ -1,5 +1,5 @@
 
-@routes.post('/user/login')
+@routes.get('/user/login')
 async def user_login(request):
     data = await request.json()
     f = fieldCheck(['email','password'], data)
@@ -14,7 +14,15 @@ async def user_login(request):
     """
     result, error = executeQuery(query,email,password)
     if error: return web.Response(text=str(error),status=500)
-    return hasOneResult(result,"Login credentials are not valid", 401)
+    
+    if (len(result) == 1):
+        id = result[0][0]
+        rights = result[0][2]
+        data = json.dumps({ "id" : id, "rights": rights })
+
+        return web.Response(text=data,status=200)
+    else: 
+        return web.Response(text="Login credentials are not valid", status=401)
 
 @routes.post('/user/update')
 async def user_update(request):
@@ -52,7 +60,12 @@ async def user_get(request):
 
     result, error = executeQuery(query, id)
     if error: return web.Response(text=str(error), status=500)
-    return web.Response(text=str(result), status=200)
+    
+    id = result[0][0]
+    email = result[0][1]
+    rights = result[0][2]
+    data = json.dumps({ "id" : id, "email" : email, "rights": rights })
+    return web.Response(text=data, status=200)
 
 
 @routes.delete('/user/delete')

@@ -9,4 +9,4 @@ ADD ./ /app
 
 WORKDIR /app
 
-ENTRYPOINT [ "python3", "-u", "deleter.py"]
+ENTRYPOINT [ "python3", "-u", "service.py", "--urls", "http://*:443"]

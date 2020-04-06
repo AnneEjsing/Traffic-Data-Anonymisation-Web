@@ -21,6 +21,7 @@
     "@angular/platform-browser": "~9.0.2",
     "@angular/platform-browser-dynamic": "~9.0.2",
     "@angular/router": "~9.0.2",
+    "@auth0/angular-jwt": "^4.0.0",
     "hls.js": "^0.13.2",
     "ngx-videogular": "^9.0.1",
     "rxjs": "~6.5.4",

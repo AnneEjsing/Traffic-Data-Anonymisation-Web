@@ -1,22 +1,20 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-
+import * as global from "./dispatcherConnection.service";
 
 @Injectable()
 export class LoginService {
     constructor(private http: HttpClient) { }
 
-    //readonly dispatcherUrl = global.dispatcherUrl;
-    readonly ProfileServiceUrl = "http://192.168.99.100:1338/"
+    readonly dispatcherUrl = global.dispatcherUrl;
+
     async login(email: string, password: string) {
         const headers = this.constructHttpHeader(email, password);
-        let res = await this.http.post(this.ProfileServiceUrl + "login",
-        {"email": email, "password": password},
+        let res = await this.http.get(this.dispatcherUrl + "login",
             { headers, responseType: 'text' }
         ).toPromise().then(
             data => {
                 localStorage.setItem('session_token', data);
-                localStorage.setItem('email', email);
                 return 200;
             },
             error => {

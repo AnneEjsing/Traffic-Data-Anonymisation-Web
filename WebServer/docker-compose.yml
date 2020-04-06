@@ -8,11 +8,7 @@ networks:
         - subnet: "172.20.0.0/24"
 
 services: # Here we define our service(s)
-  angular-service: # The name of the service
-    container_name: angularcontainer # Container name
-    build: ./frontend # Location of our Dockerfile
-    ports: # Port mapping
-      - "80:8080"
+  
 
   videodownloader:
     container_name: videodownloader
@@ -37,6 +33,8 @@ services: # Here we define our service(s)
       - "1337:1337"
     links:
       - postgres
+    depends_on:
+      - postgres
     networks:
       - traffic_net
     depends_on:
@@ -52,6 +50,21 @@ services: # Here we define our service(s)
       - "1338:1338"
     links:
       - dbresolver
+    depends_on:
+      - dbresolver
+    networks:
+      - traffic_net
+  
+  dispatcher:
+    container_name: dispatcher
+    depends_on:
+      - profileservice
+      - videodownloader
+    build:
+      context: ./microservices/dispatcher/
+      dockerfile: Dockerfile
+    ports:
+      - "443:443"
     networks:
       - traffic_net
     depends_on:

@@ -46,6 +46,7 @@ def work(data):
 
     # Queries the database with the video entry.
     response = requests.post(dbr+"video/create", headers={'Content-type': 'application/json'},json={"user_id":user_id,"camera_id":camera_id,"video_thumbnail":""})
+    # TODO: Fix...
     if response.status_code != 200:
         print(str(response.content.decode('utf-8')))
     
