@@ -82,13 +82,11 @@ export class SidemenuComponent implements OnInit {
         if (rights == "user") {
           this.profileService.getUser().then(user => {
             this.email = user.email;
-            console.log("Im in here");
           });
         }
         else if (rights = "admin") {
           this.profileService.getAdmin().then(user => {
             this.email = user.email;
-            console.log("I am an admin!!!");
           })
         }
       }
