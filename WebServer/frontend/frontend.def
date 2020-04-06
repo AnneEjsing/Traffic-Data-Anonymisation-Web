@@ -1,0 +1,59 @@
+BootStrap: docker
+From: node:10-alpine
+Stage: dependencies
+
+
+%files
+    *.json /
+
+%post
+    export NG_CLI_ANALYTICS=off
+    npm install
+    npm ci
+    mkdir /ng-app
+
+    mv node_modules ng-app/
+    mv *.json ng-app/
+
+
+# ===== Build ======
+BootStrap: docker
+From: node:10-alpine
+Stage: build
+
+%files from dependencies
+    ng-app /
+
+%files
+    src /ng-app/src
+
+%post
+    cd ng-app
+    npm run ng build -- --prod --output-path=dist
+
+
+# ====== Nginx =======
+BootStrap: docker
+From: nginx:1.14.1-alpine
+
+%help
+    run: mkdir -p singularity_nginx && singularity run --fakeroot -B singularity_nginx:/var frontend.sif
+
+%files from build
+    /ng-app/dist /
+
+%files
+    nginx/default.conf /etc/nginx/conf.d/
+
+%post
+    rm -rf /usr/share/nginx/html/*
+    mv dist /usr/share/nginx/html
+
+%runscript
+    mkdir -p /var/cache/nginx/client_temp
+    mkdir -p /var/log/nginx
+    mkdir -p /var/run
+    touch /var/run/nginx.pid
+    
+    echo "Launching nginx"
+    nginx -g 'daemon off;'

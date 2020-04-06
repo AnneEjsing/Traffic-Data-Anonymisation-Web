@@ -6,9 +6,12 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 export class LoginService {
     constructor(private http: HttpClient) { }
 
+    //readonly dispatcherUrl = global.dispatcherUrl;
+    readonly ProfileServiceUrl = "http://192.168.99.100:1338/"
     async login(email: string, password: string) {
         const headers = this.constructHttpHeader(email, password);
-        let res = await this.http.get("http:/localhost:443/login",
+        let res = await this.http.post(this.ProfileServiceUrl + "login",
+            { "email": email, "password": password },
             { headers, responseType: 'text' }
         ).toPromise().then(
             data => {
@@ -28,11 +31,10 @@ export class LoginService {
     constructHttpHeader(email: string, password: string) {
         const httpHeader = new HttpHeaders({
             'Content-Type': 'application/json',
-            'Authorization': 'Basic ' + btoa(email + ':' + password)
+            'Authorization': 'Basic ' + btoa(email + ':' + password),
         });
 
         return httpHeader;
     }
+
 }
-
-

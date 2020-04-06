@@ -12,15 +12,21 @@ services: # Here we define our service(s)
     container_name: angularcontainer # Container name
     build: ./frontend # Location of our Dockerfile
     ports: # Port mapping
-      - "80:80"
+      - "80:8080"
 
-  receiver:
-    container_name: receivercontainer
+  downloader:
+    container_name: videodownloader
     build:
-      context: ./microservices/receiver/
+      context: ./microservices/video-download/
       dockerfile: Dockerfile
     ports:
-      - "443:443"
+      - "1336:1336"
+    volumes:
+      - "./videodata:/var/lib/videodata"
+    networks:
+      - traffic_net
+    depends_on:
+      - dbresolver
 
   dbresolver:
     container_name: dbresolver
@@ -34,14 +40,14 @@ services: # Here we define our service(s)
     networks:
       - traffic_net
 
-  profile_service:
-    container_name: profile_service
+  profileservice:
+    container_name: profileservice
     build:
-      context: ./microservices/profileService/
+      context: ./microservices/profile-service/
       dockerfile: Dockerfile
     ports:
-      - "1440:1440"
-    depends_on:
+      - "1338:1338"
+    links:
       - dbresolver
     networks:
       - traffic_net
