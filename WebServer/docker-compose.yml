@@ -13,6 +13,10 @@ services: # Here we define our service(s)
     build: ./frontend # Location of our Dockerfile
     ports: # Port mapping
       - "80:8080"
+    depends_on:
+      - dispatcher
+    networks:
+    - traffic_net
 
   downloader:
     container_name: videodownloader
@@ -37,6 +41,8 @@ services: # Here we define our service(s)
       - "1337:1337"
     links:
       - postgres
+    depends_on:
+      - postgres
     networks:
       - traffic_net
 
@@ -49,13 +55,16 @@ services: # Here we define our service(s)
       - "1338:1338"
     links:
       - dbresolver
+    depends_on:
+      - dbresolver
     networks:
       - traffic_net
-
+  
   dispatcher:
     container_name: dispatcher
     depends_on:
       - profileservice
+      - videodownloader
     build:
       context: ./microservices/dispatcher/
       dockerfile: Dockerfile
