@@ -1,4 +1,4 @@
-import { Component, OnInit, AfterViewInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { Component, AfterViewInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
 import {StreamMessageService, IMediaStream} from "../_services/streamMessage.service"
