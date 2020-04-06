@@ -4,7 +4,7 @@ import { StreamMessageService, IMediaStream } from "../_services/streamMessage.s
 import { Router } from '@angular/router';
 import { LoginDialog, DialogData } from "../login/loginDialog.component";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AuthService } from '../auth/auth.service';
+import { AuthService } from '../_services/auth.service';
 import { ProfileService } from '../_services/profile.service';
 
 
@@ -75,10 +75,10 @@ export class SidemenuComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.auth.isAuthenticated().toPromise().then(response => {
-      if (response) {
+    this.auth.getRole().toPromise().then(rights => {
+      if (rights) {
         this.loggedIn = true;
-        var rights = "admin";
+
         if (rights == "user") {
           this.profileService.getUser().then(user => {
             this.email = user.email;

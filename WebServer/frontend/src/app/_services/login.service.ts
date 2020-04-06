@@ -1,13 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
-
+import * as global from "./dispatcherConnection.service";
 
 @Injectable()
 export class LoginService {
     constructor(private http: HttpClient) { }
 
-    //readonly dispatcherUrl = global.dispatcherUrl;
-    readonly dispatcherUrl = "http://localhost:443/"
+    readonly dispatcherUrl = global.dispatcherUrl;
 
     async login(email: string, password: string) {
         const headers = this.constructHttpHeader(email, password);

@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { user } from '../_models/user';
 import { rejects } from 'assert';
-
+import * as global from "./dispatcherConnection.service";
 
 @Injectable()
 export class ProfileService {
@@ -10,7 +10,7 @@ export class ProfileService {
         private http: HttpClient,
     ) { }
 
-    readonly dispatcherUrl = "http://localhost:443/";
+    readonly dispatcherUrl = global.dispatcherUrl;
 
     async getUser(): Promise<user> {
         return this.http.get<user>(this.dispatcherUrl + 'get/user', this.constructHttpOptions()).toPromise();

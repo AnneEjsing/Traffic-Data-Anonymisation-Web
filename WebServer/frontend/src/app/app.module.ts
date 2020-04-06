@@ -18,7 +18,7 @@ import { LoginDialog } from "./login/loginDialog.component";
 import { MatDialogModule } from '@angular/material/dialog';
 import { LoginService } from './_services/login.service';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
-import { AuthService } from './auth/auth.service';
+import { AuthService } from './_services/auth.service';
 
 @NgModule({
   declarations: [

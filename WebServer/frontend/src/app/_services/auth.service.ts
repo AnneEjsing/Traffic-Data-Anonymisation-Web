@@ -4,6 +4,7 @@ import { Token } from '../_models/token';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, of } from 'rxjs';
 import { map } from 'rxjs/operators';
+import * as global from "./dispatcherConnection.service";
 
 @Injectable()
 export class AuthService {
@@ -12,7 +13,7 @@ export class AuthService {
     private http: HttpClient
   ) { }
 
-  readonly dispatcherUrl = "http://localhost:443/";
+  readonly dispatcherUrl = global.dispatcherUrl;
 
   public isAuthenticatedAdmin(): Observable<boolean> {
     return this.getRole().pipe(map(value => {
