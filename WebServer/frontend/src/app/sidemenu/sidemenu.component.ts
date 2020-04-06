@@ -79,7 +79,7 @@ export class SidemenuComponent implements OnInit {
       if (rights) {
         this.loggedIn = true;
 
-        if (rights == "user") {
+        if (rights == Rights.user) {
           this.profileService.getUser().then(user => {
             this.email = user.email;
           });
