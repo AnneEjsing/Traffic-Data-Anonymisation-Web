@@ -5,15 +5,15 @@ import asyncio
 import aiohttp_cors
 
 # Used for token creation and Verification
-from authToken import create_token, verify_credentials, verify_token, system_roles, get_user_id, authenticate
+from authToken import create_token, verify_credentials, verify_token, get_user_id, authenticate
 
 routes = web.RouteTableDef()
 
-profileService = "http://profile_service:1440"
+profileService = "http://profileservice:1338"
 
-async def getQueryAsync(queryString):
+async def getQueryAsync(queryString, json):
     async with ClientSession() as session:
-        async with session.get(queryString) as response:
+        async with session.get(queryString, json=json) as response:
             if(response.status == 200):
                 return web.Response(text=await response.text())
             return web.Response(status=response.status)
@@ -47,10 +47,10 @@ async def putQueryAsync(queryString, data):
 async def login(request):
     auth = request.headers['Authorization']
     decoded = BasicAuth.decode(auth)
-    isSuccess, userId, entityType = verify_credentials(
+    isSuccess, userId, rights = verify_credentials(
         decoded.login, decoded.password)
     if (isSuccess):
-        return web.Response(text=create_token(userId, entityType))
+        return web.Response(text=create_token(userId, rights))
     else:
         return web.Response(status=401)
 
@@ -64,18 +64,30 @@ async def userSignup(request):
 @routes.get('/get/user')
 async def getUser(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised, status_code = verify_token(token, system_roles.USER)
+    isAuthorised, status_code = verify_token(token, "user")
     if(isAuthorised):
         userId = get_user_id(token)
-        string = profileService + "/get?id=" + userId
-        return await getQueryAsync(string)
+        string = profileService + "/get"
+        return await getQueryAsync(string, { "id" : userId })
     else:
         return web.Response(status=status_code)
+
+@routes.get('/get/admin')
+async def getAdmin(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised, status_code = verify_token(token, "admin")
+    if(isAuthorised):
+        userId = get_user_id(token)
+        string = profileService + "/get"
+        return await getQueryAsync(string, { "id" : userId })
+    else:
+        return web.Response(status=status_code)
+
 
 @routes.get('/user/list')
 async def listUsers(request):
     listString = profileService + "/list"
-    return await getQueryAsync(listString)
+    return await getQueryAsync(listString, json.dumps({}))
 
 @routes.get("/auth/authenticate")
 async def authenticator(request):

@@ -9,21 +9,13 @@ from datetime import datetime, timedelta
 
 secretKey = 'The perfect trafic thing!'
 
-
-class system_roles(IntEnum):
-    USER = 0
-    ADMIN = 1
-
-
 def verify_credentials(email, pwd):
     data = {"email": email, "password": pwd}
-
-    resp = requests.request(method='get', url='http://profile_service:1440/login',
-                            data=json.dumps(data), headers={'content-type': 'text/json'})
+    resp = requests.request(method='get', url='http://profileservice:1338/login', headers={'content-type': 'text/json'}, json=data)
 
     if (resp.status_code == 200):
         json_data = resp.json()
-        return (True, json_data['id'], json_data['role'])
+        return (True, json_data['id'], json_data['rights'])
     else:
         return (False, "", "")
 
@@ -65,7 +57,7 @@ def verify_token(token, desired_role):
 def is_authorized(token, desiredRole):
     header, payload, signature = token.split('.')
     id, subject, role, expiration = get_payload_info(payload)
-    return system_roles(role) == system_roles(desiredRole)
+    return role == desiredRole
 
 
 def get_user_id(token):
@@ -81,12 +73,12 @@ def verify_date(date):
 def get_payload_info(payload):
     text = base64.urlsafe_b64decode(payload + '=' * (4 - len(payload) % 4))
     jsonObj = json.loads(text)
-    return jsonObj['jid'], jsonObj['sub'], jsonObj['role'], jsonObj['exp']
+    return jsonObj['jid'], jsonObj['sub'], jsonObj['rights'], jsonObj['exp']
 
 
-def create_token(userId, entityType):
+def create_token(userId, rights):
     header = encode(create_header())
-    payload = encode(create_payload(userId, entityType))
+    payload = encode(create_payload(userId, rights))
     signature = encode(create_signature(header, payload))
     return '.'.join([header, payload, signature])
 
@@ -107,8 +99,8 @@ def create_header():
     return json.dumps({"alg": "HS512", "type": "JWT"})
 
 
-def create_payload(userId, entityType):
-    return json.dumps({'jid': '1', 'sub': userId, 'role': entityType, 'exp': generate_token_exp_time()})
+def create_payload(userId, rights):
+    return json.dumps({'jid': '1', 'sub': userId, 'rights': rights, 'exp': generate_token_exp_time()})
 
 
 def create_signature(header, payload):

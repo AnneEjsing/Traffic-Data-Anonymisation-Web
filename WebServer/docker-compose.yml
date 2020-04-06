@@ -55,7 +55,7 @@ services: # Here we define our service(s)
   dispatcher:
     container_name: dispatcher
     depends_on:
-      - profile_service
+      - profileservice
     build:
       context: ./microservices/dispatcher/
       dockerfile: Dockerfile
