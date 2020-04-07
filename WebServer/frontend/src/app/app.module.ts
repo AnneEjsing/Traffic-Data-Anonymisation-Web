@@ -19,6 +19,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { LoginService } from './_services/login.service';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { AuthService } from './_services/auth.service';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +29,7 @@ import { AuthService } from './_services/auth.service';
     VideoplayerComponent,
     SidemenuComponent,
     LoginDialog,
+    AboutComponent,
   ],
   imports: [
     MatDialogModule, //IDK why this needs to be explicit imported when part of DemoMatherialModule, the rest does not
