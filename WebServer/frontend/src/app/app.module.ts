@@ -19,6 +19,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { LoginService } from './_services/login.service';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { AuthService } from './_services/auth.service';
+import { VideoService } from './_services/video.service';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { AuthService } from './_services/auth.service';
     StreamMessageService,
     JwtHelperService,
     AuthService,
+    VideoService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
   ],
   bootstrap: [

@@ -9,9 +9,9 @@ from authToken import create_token, verify_credentials, verify_token, get_user_i
 
 routes = web.RouteTableDef()
 
-profileService = "http://profileservice:1338"
 videoDownloadService = "http://videodownloader:1336"
-
+profileService = "http://profileservice:1338"
+videoSettingsService = "http://videoservice:1339"
 
 ###### Standard Get, Post, Delete, Out Requests
 async def getQueryAsync(queryString, json):
@@ -110,6 +110,26 @@ async def record_continuous(request):
     else:
         return web.Response(text="User must be logged in to downloade a video", status=401)
 
+###### Video settings endpoints
+@routes.get('/settings/get')
+async def get_settings(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised, status_code = verify_token(token, "admin")
+    if(isAuthorised):
+        string = videoSettingsService + "/get"
+        return await getQueryAsync(string, { })
+    else:
+        return web.Response(status=status_code)
+
+@routes.post('/settings/update')
+async def update_settings(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised, status_code = verify_token(token, "admin")
+    if(isAuthorised):
+        string = videoSettingsService + "/update"
+        return await postQueryAsync(string, (await request.json()))
+    else:
+        return web.Response(status=status_code)
 
 app = web.Application()
 

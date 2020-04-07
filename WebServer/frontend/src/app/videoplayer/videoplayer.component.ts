@@ -1,9 +1,11 @@
-import { Component, AfterViewInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { Component, AfterViewInit, ViewChild, ChangeDetectionStrategy, OnInit } from "@angular/core";
 import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
 import { RecordService } from "../_services/record.service";
 import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service";
 import { AuthService } from '../_services/auth.service';
+import { VideoService } from '../_services/video.service';
+import { videoSettings } from '../_models/video';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -11,7 +13,7 @@ import { AuthService } from '../_services/auth.service';
   templateUrl: "./videoplayer.component.html",
   styleUrls: ["./videoplayer.component.scss"]
 })
-export class VideoplayerComponent implements AfterViewInit {
+export class VideoplayerComponent implements AfterViewInit, OnInit {
   @ViewChild(VgHLS) vgHls: VgHLS;
 
   //Needs to be inizialised to something or it break...
@@ -19,12 +21,18 @@ export class VideoplayerComponent implements AfterViewInit {
 
   api: VgAPI;
   bitrates: BitrateOption[];
+  settings: videoSettings;
 
   constructor(
     private recordService: RecordService,
     private streamService: StreamMessageService,
     private auth: AuthService,
+    private videoService: VideoService,
   ) { }
+
+  ngOnInit() {
+    this.getSettings();
+  }
 
   onPlayerReady(api: VgAPI) {
     this.api = api;
@@ -58,6 +66,12 @@ export class VideoplayerComponent implements AfterViewInit {
 
   setBitrate(option: BitrateOption) {
     if (this.currentStream.type == "hls") this.vgHls.setBitrate(option);
+  }
+
+  getSettings() {
+    this.videoService.getSettings().then(settings => {
+      this.settings = settings;
+    });
   }
 
   async startRecord(time: string) {

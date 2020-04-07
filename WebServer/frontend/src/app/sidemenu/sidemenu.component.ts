@@ -7,6 +7,8 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { AuthService } from '../_services/auth.service';
 import { ProfileService } from '../_services/profile.service';
 import { Rights } from "../_models/user";
+import { VideoService } from '../_services/video.service';
+import { videoSettings } from '../_models/video';
 
 @Component({
   selector: 'app-sidemenu',
@@ -56,6 +58,7 @@ export class SidemenuComponent implements OnInit {
     public dialog: MatDialog,
     private auth: AuthService,
     private profileService: ProfileService,
+    private videoService: VideoService,
   ) { }
 
   openDialog(): void {
@@ -103,5 +106,20 @@ export class SidemenuComponent implements OnInit {
         t.unsubscribe();
       }
     );
+  }
+
+  getSettings() {
+    this.videoService.getSettings().then(settings => {
+      console.log(settings);
+    });
+  }
+
+  updateSettings() {
+    var newSettings: videoSettings = {
+      recording_limit: 2000,
+    }
+    this.videoService.updateSettings(newSettings).then(response => {
+      console.log(response)
+    });
   }
 }

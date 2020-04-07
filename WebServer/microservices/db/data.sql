@@ -37,6 +37,10 @@ CREATE TABLE public.cameras (
     owner uuid NOT NULL REFERENCES public.users(user_id)
 );
 
+CREATE TABLE public.video_settings (
+    recording_limit integer NOT NULL --secounds
+);
+
 CREATE TABLE public.recorded_videos (
     video_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     user_id uuid NOT NULL REFERENCES public.users(user_id),
@@ -60,5 +64,9 @@ ALTER TABLE public.users OWNER TO postgres;
 ALTER TABLE public.recorded_videos OWNER TO postgres;
 ALTER TABLE public.cameras OWNER TO postgres;
 ALTER TABLE public.access_rights OWNER TO postgres;
+ALTER TABLE public.video_settings OWNER TO postgres;
+
+-- Start up data
+INSERT INTO public.video_settings(recording_limit) VALUES (86400);
 
 

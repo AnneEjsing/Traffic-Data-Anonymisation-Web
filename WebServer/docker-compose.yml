@@ -59,7 +59,19 @@ services: # Here we define our service(s)
       - dbresolver
     networks:
       - traffic_net
-  
+
+  videoservice:
+    container_name: videoservice
+    build:
+      context: ./microservices/video-service/
+      dockerfile: Dockerfile
+    ports:
+      - "1339:1339"
+    depends_on:
+      - dbresolver
+    networks:
+      - traffic_net
+
   dispatcher:
     container_name: dispatcher
     depends_on:
