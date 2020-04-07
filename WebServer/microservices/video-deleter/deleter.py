@@ -37,6 +37,7 @@ def periodically_delete(delay,days):
             #Delete the video
             #In the file system
             if not os.path.exists(path+v_id+".mp4"):
+                logger.error(f"Could not delete file from path: {path+v_id}.mp4, as the path does not exist")
                 continue
             os.remove(path+v_id+".mp4")
 
