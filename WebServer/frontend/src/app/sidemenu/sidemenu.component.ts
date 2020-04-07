@@ -23,9 +23,9 @@ export class SidemenuComponent implements OnInit {
     {
       type: "hls",
       label: "LiveCamera 1",
-      /*source: 'http://192.168.1.107:8080/hls/stream.m3u8'*/
-      source:
-        "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
+      source: 'http://localhost:1339/hls/stream.m3u8'
+      /*source:
+        "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"*/
     },
     {
       type: "hls",

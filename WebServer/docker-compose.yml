@@ -16,7 +16,7 @@ services: # Here we define our service(s)
     depends_on:
       - dispatcher
     networks:
-    - traffic_net
+      - traffic_net
 
   videodownloader:
     container_name: videodownloader
@@ -57,6 +57,17 @@ services: # Here we define our service(s)
       - dbresolver
     depends_on:
       - dbresolver
+    networks:
+      - traffic_net
+  
+  streamer:
+    container_name: streamer
+    build:
+      context: ./microservices/streamer/
+      dockerfile: Dockerfile
+    ports:
+      - "1935:1935" # Receive RTMP
+      - "1339:1339" # Output HLS
     networks:
       - traffic_net
   
