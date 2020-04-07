@@ -1,16 +1,102 @@
 version: "3.5" # We use version 3.5 syntax
 
+networks:
+  traffic_net:
+    ipam:
+      driver: default
+      config:
+        - subnet: "172.20.0.0/24"
+
 services: # Here we define our service(s)
   angular-service: # The name of the service
     container_name: angularcontainer # Container name
-    build: ./Webserver/frontend # Location of our Dockerfile
+    build: ./frontend # Location of our Dockerfile
     ports: # Port mapping
-      - "80:80"
+      - "80:8080"
+    depends_on:
+      - dispatcher
+    networks:
+    - traffic_net
 
-  receiver:
-    container_name: receivercontainer
+  videodownloader:
+    container_name: videodownloader
     build:
-      context: ./microservices/Receiver/
+      context: ./microservices/video-download/
+      dockerfile: Dockerfile
+    ports:
+      - "1336:1336"
+    volumes:
+      - "./videodata:/var/lib/videodata"
+    networks:
+      - traffic_net
+    depends_on:
+      - dbresolver
+
+  dbresolver:
+    container_name: dbresolver
+    build:
+      context: ./microservices/db/
+      dockerfile: Dockerfile
+    ports:
+      - "1337:1337"
+    links:
+      - postgres
+    depends_on:
+      - postgres
+    networks:
+      - traffic_net
+
+  profileservice:
+    container_name: profileservice
+    build:
+      context: ./microservices/profile-service/
+      dockerfile: Dockerfile
+    ports:
+      - "1338:1338"
+    links:
+      - dbresolver
+    depends_on:
+      - dbresolver
+    networks:
+      - traffic_net
+  
+  dispatcher:
+    container_name: dispatcher
+    depends_on:
+      - profileservice
+      - videodownloader
+    build:
+      context: ./microservices/dispatcher/
       dockerfile: Dockerfile
     ports:
       - "443:443"
+    networks:
+      - traffic_net
+
+  postgres: #Query this: docker exec -it <containerID> psql -U postgres -a Nightlife -c 'select users.firstname from users, attendees, events where users.id = attendees.userid and attendees.eventid = 1;'
+    image: "postgres:latest"
+    container_name: "postgresdb"
+    restart: "always"
+    ports:
+      - "5432"
+    volumes:
+      - ./microservices/db/data.sql:/docker-entrypoint-initdb.d/seed.sql
+      - ./microservices/db/pgData:/var/lib/psotgresql/data
+    environment:
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_DB: "Traffic_Annonymisation_DB"
+    networks:
+      - traffic_net
+
+  videodeleter:
+    container_name: videodeleter
+    build:
+      context: ./microservices/video-deleter/
+      dockerfile: Dockerfile
+    volumes:
+      - "./videodata:/var/lib/videodata"
+    networks:
+      - traffic_net
+    depends_on:
+      - dbresolver

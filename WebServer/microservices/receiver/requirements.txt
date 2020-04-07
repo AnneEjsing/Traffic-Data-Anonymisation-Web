@@ -1,5 +1,0 @@
-requests==2.20.0
-imageio_ffmpeg==0.4.1
-opencv_python==4.2.0.32
-numpy==1.18.1
-flask
