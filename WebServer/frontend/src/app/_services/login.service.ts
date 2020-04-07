@@ -6,8 +6,14 @@ import * as global from "./dispatcherConnection.service";
 export class LoginService {
     constructor(private http: HttpClient) { }
 
+<<<<<<< Updated upstream
     readonly dispatcherUrl = global.dispatcherUrl;
 
+=======
+    //readonly dispatcherUrl = global.dispatcherUrl;
+    readonly ProfileServiceUrl = "http://192.168.99.100:1338/"
+    
+>>>>>>> Stashed changes
     async login(email: string, password: string) {
         const headers = this.constructHttpHeader(email, password);
         let res = await this.http.get(this.dispatcherUrl + "login",
