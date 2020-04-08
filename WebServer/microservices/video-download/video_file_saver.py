@@ -7,6 +7,7 @@ import datetime
 import ast
 import os
 import threading
+from loguru import logger
 
 routes = web.RouteTableDef()
 
@@ -46,9 +47,9 @@ def work(data):
 
     # Queries the database with the video entry.
     response = requests.post(dbr+"video/create", headers={'Content-type': 'application/json'},json={"user_id":user_id,"camera_id":camera_id,"video_thumbnail":""})
-    # TODO: Fix...
+
     if response.status_code != 200:
-        print(str(response.content.decode('utf-8')))
+        logger.error(f"Could not query database: {response.content.decode('utf-8')}. Userid: {user_id}, cameraid: {camera_id}")
     
     # Gets the ID of the video entry created
     content = response.content.decode('utf-8').replace("datetime.datetime","")
@@ -61,5 +62,6 @@ def work(data):
 
 if __name__ == "__main__":
     app = web.Application()
+    logger.add("error.log", retention="10 days")
     app.add_routes(routes)
     web.run_app(app, host='0.0.0.0', port=1336)
