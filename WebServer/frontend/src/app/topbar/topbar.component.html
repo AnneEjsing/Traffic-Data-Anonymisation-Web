@@ -1,19 +1,6 @@
-<div class="navbar" (scroll)="onWindowScroll($event);">
-    <!-- <img class="pointer" [routerLink]="['']" routerLinkActive="router-link-active" height="100%"
-      src="../../assets/Logo/Nightlife2.png"> -->
-    <div *ngIf="!loggedIn" class="float-right">
-      <a [routerLink]="['/login']">Login</a>
-    </div>
-    <div *ngIf="type === ToolbarEnum.LoggedIn">
-      <div class="dropdown">
-        <a class="dropbtn">
-          <i class="material-icons" style="vertical-align: middle;">account_circle</i>{{ name }}
-          <i class="material-icons" style="vertical-align: middle;">arrow_drop_down</i>
-        </a>
-        <div class="dropdown-content">
-          <a class="pointer" [routerLink]="['']" (click)="logout()">Logout</a>
-          <a href="profile">Profile</a>
-        </div>
-      </div>
-    </div>
-  </div>
+<mat-toolbar style="height: 3rem;" >
+    <h1>ICU</h1>
+    <span class="fill-space"></span>
+    <button mat-raised-button style="margin-right: 1rem;" [routerLink]="['/about']">About</button>
+    <button mat-raised-button>Log in</button>
+</mat-toolbar>
