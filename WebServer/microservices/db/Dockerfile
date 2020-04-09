@@ -6,9 +6,7 @@ COPY requirements.txt requirements.txt
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install -r requirements.txt
 
-COPY config.secrets.json config.secrets.json
-
-ADD ./*.py /app/
+ADD ./ /app/
 
 WORKDIR /app
 

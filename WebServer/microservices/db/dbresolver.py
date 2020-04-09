@@ -3,7 +3,7 @@ from aiohttp import web
 import asyncio
 import json
 
-DATABASE = json.load(open("../config.secrets.json"))['DATABASE']
+DATABASE = json.load(open("config.secrets.json"))['DATABASE']
 
 # Sends a query to the database and returns the response.
 # Inspired by: #https://kb.objectrocket.com/postgresql/python-and-postgresql-docker-container-part-2-1063
