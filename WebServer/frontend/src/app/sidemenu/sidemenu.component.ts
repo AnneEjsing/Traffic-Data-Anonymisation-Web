@@ -1,12 +1,6 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Subscription, timer } from "rxjs";
-import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service"
-import { Router } from '@angular/router';
-import { LoginDialog, DialogData } from "../login/loginDialog.component";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import { AuthService } from '../_services/auth.service';
-import { ProfileService } from '../_services/profile.service';
-import { Rights } from "../_models/user";
+import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service";
 
 @Component({
   selector: 'app-sidemenu',
@@ -52,46 +46,10 @@ export class SidemenuComponent implements OnInit {
 
   constructor(
     private streamService: StreamMessageService,
-    private router: Router,
-    public dialog: MatDialog,
-    private auth: AuthService,
-    private profileService: ProfileService,
   ) { }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(LoginDialog, {
-      width: '250px',
-      data: { email: "", password: "" }
-    });
-
-    dialogRef.afterClosed().subscribe(data => {
-      this.auth.isAuthenticated().toPromise().then(response => {
-        if (response) {
-          this.loggedIn = true;
-          this.email = data;
-        }
-      });
-    });
-  }
-
   ngOnInit(): void {
-    this.auth.getRole().toPromise().then(rights => {
-      if (rights) {
-        this.loggedIn = true;
-
-        if (rights == Rights.user) {
-          this.profileService.getUser().then(user => {
-            this.email = user.email;
-          });
-        }
-        else if (rights = Rights.admin) {
-          this.profileService.getAdmin().then(user => {
-            this.email = user.email;
-          })
-        }
-      }
-    });
-
+    
     this.streamService.changeStream(this.streams[0])
     this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
   }

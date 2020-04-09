@@ -3,10 +3,3 @@
     <li *ngFor="let stream of streams" (click)="onClickStream(stream)"
         [ngClass]="{'selected': currentStream === stream}">{{ stream.label }}</li>
 </ul>
-<div style="display:flex; justify-content: center;">
-    <button mat-raised-button *ngIf="!loggedIn" (click)="openDialog()">Login</button>
-    <div *ngIf="loggedIn">
-        <p>{{this.email}}</p>
-        <button>Add Cam</button>
-    </div>
-</div>
