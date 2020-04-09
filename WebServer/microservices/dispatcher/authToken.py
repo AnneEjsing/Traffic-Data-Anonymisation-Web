@@ -7,7 +7,7 @@ from enum import IntEnum
 from datetime import datetime, timedelta
 
 
-secretKey = json.load(open("../config.secrets.json"))['JWT']['SECRET_KEY']
+secretKey = json.load(open("config.secrets.json"))['JWT']['SECRET_KEY']
 
 def verify_credentials(email, pwd):
     data = {"email": email, "password": pwd}
