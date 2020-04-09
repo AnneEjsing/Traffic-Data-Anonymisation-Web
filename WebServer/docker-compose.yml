@@ -39,6 +39,8 @@ services: # Here we define our service(s)
       dockerfile: Dockerfile
     ports:
       - "1337:1337"
+    volumes:
+      - ./microservices/config.secrets.json:/app/config.secrets.json
     links:
       - postgres
     depends_on:
@@ -70,6 +72,8 @@ services: # Here we define our service(s)
       dockerfile: Dockerfile
     ports:
       - "443:443"
+    volumes:
+      - ./microservices/config.secrets.json:/app/config.secrets.json
     networks:
       - traffic_net
 
