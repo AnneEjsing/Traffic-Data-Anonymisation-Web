@@ -1,2 +1,3 @@
 videodata/*.mp4
-microservices/config.secrets.json
+config.secrets.json
+*.sif
