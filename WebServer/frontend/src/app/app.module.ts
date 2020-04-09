@@ -4,7 +4,6 @@ import { FormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { HomepageComponent } from './homepage/homepage.component';
-import { LoginComponent } from './login/login.component';
 import { VideoplayerComponent } from './videoplayer/videoplayer.component';
 import { VgCoreModule, VgControlsModule, VgStreamingModule, VgOverlayPlayModule, VgBufferingModule } from 'ngx-videogular';
 import { ProfileService } from './_services/profile.service';
@@ -19,15 +18,18 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { LoginService } from './_services/login.service';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { AuthService } from './_services/auth.service';
+import { TopbarComponent } from './topbar/topbar.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     HomepageComponent,
-    LoginComponent,
     VideoplayerComponent,
     SidemenuComponent,
     LoginDialog,
+    TopbarComponent,
+    AboutComponent,
   ],
   imports: [
     MatDialogModule, //IDK why this needs to be explicit imported when part of DemoMatherialModule, the rest does not

@@ -5,6 +5,7 @@ import datetime
 import time
 import os
 import json
+from loguru import logger
 
 dbr = "http://dbresolver:1337/"
 path = "/var/lib/videodata/"
@@ -14,9 +15,8 @@ def periodically_delete(delay,days):
     while True:
         #Query the database
         response = requests.get(queryString)
-        # TODO: fix....
         if response.status_code != 200:
-            print(str(response.status_code) +": "+response.content.decode('utf-8'))
+            logger.error(f"Could not query database: {response.status_code} {response.content.decode('utf-8')}. Query: {queryString}")
         
         #Decode response
         content = response.content.decode('utf-8').replace("datetime.datetime","")
@@ -37,14 +37,15 @@ def periodically_delete(delay,days):
             #Delete the video
             #In the file system
             if not os.path.exists(path+v_id+".mp4"):
+                logger.error(f"Could not delete file from path: {path+v_id}.mp4, as the path does not exist")
                 continue
             os.remove(path+v_id+".mp4")
 
             #In the database
             response = requests.delete(dbr+"video/delete",headers={'Content-type': 'application/json'},json={"video_id":v_id})
-            # TODO: fix....
+
             if response.status_code != 200:
-                print(str(response.status_code) +": "+response.content.decode('utf-8'))
+                logger.error(f"Could not delete from database: {response.status_code} {response.content.decode('utf-8')}. video: {v_id}")
 
         time.sleep(delay)
 
@@ -67,4 +68,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
     delay = args.delay
     days = args.days
+    
+    logger.add("error.log", retention="10 days")
     periodically_delete(delay,days)

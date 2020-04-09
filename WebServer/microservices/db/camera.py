@@ -1,5 +1,5 @@
 @routes.post('/camera/updateLSOL')
-async def camera_updatelsoĺ(request):
+async def camera_updatelsol(request):
     data = await request.json()
     f = fieldCheck(['id'], data)
     if f != None: return f
