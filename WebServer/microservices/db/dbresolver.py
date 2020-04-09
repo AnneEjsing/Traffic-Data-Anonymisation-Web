@@ -2,7 +2,7 @@ from psycopg2 import connect, errors
 from aiohttp import web
 import asyncio
 import json
-import os
+import os 
 
 # Sends a query to the database and returns the response.
 # Inspired by: #https://kb.objectrocket.com/postgresql/python-and-postgresql-docker-container-part-2-1063
