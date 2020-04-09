@@ -80,7 +80,6 @@ exec(open("video.py").read())
 
 if __name__ == "__main__":
     app = web.Application()
-    print(DATABASE['POSTGRES_DB'])
     app.add_routes(routes)
     web.run_app(app, host='0.0.0.0', port=1337)
 
