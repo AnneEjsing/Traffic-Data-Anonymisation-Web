@@ -12,8 +12,8 @@ async def remote_change_ml(request):
     model = data['file']
 
     # File extension .pb is for SSD models, and extension .m5 is for retinanet models.
-    filename = model.filename.split('.')
-    if filename[1] != "pb" or filename[1] != "m5":
+    extension = model.filename.split('.')[1]
+    if extension != "pb" and extension != "h5":
         return web.Response(status=500)
 
     # Redirect to correct url with correct port and path
