@@ -17,13 +17,11 @@ async def remote_change_ml(request):
         return web.Response(status=500)
 
     # Redirect to correct url with correct port and path
-    #url = f"http://{ip}:5000/model/upload"
-    url = "http://0.0.0.0:5000/model/upload"
+    url = f"http://{ip}:5000/model/upload"
 
     # Sends file to specified url
     files = {'file': (model.filename, model.file, model.content_type, model.headers)}
     response = requests.post(url, files=files)
-    print(response.status_code)
 
     # Returns status code recevied from nano
     return web.Response(status=response.status_code)
