@@ -16,7 +16,7 @@ services: # Here we define our service(s)
     depends_on:
       - dispatcher
     networks:
-    - traffic_net
+      - traffic_net
 
   videodownloader:
     container_name: videodownloader
@@ -67,9 +67,6 @@ services: # Here we define our service(s)
   
   dispatcher:
     container_name: dispatcher
-    depends_on:
-      - profileservice
-      - videodownloader
     build:
       context: ./microservices/dispatcher/
       dockerfile: Dockerfile
@@ -83,12 +80,14 @@ services: # Here we define our service(s)
       - dbresolver
       
   modelchanger:
-    container_name: modelchangercontainer
+    container_name: modelchanger
     build:
       context: ./microservices/model-changer/
       dockerfile: Dockerfile
     ports:
       - "1339:1339"
+    networks:
+      - traffic_net
 
   postgres: #Query this: docker exec -it <containerID> psql -U postgres -a Nightlife -c 'select users.firstname from users, attendees, events where users.id = attendees.userid and attendees.eventid = 1;'
     image: "postgres:latest"

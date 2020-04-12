@@ -8,22 +8,27 @@ routes = web.RouteTableDef()
 async def remote_change_ml(request):
     # request.post is nessecary as data is not json, but a file.
     data = await request.post()
-    url = data['url']
-    input_file = data['file']
+    ip = data['ip']
+    model = data['file']
 
     # File extension .pb is for SSD models, and extension .m5 is for retinanet models.
-    filename = input_file.filename.split('.')
+    filename = model.filename.split('.')
     if filename[1] != "pb" or filename[1] != "m5":
         return web.Response(status=500)
 
+    # Redirect to correct url with correct port and path
+    #url = f"http://{ip}:5000/model/upload"
+    url = "http://0.0.0.0:5000/model/upload"
+
     # Sends file to specified url
-    action = {"file": input_file.file}
-    r = requests.post(url, files=action)
+    files = {'file': (model.filename, model.file, model.content_type, model.headers)}
+    response = requests.post(url, files=files)
+    print(response.status_code)
 
     # Returns status code recevied from nano
-    return web.Response(status=r.status_code)
+    return web.Response(status=response.status_code)
 
 if __name__ == "__main__":  
-    app = web.Application()
+    app = web.Application(client_max_size=0)
     app.add_routes(routes)
     web.run_app(app, host='0.0.0.0', port=1339)
