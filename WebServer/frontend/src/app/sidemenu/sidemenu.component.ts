@@ -21,29 +21,29 @@ export class SidemenuComponent implements OnInit {
   //Change this to something that fetches it from a microservice.
   streams: IMediaStream[] = [
     {
-      type: "hls",
       label: "LiveCamera 1",
       /*source: 'http://192.168.1.107:8080/hls/stream.m3u8'*/
       source:
-        "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
+        "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
+      ip: "localhost"
     },
     {
-      type: "hls",
       label: "NotLiveCamera 2",
       source:
-        "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
+        "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
+      ip: "localhost"
     },
     {
-      type: "hls",
       label: "NotLiveCamera 3",
       source:
-        "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
+        "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
+      ip: "localhost"
     },
     {
-      type: "hls",
       label: "NotLiveCamera 4",
       source:
-        "https://mnmedias.api.telequebec.tv/m3u8/29880.m3u8"
+        "https://mnmedias.api.telequebec.tv/m3u8/29880.m3u8",
+      ip: "localhost"
     }
   ];
 

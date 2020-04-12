@@ -55,6 +55,6 @@ export class VideoplayerComponent implements AfterViewInit {
   }
 
   setBitrate(option: BitrateOption) {
-    if (this.currentStream.type == "hls") this.vgHls.setBitrate(option);
+    this.vgHls.setBitrate(option);
   }
 }
