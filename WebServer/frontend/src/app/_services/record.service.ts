@@ -16,9 +16,11 @@ readonly dispatcherUrl = global.dispatcherUrl;
       "user_id": userId,
       "camera_id": cameraId,
     };
+    
+    let endpoint = global.dispatcherUrl + "record/interval";
 
     let res = await this.http.post(
-      global.dispatcherUrl + "/record/interval",
+      endpoint,
       data,
       this.constructHttpOptions())
       .toPromise().then(
