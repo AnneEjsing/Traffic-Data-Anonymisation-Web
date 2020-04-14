@@ -44,10 +44,17 @@ From: nginx:1.14.1-alpine
 
 %files
     nginx/default.conf /etc/nginx/conf.d/
+    ../secrets.env /
 
 %post
     rm -rf /usr/share/nginx/html/*
     mv dist /usr/share/nginx/html
+
+    # Adding environment variables
+    while read line; do    #Make sure to have empty line at end of file
+        echo "export $line" >> $SINGULARITY_ENVIRONMENT
+    done <secrets.env
+    rm secrets.env
 
 %runscript
     mkdir -p /var/cache/nginx/client_temp
