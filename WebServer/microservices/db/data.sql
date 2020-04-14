@@ -62,3 +62,32 @@ ALTER TABLE public.cameras OWNER TO postgres;
 ALTER TABLE public.access_rights OWNER TO postgres;
 
 
+INSERT INTO users (user_id,email,role,password)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11','notadmin@notadmin.no', 'user', 'passpass'
+) RETURNING *;
+
+INSERT INTO users (user_id,email,role,password)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12','admin@admin.no', 'admin', 'passpass'
+) RETURNING *;
+
+INSERT INTO cameras (camera_id,owner,description,ip)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'open cam', '0.0.0.0'
+) RETURNING *;
+
+INSERT INTO cameras (camera_id,owner,description,ip)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'closed cam', '0.0.0.0'
+) RETURNING *;
+
+INSERT INTO access_rights (camera_id, user_id, expiry)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', TIMESTAMP '2020-07-23 11:00:00+01'
+) RETURNING *;
+
+INSERT INTO recorded_videos (video_thumbnail, camera_id, user_id, save_time)
+VALUES (
+    'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', TIMESTAMP '2020-07-23 11:00:00+01'
+) RETURNING *;
