@@ -3,6 +3,7 @@ import { RecordService } from "../_services/record.service";
 import { FileuploadService } from "../_services/fileupload.service"
 import { AuthService } from '../_services/auth.service';
 import { IMediaStream } from "../_services/streamMessage.service";
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'app-video-utils',
@@ -15,6 +16,7 @@ export class VideoUtilsComponent implements OnInit {
   canUpload: Boolean = false;
 
   constructor(
+    private snackBar: MatSnackBar,
     private recordService: RecordService, 
     private fileUploadService: FileuploadService,
     private auth: AuthService,
@@ -25,16 +27,15 @@ export class VideoUtilsComponent implements OnInit {
 
   handleFileInput(files: FileList) {
     this.fileToUpload = files.item(0);
-    this.canUpload = true;
+    this.canUpload = files.length > 0;
   }
 
   async uploadFile() {
     let res = await this.fileUploadService.postFile(this.fileToUpload, this.stream.ip);
     if (res === 200) { 
       this.canUpload = false; 
-      console.log("success");
     }
-    else console.log("error");
+    else this.openSnackBar("An error occured. Try again later", "OK");
   }
 
   async startRecord(time: string) {
@@ -56,5 +57,11 @@ export class VideoUtilsComponent implements OnInit {
         console.log("error: unautherised")
       }
     })
+  }
+
+  openSnackBar(message: string, action: string) {
+    this.snackBar.open(message, action, {
+      duration: 5000,
+    });
   }
 }
