@@ -87,8 +87,9 @@ services: # Here we define our service(s)
       - ./microservices/config.secrets.json:/app/config.secrets.json
     networks:
       - traffic_net
-    depends_on:
-      - dbresolver
+    depends_on:	
+      - profileservice	
+      - videodownloader
       
   modelchanger:
     container_name: modelchanger
