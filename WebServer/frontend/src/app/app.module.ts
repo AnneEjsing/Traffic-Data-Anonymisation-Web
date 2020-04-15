@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -20,6 +20,7 @@ import { LoginService } from './_services/login.service';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { AuthService } from './_services/auth.service';
 import { VideoService } from './_services/video.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
 @NgModule({
   declarations: [
@@ -35,6 +36,7 @@ import { VideoService } from './_services/video.service';
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     DemoMaterialModule,
     AppRoutingModule,
     VgCoreModule,
@@ -43,6 +45,7 @@ import { VideoService } from './_services/video.service';
     VgBufferingModule,
     VgStreamingModule,
     HttpClientModule,
+    NgbModule,
   ],
   providers: [
     ProfileService,

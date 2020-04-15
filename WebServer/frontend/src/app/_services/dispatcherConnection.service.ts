@@ -1,1 +1,1 @@
-export const dispatcherUrl: String = "http://dispatcher:443/";
+export const dispatcherUrl: String = "http://localhost:443/";

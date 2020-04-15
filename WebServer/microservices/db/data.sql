@@ -67,6 +67,6 @@ ALTER TABLE public.access_rights OWNER TO postgres;
 ALTER TABLE public.video_settings OWNER TO postgres;
 
 -- Start up data
-INSERT INTO public.video_settings(recording_limit) VALUES (86400);
+INSERT INTO public.video_settings(recording_limit) VALUES (18000);
 
 

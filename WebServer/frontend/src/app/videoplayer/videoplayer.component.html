@@ -23,25 +23,29 @@
                 <vg-fullscreen></vg-fullscreen>
             </vg-controls>
             <video #media (onGetBitrates)="bitrates = $event" [vgMedia]="media" [vgDash]="currentStream.source"
-                [vgHls]="currentStream.source" id="singleVideo" autoplay crossorigin>
+                [vgHls]="currentStream.source" id="singleVideo" crossorigin>
             </video>
 
         </vg-player>
     </div>
-    <div class="row">
+    <div class="ml-2">
         <label>
             Media Url (add url to see different stream): <input type="text" [(ngModel)]="currentStream.source">
         </label>
-        <div class="row">
-            <button (click)="startRecord(time.value)">Record</button>
-            <!-- <input #time
-        (keyup.enter)="startRecord(time.value)"
-        (blur)="startRecord(time.value); time.value='' "> -->
 
-            <mat-form-field>
-                <input matInput [ngxTimepicker]="time" [format]="24" placeholder="{{placeholderTimeEnd}}" />
-                <ngx-material-timepicker #time (timeSet)="timeChangeEnd($event)">
-                </ngx-material-timepicker>
-            </mat-form-field>
+        <button class="btn btn-primary" (click)="startRecord()">Record</button>
+
+        <br>
+        <div class="form-group">
+            <div class="form-group">
+                <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
+                <div *ngIf="ctrl.valid" class="h5">Great choice</div>
+                <div *ngIf="ctrl.errors" class="h5">
+                    <div *ngIf="ctrl.errors['exceededMax']">Max: {{ settings.recording_limit }} secounds</div>
+                </div>
+            </div>
+
+            <hr>
+            <pre>Selected time: {{ctrl.value | json}}</pre>
         </div>
     </div>

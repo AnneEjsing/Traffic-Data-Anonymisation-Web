@@ -113,13 +113,7 @@ async def record_continuous(request):
 ###### Video settings endpoints
 @routes.get('/settings/get')
 async def get_settings(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised, status_code = verify_token(token, "admin")
-    if(isAuthorised):
-        string = videoSettingsService + "/get"
-        return await getQueryAsync(string, { })
-    else:
-        return web.Response(status=status_code)
+    return await getQueryAsync(videoSettingsService + "/get", { })
 
 @routes.post('/settings/update')
 async def update_settings(request):

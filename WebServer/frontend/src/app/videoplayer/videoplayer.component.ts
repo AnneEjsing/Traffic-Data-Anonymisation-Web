@@ -6,6 +6,7 @@ import { StreamMessageService, IMediaStream } from "../_services/streamMessage.s
 import { AuthService } from '../_services/auth.service';
 import { VideoService } from '../_services/video.service';
 import { videoSettings } from '../_models/video';
+import { FormControl } from '@angular/forms';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -23,12 +24,27 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
   bitrates: BitrateOption[];
   settings: videoSettings;
 
+  ctrl = new FormControl('', (control: FormControl) => {
+    const value = control.value;
+
+    if (!value) {
+      return null;
+    }
+    else if ((((value.hour * 60) + value.minute) * 60) + value.second > this.settings.recording_limit) {
+      return { exceededMax: true };
+    }
+
+    return null;
+  });
+
   constructor(
     private recordService: RecordService,
     private streamService: StreamMessageService,
     private auth: AuthService,
     private videoService: VideoService,
-  ) { }
+  ) {
+
+  }
 
   ngOnInit() {
     this.getSettings();
@@ -71,15 +87,32 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
   getSettings() {
     this.videoService.getSettings().then(settings => {
       this.settings = settings;
+      console.log(this.settings);
+    }).catch(error => {
+      console.log(error);
     });
   }
 
-  async startRecord(time: string) {
+  lastTime: number;
+  timeChange(time: string) {
+    console.log(event);
+    var splitted = time.split(':');
+    var hour: number = +splitted[0];
+    var minute: number = +splitted[1];
+    var sec = 0;
+    sec += hour * 60 * 60;
+    sec += minute * 60;
+    console.log(sec);
+    this.lastTime = sec;
+  }
+
+  async startRecord() {
+    var time = this.lastTime;
     this.auth.getId().toPromise().then(async userId => {
       if (userId) {
         let res = await this.recordService.postRecordInfo(
           this.currentStream.source,
-          time,
+          time.toString(),
           userId,
           "blabla" // TODO: Add a real camera ID
         );
