@@ -1,7 +1,6 @@
 import { Component, AfterViewInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
 import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
-import { RecordService } from "../_services/record.service";
 import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service";
 import { AuthService } from '../_services/auth.service';
 
@@ -21,7 +20,6 @@ export class VideoplayerComponent implements AfterViewInit {
   bitrates: BitrateOption[];
 
   constructor(
-    private recordService: RecordService,
     private streamService: StreamMessageService,
     private auth: AuthService,
   ) { }
@@ -57,27 +55,6 @@ export class VideoplayerComponent implements AfterViewInit {
   }
 
   setBitrate(option: BitrateOption) {
-    if (this.currentStream.type == "hls") this.vgHls.setBitrate(option);
-  }
-
-  async startRecord(time: string) {
-    this.auth.getId().toPromise().then(async userId => {
-      if (userId) {
-        let res = await this.recordService.postRecordInfo(
-          this.currentStream.source,
-          time,
-          userId,
-          "blabla" // TODO: Add a real camera ID
-        );
-
-        // TODO: Something...
-        if (res === 200) console.log("success");
-        else console.log("error");
-      }
-      else {
-        // TODO: Error handling
-        console.log("error: unautherised")
-      }
-    })
+    this.vgHls.setBitrate(option);
   }
 }

@@ -40,10 +40,5 @@
     <label>
         Media Url (add url to see different stream): <input type="text" [(ngModel)]="currentStream.source">
     </label>
-    <div class="row">
-        <button (click)="startRecord(time.value)">Record</button>
-        <input #time
-        (keyup.enter)="startRecord(time.value)"
-        (blur)="startRecord(time.value); time.value='' ">
-    </div>
+    <app-video-utils [stream]="currentStream"></app-video-utils>
 </div>

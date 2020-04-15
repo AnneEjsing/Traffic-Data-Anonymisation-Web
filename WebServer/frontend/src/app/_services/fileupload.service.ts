@@ -1,40 +1,35 @@
-import { Injectable } from '@angular/core';
+import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import * as global from "./dispatcherConnection.service";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
-export class RecordService {
-readonly dispatcherUrl = global.dispatcherUrl;
-  constructor(private http: HttpClient) { }
 
-  async postRecordInfo(url: string, seconds: string, userId: string, cameraId: string) {
-    var data: any = {
-      "url": url,
-      "length": seconds,
-      "user_id": userId,
-      "camera_id": cameraId,
-    };
+export class FileuploadService {
+  readonly dispatcherUrl = global.dispatcherUrl;
+  constructor(private http: HttpClient) {}
+
+  async postFile(file: File, cameraIp: string) {
+    let formData:FormData = new FormData();
+    formData.append('file', file, file.name);
+    formData.append('ip', cameraIp);
     
-    let endpoint = global.dispatcherUrl + "record/interval";
-
+    var endpoint: string = this.dispatcherUrl + "model/upload"
     let res = await this.http.post(
       endpoint,
-      data,
+      formData,
       this.constructHttpOptions())
       .toPromise().then(
         data => { return '200' },
         error => { return error.status }
       )
-
     return res;
   }
 
   constructHttpOptions() {
     const httpOptions = {
       headers: new HttpHeaders({
-        'Content-Type': 'application/json',
         'Authorization': 'Bearer ' + localStorage.getItem('session_token'),
       })
     };

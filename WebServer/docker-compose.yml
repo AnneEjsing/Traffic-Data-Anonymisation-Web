@@ -47,6 +47,9 @@ services: # Here we define our service(s)
       - postgres
     networks:
       - traffic_net
+    depends_on:
+      - postgres
+
 
   profileservice:
     container_name: profileservice
@@ -75,9 +78,6 @@ services: # Here we define our service(s)
   
   dispatcher:
     container_name: dispatcher
-    depends_on:
-      - profileservice
-      - videodownloader
     build:
       context: ./microservices/dispatcher/
       dockerfile: Dockerfile
@@ -85,6 +85,19 @@ services: # Here we define our service(s)
       - "443:443"
     volumes:
       - ./microservices/config.secrets.json:/app/config.secrets.json
+    networks:
+      - traffic_net
+    depends_on:	
+      - profileservice	
+      - videodownloader
+      
+  modelchanger:
+    container_name: modelchanger
+    build:
+      context: ./microservices/model-changer/
+      dockerfile: Dockerfile
+    ports:
+      - "1339:1339"
     networks:
       - traffic_net
 
