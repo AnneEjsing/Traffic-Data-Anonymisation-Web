@@ -88,16 +88,4 @@ export class TopbarComponent implements OnInit {
       duration: 2000,
     });
   }
-  // @HostListener('window:scroll', ['$event'])
-
-  // onWindowScroll(e) {
-  //   let element = document.querySelector('.navbar');
-  //   if (window.pageYOffset > element.clientHeight) {
-  //     this.isScrolled = true;
-  //     element.classList.add('navbar-inverse');
-  //   } else {
-  //     this.isScrolled = false;
-  //     element.classList.remove('navbar-inverse');
-  //   }
-  // }
 }
