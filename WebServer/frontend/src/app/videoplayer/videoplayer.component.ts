@@ -1,7 +1,6 @@
 import { Component, AfterViewInit, ViewChild, ChangeDetectionStrategy, OnInit } from "@angular/core";
 import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
-import { RecordService } from "../_services/record.service";
 import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service";
 import { AuthService } from '../_services/auth.service';
 import { VideoService } from '../_services/video.service';
@@ -38,7 +37,6 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
   });
 
   constructor(
-    private recordService: RecordService,
     private streamService: StreamMessageService,
     private auth: AuthService,
     private videoService: VideoService,
@@ -80,10 +78,6 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
       })
   }
 
-  setBitrate(option: BitrateOption) {
-    if (this.currentStream.type == "hls") this.vgHls.setBitrate(option);
-  }
-
   getSettings() {
     this.videoService.getSettings().then(settings => {
       this.settings = settings;
@@ -91,40 +85,5 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
     }).catch(error => {
       console.log(error);
     });
-  }
-
-  lastTime: number;
-  timeChange(time: string) {
-    console.log(event);
-    var splitted = time.split(':');
-    var hour: number = +splitted[0];
-    var minute: number = +splitted[1];
-    var sec = 0;
-    sec += hour * 60 * 60;
-    sec += minute * 60;
-    console.log(sec);
-    this.lastTime = sec;
-  }
-
-  async startRecord() {
-    var time = this.lastTime;
-    this.auth.getId().toPromise().then(async userId => {
-      if (userId) {
-        let res = await this.recordService.postRecordInfo(
-          this.currentStream.source,
-          time.toString(),
-          userId,
-          "blabla" // TODO: Add a real camera ID
-        );
-
-        // TODO: Something...
-        if (res === 200) console.log("success");
-        else console.log("error");
-      }
-      else {
-        // TODO: Error handling
-        console.log("error: unautherised")
-      }
-    })
   }
 }

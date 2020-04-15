@@ -8,15 +8,15 @@ networks:
         - subnet: "172.20.0.0/24"
 
 services: # Here we define our service(s)
-  #angular-service: # The name of the service
-  #  container_name: angularcontainer # Container name
-  #  build: ./frontend # Location of our Dockerfile
-  #  ports: # Port mapping
-  #    - "80:8080"
-  #  depends_on:
-  #    - dispatcher
-  #  networks:
-  #  - traffic_net
+  angular-service: # The name of the service
+    container_name: angularcontainer # Container name
+    build: ./frontend # Location of our Dockerfile
+    ports: # Port mapping
+      - "80:8080"
+    depends_on:
+      - dispatcher
+    networks:
+      - traffic_net
 
   videodownloader:
     container_name: videodownloader
@@ -39,12 +39,17 @@ services: # Here we define our service(s)
       dockerfile: Dockerfile
     ports:
       - "1337:1337"
+    volumes:
+      - ./microservices/config.secrets.json:/app/config.secrets.json
     links:
       - postgres
     depends_on:
       - postgres
     networks:
       - traffic_net
+    depends_on:
+      - postgres
+
 
   profileservice:
     container_name: profileservice
@@ -72,16 +77,39 @@ services: # Here we define our service(s)
     networks:
       - traffic_net
 
+  streamer:
+    container_name: streamer
+    build:
+      context: ./microservices/streamer/
+      dockerfile: Dockerfile
+    ports:
+      - "1935:1935" # Receive RTMP
+      - "1339:1339" # Output HLS
+    networks:
+      - traffic_net
+  
   dispatcher:
     container_name: dispatcher
-    depends_on:
-      - profileservice
-      - videodownloader
     build:
       context: ./microservices/dispatcher/
       dockerfile: Dockerfile
     ports:
       - "443:443"
+    volumes:
+      - ./microservices/config.secrets.json:/app/config.secrets.json
+    networks:
+      - traffic_net
+    depends_on:	
+      - profileservice	
+      - videodownloader
+      
+  modelchanger:
+    container_name: modelchanger
+    build:
+      context: ./microservices/model-changer/
+      dockerfile: Dockerfile
+    ports:
+      - "1339:1339"
     networks:
       - traffic_net
 

@@ -1,14 +1,5 @@
-<h1 style="text-align: center;">ICU</h1>
+<h3 style="text-align: center;">Camera</h3>
 <ul style="padding-left: 0%;">
     <li *ngFor="let stream of streams" (click)="onClickStream(stream)"
         [ngClass]="{'selected': currentStream === stream}">{{ stream.label }}</li>
 </ul>
-<div style="display:flex; justify-content: center;">
-    <button mat-raised-button *ngIf="!loggedIn" (click)="openDialog()">Login</button>
-    <div *ngIf="loggedIn">
-        <p>{{this.email}}</p>
-        <button (click)="getSettings()">get settings</button>
-        <button (click)="updateSettings()">update settings</button>
-        <button>Add Cam</button>
-    </div>
-</div>

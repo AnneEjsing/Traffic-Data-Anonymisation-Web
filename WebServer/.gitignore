@@ -1,1 +1,3 @@
 videodata/*.mp4
+config.secrets.json
+*.sif

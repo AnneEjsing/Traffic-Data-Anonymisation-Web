@@ -28,12 +28,12 @@
 
         </vg-player>
     </div>
+
     <div class="ml-2">
         <label>
             Media Url (add url to see different stream): <input type="text" [(ngModel)]="currentStream.source">
         </label>
-
-        <button class="btn btn-primary" (click)="startRecord()">Record</button>
+        <app-video-utils [stream]="currentStream"></app-video-utils>
 
         <br>
         <div class="form-group">

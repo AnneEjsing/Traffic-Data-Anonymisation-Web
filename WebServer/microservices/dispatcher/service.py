@@ -12,8 +12,11 @@ routes = web.RouteTableDef()
 videoDownloadService = "http://videodownloader:1336"
 profileService = "http://profileservice:1338"
 videoSettingsService = "http://videoservice:1339"
+modelChangerService = "http://modelchanger:1339"
 
-###### Standard Get, Post, Delete, Out Requests
+# Standard Get, Post, Delete, Out Requests
+
+
 async def getQueryAsync(queryString, json):
     async with ClientSession() as session:
         async with session.get(queryString, json=json) as response:
@@ -45,7 +48,7 @@ async def putQueryAsync(queryString, data):
                 return web.Response(text=await response.text())
             return web.Response(status=response.status)
 
-###### Userservice endpoints
+# Userservice endpoints
 @routes.get('/login')
 async def login(request):
     auth = request.headers['Authorization']
@@ -64,6 +67,7 @@ async def userSignup(request):
     data = await request.json()
     return await postQueryAsync(signupString, data)
 
+
 @routes.get('/get/user')
 async def getUser(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
@@ -71,9 +75,10 @@ async def getUser(request):
     if(isAuthorised):
         userId = get_user_id(token)
         string = profileService + "/get"
-        return await getQueryAsync(string, { "id" : userId })
+        return await getQueryAsync(string, {"id": userId})
     else:
         return web.Response(status=status_code)
+
 
 @routes.get('/get/admin')
 async def getAdmin(request):
@@ -82,7 +87,7 @@ async def getAdmin(request):
     if(isAuthorised):
         userId = get_user_id(token)
         string = profileService + "/get"
-        return await getQueryAsync(string, { "id" : userId })
+        return await getQueryAsync(string, {"id": userId})
     else:
         return web.Response(status=status_code)
 
@@ -93,20 +98,22 @@ async def listUsers(request):
     return await getQueryAsync(listString, json.dumps({}))
 
 
-###### Authenticate endpoint
+# Authenticate endpoint
 @routes.get("/auth/authenticate")
 async def authenticator(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
     return web.Response(text=json.dumps((authenticate(token))))
 
 
-###### Video downloader endpoints
+# Video downloader endpoints
 @routes.post("/record/interval")
 async def record_continuous(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
     isAuthorised = authenticate(token)
     if (isAuthorised):
-        return postQueryAsync("/record/interval", request.json())
+        endpoint = videoDownloadService + "/record/interval"
+        data = await request.json()
+        return await postQueryAsync(endpoint, data)
     else:
         return web.Response(text="User must be logged in to downloade a video", status=401)
 
@@ -125,25 +132,44 @@ async def update_settings(request):
     else:
         return web.Response(status=status_code)
 
-app = web.Application()
+# Model changer
+@routes.post("/model/upload")
+async def upload_model(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised = authenticate(token)
+    if (isAuthorised):
+        endpoint = modelChangerService + "/model/upload"
+        data = await request.post()
+        
+        # Data cannot just be forwarded. File need to be sent using the format below.
+        model = data['file']
+        files = {'file': (model.filename, model.file, model.content_type, model.headers)}
+        data={'ip':data['ip']}
+        response = requests.post(endpoint,data=data, files=files)
+        return web.Response(status=response.status_code)
+    else:
+        return web.Response(text="User must be logged in to upload a model", status=401)
 
-# Configure default CORS settings.
-resources = [
-    '*',
-]
+if __name__ == "__main__":
+    # Client_max_size disables size limits on sent files
+    app = web.Application(client_max_size=0)
 
-cors = aiohttp_cors.setup(app, defaults={
-    resource: aiohttp_cors.ResourceOptions(
-        allow_credentials=True,
-        expose_headers='*',
-        allow_methods='*',
-        allow_headers='*',
-    ) for resource in resources
-})
-app.add_routes(routes)
+    # Configure default CORS settings.
+    resources = [
+        '*',
+    ]
 
-for route in app.router.routes():
-    cors.add(route)
+    cors = aiohttp_cors.setup(app, defaults={
+        resource: aiohttp_cors.ResourceOptions(
+            allow_credentials=True,
+            expose_headers='*',
+            allow_methods='*',
+            allow_headers='*',
+        ) for resource in resources
+    })
+    app.add_routes(routes)
 
+    for route in app.router.routes():
+        cors.add(route)
 
-web.run_app(app, host='0.0.0.0', port=443)
+    web.run_app(app, host='0.0.0.0', port=443)

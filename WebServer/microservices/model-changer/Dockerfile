@@ -6,8 +6,8 @@ COPY requirements.txt requirements.txt
 RUN python3 -m pip install --upgrade pip
 RUN python3 -m pip install -r requirements.txt
 
-ADD ./*.py /app/
+ADD ./ /app
 
 WORKDIR /app
 
-ENTRYPOINT [ "python3", "-u", "dbresolver.py"]
+ENTRYPOINT [ "python3", "-u", "swap-models.py", "--urls", "http://*:1339"]
