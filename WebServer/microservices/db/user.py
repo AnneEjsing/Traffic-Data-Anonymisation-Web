@@ -60,12 +60,7 @@ async def user_get(request):
 
     result, error = executeQuery(query, id)
     if error: return web.Response(text=str(error), status=500)
-    
-    id = result[0][0]
-    email = result[0][1]
-    rights = result[0][2]
-    data = json.dumps({ "id" : id, "email" : email, "rights": rights })
-    return web.Response(text=data, status=200)
+    return web.Response(text=str(result), status=200)
 
 
 @routes.delete('/user/delete')

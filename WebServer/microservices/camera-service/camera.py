@@ -10,25 +10,29 @@ routes = web.RouteTableDef()
 
 url = "http://dbresolver:1337/camera/"
 
-@routes.post('/update')
+@routes.post('/camera/update')
 async def update(request):
     return await send_request("update", await request.json(), requests.post)
 
-@routes.get('/get')
+@routes.get('/camera/get')
 async def get(request):
     return await send_request("get", await request.json(),requests.get)
 
-@routes.delete('/delete')
+@routes.delete('/camera/delete')
 async def delete(request):
     return await send_request("delete", await request.json(), requests.delete)
 
-@routes.post('/create')
+@routes.post('/camera/create')
 async def signup(request):
     return await send_request("signup", await request.json(), requests.post)
 
-@routes.get('/list')
+@routes.get('/camera/userlist')
 async def users(request):
-    return await send_request("list", await request.json(), requests.get)
+    return await send_request("userlist", await request.json(), requests.get)
+
+@routes.get('/camera/adminlist')
+async def users(request):
+    return await send_request("adminlist", '{}', requests.get)
 
 async def send_request(path, json, query_function):
     response = query_function(url + path,headers={'Content-type': 'application/json'}, json=(json))

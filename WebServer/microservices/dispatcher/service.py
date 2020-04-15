@@ -5,13 +5,14 @@ import asyncio
 import aiohttp_cors
 
 # Used for token creation and Verification
-from authToken import create_token, verify_credentials, verify_token, get_user_id, authenticate
+from authToken import create_token, verify_credentials, verify_token, get_user_id, authenticate, get_rights
 
 routes = web.RouteTableDef()
 
 profileService = "http://profileservice:1338"
 videoDownloadService = "http://videodownloader:1336"
 modelChangerService = "http://modelchanger:1341"
+cameraService = "http://cameraservice:1340"
 
 # Standard Get, Post, Delete, Out Requests
 
@@ -95,6 +96,23 @@ async def getAdmin(request):
 async def listUsers(request):
     listString = profileService + "/list"
     return await getQueryAsync(listString, json.dumps({}))
+
+# Camera endpoints
+@routes.get('/camera/list')
+async def listUsers(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    userId = get_user_id(token)
+    rights = get_rights(token)
+    isAuthorised, status_code = verify_token(token, rights)
+    if isAuthorised:
+        listString = ""
+        if rights == "admin":
+            listString = cameraService + "/camera/adminlist"
+        else: 
+            listString = cameraService + "/camera/userlist"
+        return await getQueryAsync(listString,{"id": userId}) 
+    else:
+        return web.Response(status=status_code)
 
 
 # Authenticate endpoint

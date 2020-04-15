@@ -31,7 +31,7 @@ export class VideoUtilsComponent implements OnInit {
   }
 
   async uploadFile() {
-    let res = await this.fileUploadService.postFile(this.fileToUpload, this.stream.ip);
+    let res = await this.fileUploadService.postFile(this.fileToUpload);
     if (res === 200) { 
       this.canUpload = false; 
     }

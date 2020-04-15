@@ -93,9 +93,26 @@ async def camera_create(request):
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=str(result),status=200)
 
-@routes.get('/camera/list')
+@routes.get('/camera/adminlist')
 def camera_list():
-    query = "SELECT * FROM cameras;"
+    query = "SELECT source, description FROM cameras;"
     result, error = executeQuery(query)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=str(result),status=200)
+
+@routes.get('/camera/userlist')
+async def camera_userlist(request):
+    data = await request.json()
+    f = fieldCheck(['id'], data)
+    if f != None: return f
+    
+    user = data['id']
+    query = """
+    SELECT source, description
+    FROM cameras
+    JOIN access_rights ON cameras.camera_id = access_rights.camera_id
+    WHERE access_rights.user_id = %s;
+    """
+    result, error = executeQuery(query,user)
+    if error: return web.Response(text=error,status=500)
+    return web.Response(text=result, status=200)

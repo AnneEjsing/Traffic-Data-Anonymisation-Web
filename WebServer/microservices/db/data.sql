@@ -33,6 +33,7 @@ CREATE TABLE public.cameras (
     camera_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     description text,
     ip text,
+    source text,
     last_sign_of_life timestamp,
     owner uuid NOT NULL REFERENCES public.users(user_id)
 );
@@ -64,30 +65,30 @@ ALTER TABLE public.access_rights OWNER TO postgres;
 
 INSERT INTO users (user_id,email,role,password)
 VALUES (
-    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11','notadmin@notadmin.no', 'user', 'passpass'
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11','notadmin@notadmin.no', 'user', crypt('passpass', gen_salt('bf'))
 ) RETURNING *;
 
 INSERT INTO users (user_id,email,role,password)
 VALUES (
-    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12','admin@admin.no', 'admin', 'passpass'
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12','admin@admin.no', 'admin', crypt('passpass', gen_salt('bf'))
 ) RETURNING *;
 
-INSERT INTO cameras (camera_id,owner,description,ip)
+INSERT INTO cameras (camera_id,owner,description,ip,source)
 VALUES (
-    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'open cam', '0.0.0.0'
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'open cam', '0.0.0.0','https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8'
 ) RETURNING *;
 
-INSERT INTO cameras (camera_id,owner,description,ip)
+INSERT INTO cameras (camera_id,owner,description,ip,source)
 VALUES (
-    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'closed cam', '0.0.0.0'
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'closed cam', '0.0.0.0', 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
 ) RETURNING *;
 
 INSERT INTO access_rights (camera_id, user_id, expiry)
 VALUES (
-    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', TIMESTAMP '2020-07-23 11:00:00+01'
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', NOW()
 ) RETURNING *;
 
 INSERT INTO recorded_videos (video_thumbnail, camera_id, user_id, save_time)
 VALUES (
-    'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', TIMESTAMP '2020-07-23 11:00:00+01'
+    'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', NOW()
 ) RETURNING *;

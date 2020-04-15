@@ -1,6 +1,7 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Subscription, timer } from "rxjs";
 import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service";
+import { ProfileService } from "../_services/profile.service"
 
 @Component({
   selector: 'app-sidemenu',
@@ -13,45 +14,24 @@ export class SidemenuComponent implements OnInit {
   currentStream: IMediaStream;
 
   //Change this to something that fetches it from a microservice.
-  streams: IMediaStream[] = [
-    {
-      label: "LiveCamera 1",
-      /*source: 'http://192.168.1.107:8080/hls/stream.m3u8'*/
-      source:
-        "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
-      ip: "localhost"
-    },
-    {
-      label: "NotLiveCamera 2",
-      source:
-        "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
-      ip: "localhost"
-    },
-    {
-      label: "NotLiveCamera 3",
-      source:
-        "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
-      ip: "localhost"
-    },
-    {
-      label: "NotLiveCamera 4",
-      source:
-        "https://mnmedias.api.telequebec.tv/m3u8/29880.m3u8",
-      ip: "localhost"
-    }
-  ];
+  streams: IMediaStream[];
 
   loggedIn: boolean = false;
   email: string;
 
   constructor(
     private streamService: StreamMessageService,
-  ) { }
-
-  ngOnInit(): void {
+    private profileService: ProfileService,
+    ) { }
     
-    this.streamService.changeStream(this.streams[0])
-    this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+  ngOnInit() {
+    this.profileService.listStreams().then(
+      response => {
+        this.streams = response;
+        this.streamService.changeStream(this.streams[0])
+        this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+    },
+    error => {console.log("TODO: Lav route til login")})
   }
 
   onClickStream(stream: IMediaStream) {
