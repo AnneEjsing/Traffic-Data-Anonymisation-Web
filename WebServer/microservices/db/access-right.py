@@ -34,7 +34,7 @@ async def right_get(request):
 
     result, error = executeQuery(query, camera_id, user_id)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=str(result), status=200)
+    return web.Response(text=json.dumps(result, default=str), status=200)
 
 
 @routes.delete('/right/delete')
@@ -73,11 +73,11 @@ async def right_create(request):
     """
     result, error = executeQuery(query,camera_id,user_id,expiry)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=str(result), status=200)
+    return web.Response(text=json.dumps(result, default=str), status=200)
 
 @routes.get('/right/list')
 def right_list(request):
     query = "SELECT * FROM access_rights;"
     result, error = executeQuery(query)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=str(result), status=200)
+    return web.Response(text=json.dumps(result, default=str), status=200)

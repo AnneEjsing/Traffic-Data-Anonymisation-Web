@@ -32,7 +32,7 @@ def executeQuery(query,*inputs):
         conn.commit()
 
         # enumerate() over the PostgreSQL records
-        results = json.dumps(cursor.fetchall(), default=str)
+        results = cursor.fetchall()
 
     except errors.InvalidTextRepresentation as e:
         error = e
@@ -67,7 +67,7 @@ def fieldCheck(requiredFields, data):
 
 def hasOneResult(result, errorString, errorCode):
     if len(result) == 1:
-        return web.Response(text="Success",status=200)
+        return web.Response(text=json.dumps(result, default=str),status=200)
     else:
         return web.Response(text=errorString, status=errorCode)
 

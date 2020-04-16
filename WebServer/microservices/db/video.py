@@ -34,7 +34,7 @@ async def video_get(request):
 
     result, error = executeQuery(query, video_id)
     if error: return web.Response(text=str(error), status=500)
-    return web.Response(text=str(result), status=200)
+    return web.Response(text=json.dumps(result, default=str), status=200)
 
 
 @routes.delete('/video/delete')
@@ -73,11 +73,11 @@ async def video_create(request):
     """
     result, error = executeQuery(query, user_id, camera_id, video_thumbnail)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=str(result), status=200)
+    return web.Response(text=json.dumps(result, default=str), status=200)
 
 @routes.get('/video/list')
 def video_list(request):
     query = "SELECT * FROM recorded_videos;"
     result, error = executeQuery(query)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=str(result),status=200)
+    return web.Response(text=json.dumps(result, default=str),status=200)

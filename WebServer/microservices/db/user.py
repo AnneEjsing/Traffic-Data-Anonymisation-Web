@@ -13,11 +13,12 @@ async def user_login(request):
     WHERE email = %s AND password = crypt(%s,password);
     """
     result, error = executeQuery(query,email,password)
+
     if error: return web.Response(text=str(error),status=500)
-    
-    if (len(result) == 1):
-        id = result[0][0]
-        rights = result[0][2]
+
+    if (len(result) != 0):
+        id = result[0]['user_id']
+        rights = result[0]['role']
         data = json.dumps({ "id" : id, "rights": rights })
 
         return web.Response(text=data,status=200)
@@ -60,7 +61,7 @@ async def user_get(request):
 
     result, error = executeQuery(query, id)
     if error: return web.Response(text=str(error), status=500)
-    return web.Response(text=str(result), status=200)
+    return web.Response(text=json.dumps(result, default=str), status=200)
 
 
 @routes.delete('/user/delete')
@@ -98,11 +99,11 @@ async def user_signup(request):
     """
     result, error = executeQuery(query,email,rights,password)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=str(result), status=200)
+    return web.Response(text=json.dumps(result, default=str), status=200)
 
 @routes.get('/user/list')
 def user_list(request):
     query = "SELECT * FROM users;"
     result, error = executeQuery(query)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=str(result), status=200)
+    return web.Response(text=json.dumps(result, default=str), status=200)
