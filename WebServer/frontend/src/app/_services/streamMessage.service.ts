@@ -4,13 +4,15 @@ import { BehaviorSubject } from 'rxjs';
 export interface IMediaStream {
     source: string;
     description: string;
+    label: string;
   }
-  
+
 @Injectable()
 export class StreamMessageService {
   defaultStream:IMediaStream =
   {
-    description: "NotLiveCamera 2",
+    label: "NotLiveCamera 2",
+    description: "Dummy description",
     source:
       "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
   };

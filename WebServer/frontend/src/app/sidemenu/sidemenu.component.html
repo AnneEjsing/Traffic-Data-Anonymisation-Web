@@ -1,5 +1,5 @@
 <h3 style="text-align: center;">Camera</h3>
 <ul style="padding-left: 0%;">
     <li *ngFor="let stream of streams" (click)="onClickStream(stream)"
-        [ngClass]="{'selected': currentStream === stream}">{{ stream.description }}</li>
+        [ngClass]="{'selected': currentStream === stream}">{{ stream.label }}</li>
 </ul>
