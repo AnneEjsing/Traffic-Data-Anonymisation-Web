@@ -2,6 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Subscription, timer } from "rxjs";
 import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service";
 import { ProfileService } from "../_services/profile.service"
+import { Router } from "@angular/router";
+
 
 @Component({
   selector: 'app-sidemenu',
@@ -12,8 +14,6 @@ import { ProfileService } from "../_services/profile.service"
 
 export class SidemenuComponent implements OnInit {
   currentStream: IMediaStream;
-
-  //Change this to something that fetches it from a microservice.
   streams: IMediaStream[];
 
   loggedIn: boolean = false;
@@ -22,6 +22,7 @@ export class SidemenuComponent implements OnInit {
   constructor(
     private streamService: StreamMessageService,
     private profileService: ProfileService,
+    private router: Router,
     ) { }
     
   ngOnInit() {
@@ -31,7 +32,7 @@ export class SidemenuComponent implements OnInit {
         this.streamService.changeStream(this.streams[0])
         this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
     },
-    error => {console.log("TODO: Lav route til login")})
+    error => {this.router.navigate([""]);})
   }
 
   onClickStream(stream: IMediaStream) {
