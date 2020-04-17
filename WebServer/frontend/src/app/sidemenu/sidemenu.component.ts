@@ -2,7 +2,8 @@ import { Component, OnInit, Inject } from '@angular/core';
 import { Subscription, timer } from "rxjs";
 import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service";
 import { ProfileService } from "../_services/profile.service"
-import { Router } from "@angular/router";
+import { CameraDialog } from '../add-camera/add-camera.component'
+import { MatDialog } from '@angular/material/dialog';
 
 
 @Component({
@@ -20,19 +21,22 @@ export class SidemenuComponent implements OnInit {
   email: string;
 
   constructor(
+    public dialog: MatDialog,
     private streamService: StreamMessageService,
-    private profileService: ProfileService,
-    private router: Router,
+    private profileService: ProfileService
     ) { }
     
   ngOnInit() {
-    this.profileService.listStreams().then(
-      response => {
-        this.streams = response;
-        this.streamService.changeStream(this.streams[0])
-        this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
-    },
-    error => {this.router.navigate([""]);})
+    if (localStorage.getItem('session_token'))
+    {
+        this.profileService.listStreams().then(
+          response => {
+            this.streams = response;
+            this.streamService.changeStream(this.streams[0])
+            this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+        },
+        error => {})
+    }
   }
 
   onClickStream(stream: IMediaStream) {
@@ -42,5 +46,12 @@ export class SidemenuComponent implements OnInit {
         t.unsubscribe();
       }
     );
+  }
+
+
+  openCameraDialog(): void {
+    this.dialog.open(CameraDialog, {
+      data: { label: "", source: "", description: "", ip: "" }
+    });
   }
 }

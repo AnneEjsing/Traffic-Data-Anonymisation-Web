@@ -72,6 +72,7 @@ export class TopbarComponent implements OnInit {
         if (response) {
           this.isLoggedIn = true;
           this.email = data;
+          window.location.reload();
         }
       });
     });
@@ -81,6 +82,7 @@ export class TopbarComponent implements OnInit {
     localStorage.clear();
     this.isLoggedIn = false;
     this.isAdmin = false;
+    window.location.reload();
   }
 
   openSnackBar(message: string, action: string) {

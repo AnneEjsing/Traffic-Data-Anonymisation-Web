@@ -23,15 +23,15 @@ async def delete(request):
     return await send_request("delete", await request.json(), requests.delete)
 
 @routes.post('/camera/create')
-async def signup(request):
-    return await send_request("signup", await request.json(), requests.post)
+async def create(request):
+    return await send_request("create", await request.json(), requests.post)
 
 @routes.get('/camera/userlist')
-async def users(request):
+async def userlist(request):
     return await send_request("userlist", await request.json(), requests.get)
 
 @routes.get('/camera/adminlist')
-async def users(request):
+async def adminlist(request):
     return await send_request("adminlist", '{}', requests.get)
 
 async def send_request(path, json, query_function):

@@ -99,7 +99,7 @@ async def listUsers(request):
 
 # Camera endpoints
 @routes.get('/camera/list')
-async def listUsers(request):
+async def listCamera(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
     userId = get_user_id(token)
     rights = get_rights(token)
@@ -114,6 +114,17 @@ async def listUsers(request):
     else:
         return web.Response(status=status_code)
 
+@routes.post('/camera/create')
+async def createCamera(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised = authenticate(token)
+    if (isAuthorised):
+        endpoint = cameraService + "/camera/create"
+        data = await request.json()
+        data["owner"] = get_user_id(token)
+        return await postQueryAsync(endpoint, data)
+    else:
+        return web.Response(text="User must be logged in to create a camera", status=401)
 
 # Authenticate endpoint
 @routes.get("/auth/authenticate")
