@@ -39,8 +39,14 @@ services: # Here we define our service(s)
       dockerfile: Dockerfile
     ports:
       - "1337:1337"
-    volumes:
-      - ./microservices/config.secrets.json:/app/config.secrets.json
+    env_file:
+      - secrets.env
+    environment:
+      - POSTGRES_USER:${POSTGRES_USER}
+      - POSTGRES_PASSWORD:${POSTGRES_PASSWORD}
+      - POSTGRES_DB:${POSTGRES_DB}
+      - POSTGRES_HOST:${POSTGRES_HOST}
+      - POSTGRES_PORT:${POSTGRES_PORT}
     links:
       - postgres
     depends_on:
@@ -83,8 +89,10 @@ services: # Here we define our service(s)
       dockerfile: Dockerfile
     ports:
       - "443:443"
-    volumes:
-      - ./microservices/config.secrets.json:/app/config.secrets.json
+    env_file:
+      - secrets.env
+    environment:
+      - SECRET_KEY:${SECRET_KEY}
     networks:
       - traffic_net
     depends_on:	
@@ -110,10 +118,8 @@ services: # Here we define our service(s)
     volumes:
       - ./microservices/db/data.sql:/docker-entrypoint-initdb.d/seed.sql
       - ./microservices/db/pgData:/var/lib/psotgresql/data
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
-      POSTGRES_DB: "Traffic_Annonymisation_DB"
+    env_file:
+      - secrets.env
     networks:
       - traffic_net
 

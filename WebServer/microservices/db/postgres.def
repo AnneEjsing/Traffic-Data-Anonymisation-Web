@@ -10,8 +10,11 @@ From: postgres:alpine
 
 %files
     data.sql /docker-entrypoint-initdb.d/seed.sql
+    ../../secrets.env /
 
-%environment
-    export POSTGRES_USER='postgres'
-    export POSTGRES_PASSWORD='postgres'
-    export HOSTNAME=localhost
+%post
+    # Adding environment variables
+    while read line; do    #Make sure to have empty line at end of file
+        echo "export $line" >> $SINGULARITY_ENVIRONMENT
+    done <secrets.env
+    rm secrets.env
