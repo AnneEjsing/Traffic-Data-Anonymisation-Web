@@ -95,8 +95,8 @@ services: # Here we define our service(s)
       - SECRET_KEY:${SECRET_KEY}
     networks:
       - traffic_net
-    depends_on:	
-      - profileservice	
+    depends_on:
+      - profileservice
       - videodownloader
       
   modelchanger:
@@ -105,7 +105,7 @@ services: # Here we define our service(s)
       context: ./microservices/model-changer/
       dockerfile: Dockerfile
     ports:
-      - "1339:1339"
+      - "1341:1341"
     networks:
       - traffic_net
 

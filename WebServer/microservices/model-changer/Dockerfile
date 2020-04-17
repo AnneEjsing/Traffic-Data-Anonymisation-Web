@@ -10,4 +10,4 @@ ADD ./ /app
 
 WORKDIR /app
 
-ENTRYPOINT [ "python3", "-u", "swap-models.py", "--urls", "http://*:1339"]
+ENTRYPOINT [ "python3", "-u", "swap-models.py", "--urls", "http://*:1341"]
