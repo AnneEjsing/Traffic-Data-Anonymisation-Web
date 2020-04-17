@@ -95,8 +95,8 @@ services: # Here we define our service(s)
       - SECRET_KEY:${SECRET_KEY}
     networks:
       - traffic_net
-    depends_on:	
-      - profileservice	
+    depends_on:
+      - profileservice
       - videodownloader
       
   modelchanger:
