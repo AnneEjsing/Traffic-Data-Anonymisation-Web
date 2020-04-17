@@ -1,9 +1,11 @@
 <h3 style="text-align: center;">Camera</h3>
+
+<button mat-button style="width: 100%;" (click)="openCameraDialog()">
+    <mat-icon>add_circle</mat-icon>
+    <b>Add new stream</b>
+</button>
+
 <ul style="padding-left: 0%;">
-    <button mat-button style="width: 100%;" (click)="openCameraDialog()">
-        <mat-icon>add_circle</mat-icon>
-        <b>Add new stream</b>
-    </button>
-    <li *ngFor="let stream of streams" (click)="onClickStream(stream)"
-        [ngClass]="{'selected': currentStream === stream}">{{ stream.label }}</li>
+    <app-menu-list-item *ngFor="let stream of streams" [item]="stream" (click)="onClickStream(stream)"
+    [ngClass]="{'selected': currentStream === stream}">{{ stream.label }}></app-menu-list-item>
 </ul>

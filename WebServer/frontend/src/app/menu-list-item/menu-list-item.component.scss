@@ -1,0 +1,23 @@
+
+:host {
+  display: flex;
+  flex-direction: column;
+  outline: none;
+  width: 100%;
+}
+
+.mat-list-item {
+  padding: 8px 0;
+  display: flex;
+  width: auto;
+  transition-duration: 0.4s;
+
+  .routeIcon {
+    margin-right: 1rem;
+  }
+}
+
+.mat-list-item:hover  {
+  background-color: #4CAF50; /* Green */
+  color: white;
+}

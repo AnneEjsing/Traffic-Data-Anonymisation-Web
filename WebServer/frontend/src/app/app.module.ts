@@ -23,6 +23,7 @@ import { TopbarComponent } from './topbar/topbar.component';
 import { AboutComponent } from './about/about.component';
 import { CameraDialog } from './add-camera/add-camera.component';
 import { CameraService } from './_services/camera.service'
+import { MenuListItemComponent } from './menu-list-item/menu-list-item.component'
 
 @NgModule({
   declarations: [
@@ -34,7 +35,8 @@ import { CameraService } from './_services/camera.service'
     LoginDialog,
     TopbarComponent,
     AboutComponent,
-    CameraDialog
+    CameraDialog,
+    MenuListItemComponent
   ],
   imports: [
     MatDialogModule, //IDK why this needs to be explicit imported when part of DemoMatherialModule, the rest does not
