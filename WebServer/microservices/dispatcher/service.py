@@ -11,7 +11,7 @@ routes = web.RouteTableDef()
 
 profileService = "http://profileservice:1338"
 videoDownloadService = "http://videodownloader:1336"
-modelChangerService = "http://modelchanger:1339"
+modelChangerService = "http://modelchanger:1341"
 
 # Standard Get, Post, Delete, Out Requests
 
