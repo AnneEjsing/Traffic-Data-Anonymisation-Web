@@ -78,6 +78,10 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
       })
   }
 
+  setBitrate(option: BitrateOption) {
+    this.vgHls.setBitrate(option);
+  }
+
   getSettings() {
     this.videoService.getSettings().then(settings => {
       this.settings = settings;
