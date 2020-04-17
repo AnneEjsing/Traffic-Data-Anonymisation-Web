@@ -4,11 +4,21 @@ From: python:jessie
 %files
     *.py /
     requirements.txt /
+    ../../secrets.env /
 
 %post
     python3 --version
     python3 -m pip install --upgrade pip
     python3 -m pip install -r requirements.txt
+    
+    # Adding environment variables
+    while read line; do    #Make sure to have empty line at end of file
+        echo "export $line" >> $SINGULARITY_ENVIRONMENT
+    done <secrets.env
+    rm secrets.env
+
+    #Overwriting postgres url for Singularity
+    echo "export POSTGRES_HOST=0.0.0.0" >> $SINGULARITY_ENVIRONMENT
 
 %runscript
     python3 dbresolver.py

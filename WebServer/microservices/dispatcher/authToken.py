@@ -5,9 +5,10 @@ import hashlib
 import hmac
 from enum import IntEnum
 from datetime import datetime, timedelta
+import os
 
 
-secretKey = json.load(open("config.secrets.json"))['JWT']['SECRET_KEY']
+secretKey = os.getenv("SECRET_KEY")
 
 def verify_credentials(email, pwd):
     data = {"email": email, "password": pwd}
