@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import * as global from "./dispatcherConnection.service";
 import { CameraData } from "../add-camera/add-camera.component";
+import { IMediaStream } from './streamMessage.service';
 
 @Injectable()
 export class CameraService {
@@ -12,8 +13,17 @@ export class CameraService {
     async createCamera(camera: CameraData) {
         const headers = this.constructHttpHeader();
         return await this.http.post(this.dispatcherUrl + "camera/create", camera, {headers, responseType: 'text'}).toPromise().then(
-            data => { console.log("success"); return 200; },
-            error => { console.log(error.status); return error.status; }
+            data => { return 200; },
+            error => { return error.status; }
+        );
+    }
+
+    async deleteCamera(camera: IMediaStream) {
+        const headers = this.constructHttpHeader();
+        const id = "?id=" + camera.camera_id;
+        return await this.http.delete(this.dispatcherUrl + "camera/delete"+id, {headers}).toPromise().then(
+            data => { return 200; },
+            error => { return error.status; }
         );
     }
 
@@ -25,9 +35,4 @@ export class CameraService {
 
         return httpHeader;
     }
-
-    constructJson(camera: CameraData) {
-        return "{\"source\":\""+camera.source+"\", \"ip\":\""+camera.ip+"\",\"label\":\""+camera.label+"\",\"description\":\""+camera.description+"\"";
-    }
-
 }

@@ -32,15 +32,15 @@ CREATE TABLE public.cameras (
     description text,
     label text,
     ip text,
-    source text,
+    source text UNIQUE NOT NULL,
     last_sign_of_life timestamp,
     owner uuid NOT NULL REFERENCES public.users(user_id)
 );
 
 CREATE TABLE public.recorded_videos (
     video_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
-    user_id uuid NOT NULL REFERENCES public.users(user_id),
-    camera_id uuid NOT NULL REFERENCES public.cameras(camera_id),
+    user_id uuid REFERENCES public.users(user_id) ON DELETE CASCADE,
+    camera_id uuid REFERENCES public.cameras(camera_id) ON DELETE CASCADE,
     video_thumbnail text,
     save_time timestamp NOT NULL
 );

@@ -20,7 +20,8 @@ async def get(request):
 
 @routes.delete('/camera/delete')
 async def delete(request):
-    return await send_request("delete", await request.json(), requests.delete)
+    response = requests.delete(url+"delete?id="+request.query['id'])
+    return web.Response(text=response.text, status=response.status_code)
 
 @routes.post('/camera/create')
 async def create(request):

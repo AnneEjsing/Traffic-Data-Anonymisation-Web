@@ -59,11 +59,7 @@ async def camera_get(request):
 
 @routes.delete('/camera/delete')
 async def camera_delete(request):
-    data = await request.json()
-    f = fieldCheck(['id'], data)
-    if f != None: return f
-
-    id = data['id']
+    id = request.query['id']
     query = """
     DELETE FROM cameras
     WHERE camera_id = %s
@@ -77,27 +73,29 @@ async def camera_delete(request):
 @routes.post('/camera/create')
 async def camera_create(request):
     data = await request.json()
-    f = fieldCheck(['owner', 'description', 'ip', 'label'], data)
+
+    f = fieldCheck(['owner', 'description', 'ip', 'label', 'source'], data)
     if f != None: return f
     
-    owner = data['owner']    
+    owner = data['owner']
     description = data['description']
     ip = data['ip']
     label = data['label']
+    source = data['source']
     query = """
-    INSERT INTO cameras (owner,description,ip,label)
+    INSERT INTO cameras (owner,description,ip,label,source)
     VALUES (
-        %s, %s, %s, %s
+        %s, %s, %s, %s, %s
     )
     RETURNING *;
     """
-    result, error = executeQuery(query,owner,description,ip,label)
+    result, error = executeQuery(query,owner,description,ip,label,source)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str),status=200)
 
 @routes.get('/camera/adminlist')
 def camera_list(request):
-    query = "SELECT source, description, label FROM cameras;"
+    query = "SELECT source, description, label, camera_id FROM cameras;"
     result, error = executeQuery(query)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str),status=200)
@@ -110,7 +108,7 @@ async def camera_userlist(request):
     
     user = data['id']
     query = """
-    SELECT source, description, label
+    SELECT source, description, label, camera_id
     FROM cameras
     JOIN access_rights ON cameras.camera_id = access_rights.camera_id
     WHERE access_rights.user_id = %s;

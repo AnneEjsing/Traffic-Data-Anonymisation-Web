@@ -1,6 +1,7 @@
 import {Component, HostBinding, Input, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { IMediaStream } from '../_services/streamMessage.service'
+import { CameraService } from '../_services/camera.service'
 
 
 @Component({
@@ -22,7 +23,9 @@ export class MenuListItemComponent implements OnInit {
   @HostBinding('attr.aria-expanded') ariaExpanded = this.expanded;
   @Input() item: IMediaStream;
 
-  constructor() { }
+  constructor(
+    public cameraService: CameraService,
+  ) { }
 
   ngOnInit() {
   }
@@ -31,9 +34,10 @@ export class MenuListItemComponent implements OnInit {
     this.expanded = !this.expanded;
   }
 
-  delete() {
+  async delete() {
     if(confirm("Are you sure to delete " + this.item.label)) {
-
+        await this.cameraService.deleteCamera(this.item);
+        window.location.reload();
     }
   }
 }
