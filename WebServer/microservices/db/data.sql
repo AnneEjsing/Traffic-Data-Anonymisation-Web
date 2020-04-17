@@ -11,8 +11,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-CREATE DATABASE traffic_annonymisation_db;
-
 \connect "traffic_annonymisation_db"
 
 -- Access type
