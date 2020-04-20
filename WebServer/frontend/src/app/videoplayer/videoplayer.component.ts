@@ -21,16 +21,13 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
 
   api: VgAPI;
   bitrates: BitrateOption[];
-  settings: videoSettings;
 
+  role: string;
   ctrl = new FormControl('', (control: FormControl) => {
     const value = control.value;
 
     if (!value) {
       return null;
-    }
-    else if ((((value.hour * 60) + value.minute) * 60) + value.second > this.settings.recording_limit) {
-      return { exceededMax: true };
     }
 
     return null;
@@ -41,12 +38,12 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
     private auth: AuthService,
     private videoService: VideoService,
   ) {
-
+    this.auth.getRole().subscribe(role => {
+      this.role = role;
+    });
   }
 
-  ngOnInit() {
-    this.getSettings();
-  }
+  ngOnInit() { }
 
   onPlayerReady(api: VgAPI) {
     this.api = api;
@@ -82,12 +79,11 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
     this.vgHls.setBitrate(option);
   }
 
-  getSettings() {
-    this.videoService.getSettings().then(settings => {
-      this.settings = settings;
-      console.log(this.settings);
-    }).catch(error => {
-      console.log(error);
-    });
+  SetRecordingLimit() {
+    var newSettings: videoSettings = {
+      recording_limit: (((this.ctrl.value.hour * 60) + this.ctrl.value.minute) * 60) + this.ctrl.value.second
+    }
+
+    this.videoService.updateSettings(newSettings).then(response => { });
   }
 }

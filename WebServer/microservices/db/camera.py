@@ -94,7 +94,7 @@ async def camera_create(request):
     return web.Response(text=str(result),status=200)
 
 @routes.get('/camera/list')
-def camera_list():
+def camera_list(request):
     query = "SELECT * FROM cameras;"
     result, error = executeQuery(query)
     if error: return web.Response(text=str(error),status=500)

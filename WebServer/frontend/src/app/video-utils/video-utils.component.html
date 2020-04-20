@@ -1,14 +1,19 @@
 <div class="row">
-    <button (click)="startRecord(time.value)">Record</button>
-    <input #time
-    (keyup.enter)="startRecord(time.value)">
+    <div style="flex-wrap: wrap;align-content: flex-start;display: flex;">
+        <div class="form-group">
+            <button (click)="startRecord()">Record</button>
+
+            <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
+            <div *ngIf="ctrl.valid" class="h5">Great choice</div>
+            <div *ngIf="ctrl.errors" class="h5">
+                <div *ngIf="ctrl.errors['exceededMax']">Max: {{ settings.recording_limit }} secounds</div>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="form-group">
     <label for="file">Upload new model</label>
-    <input type="file"
-           id="file"
-           (change)="handleFileInput($event.target.files)"
-           accept=".h2,.pb">
+    <input type="file" id="file" (change)="handleFileInput($event.target.files)" accept=".h2,.pb">
     <button (click)="uploadFile()" [disabled]="!canUpload">Upload</button>
 </div>

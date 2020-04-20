@@ -36,16 +36,14 @@
         <app-video-utils [stream]="currentStream"></app-video-utils>
 
         <br>
-        <div class="form-group">
-            <div class="form-group">
-                <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
-                <div *ngIf="ctrl.valid" class="h5">Great choice</div>
-                <div *ngIf="ctrl.errors" class="h5">
-                    <div *ngIf="ctrl.errors['exceededMax']">Max: {{ settings.recording_limit }} secounds</div>
+        <div class="form-group" *ngIf="role == 'admin'">
+            <div style="flex-wrap: wrap;align-content: flex-start;display: flex;">
+                <div class="form-group">
+                    <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
                 </div>
-            </div>
 
-            <hr>
-            <pre>Selected time: {{ctrl.value | json}}</pre>
+                <button (click)="SetRecordingLimit()" style="align-self: center;" class="btn btn-primary">Set recording
+                    limit</button>
+            </div>
         </div>
     </div>

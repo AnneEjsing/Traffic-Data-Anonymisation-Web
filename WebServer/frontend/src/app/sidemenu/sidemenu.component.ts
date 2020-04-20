@@ -8,7 +8,9 @@ import { AuthService } from '../_services/auth.service';
 import { ProfileService } from '../_services/profile.service';
 import { Rights } from "../_models/user";
 import { VideoService } from '../_services/video.service';
-import { videoSettings } from '../_models/video';
+import { videoSettings, recording_info } from '../_models/video';
+import { RecordService } from '../_services/record.service';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-sidemenu',
@@ -51,20 +53,34 @@ export class SidemenuComponent implements OnInit {
 
   loggedIn: boolean = false;
   email: string;
+  recordings: Array<recording_info> = [];
 
   constructor(
     private streamService: StreamMessageService,
-    private router: Router,
     public dialog: MatDialog,
     private auth: AuthService,
-    private profileService: ProfileService,
-    private videoService: VideoService,
+    private recordService: RecordService,
   ) { }
 
   ngOnInit(): void {
-
     this.streamService.changeStream(this.streams[0])
     this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+
+    console.log("staring");
+    this.auth.getId().subscribe(id => {
+      console.log(id);
+      if (id) {
+        this.recordService.listRecordings(id).then(recordings => {
+          console.log(recordings);
+          this.recordings = recordings;
+        });
+      }
+    });
+  }
+
+  isRecording(camera_id) {
+    console.log(camera_id);
+    return this.recordings.some(recording => recording.camera_id == camera_id);
   }
 
   onClickStream(stream: IMediaStream) {
@@ -74,20 +90,5 @@ export class SidemenuComponent implements OnInit {
         t.unsubscribe();
       }
     );
-  }
-
-  getSettings() {
-    this.videoService.getSettings().then(settings => {
-      console.log(settings);
-    });
-  }
-
-  updateSettings() {
-    var newSettings: videoSettings = {
-      recording_limit: 2000,
-    }
-    this.videoService.updateSettings(newSettings).then(response => {
-      console.log(response)
-    });
   }
 }

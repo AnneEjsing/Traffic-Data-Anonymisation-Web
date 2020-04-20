@@ -11,8 +11,8 @@ routes = web.RouteTableDef()
 
 videoDownloadService = "http://videodownloader:1336"
 profileService = "http://profileservice:1338"
-videoSettingsService = "http://videoservice:1339"
-modelChangerService = "http://modelchanger:1339"
+videoSettingsService = "http://videoservice:1341"
+modelChangerService = "http://modelchanger:1340"
 
 # Standard Get, Post, Delete, Out Requests
 
@@ -117,7 +117,7 @@ async def record_continuous(request):
     else:
         return web.Response(text="User must be logged in to downloade a video", status=401)
 
-###### Video settings endpoints
+###### Video endpoints
 @routes.get('/settings/get')
 async def get_settings(request):
     return await getQueryAsync(videoSettingsService + "/get", { })
@@ -131,6 +131,14 @@ async def update_settings(request):
         return await postQueryAsync(string, (await request.json()))
     else:
         return web.Response(status=status_code)
+
+@routes.post('/get/recording')
+async def get_recording_info(request):
+    return await getQueryAsync(videoSettingsService + "/get/recording", (await request.json()))
+
+@routes.post('/recordings/list/user_id')
+async def get_recording_info(request):
+    return await getQueryAsync(videoSettingsService + "/recordings/list/user_id", (await request.json()))
 
 # Model changer
 @routes.post("/model/upload")
