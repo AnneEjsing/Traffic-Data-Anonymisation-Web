@@ -1,4 +1,4 @@
-@routes.post('/camera/updateLSOL')
+@routes.put('/camera/updateLSOL')
 async def camera_updatelsol(request):
     data = await request.json()
     f = fieldCheck(['id'], data)
@@ -17,25 +17,25 @@ async def camera_updatelsol(request):
     return hasOneResult(result, "There is no camera with that id.", 404)
 
 
-@routes.post('/camera/updateInfo')
+@routes.put('/camera/updateInfo')
 async def camera_update(request):
     data = await request.json()
-    f = fieldCheck(['id', 'owner', 'description', 'ip', 'label'], data)
+    f = fieldCheck(['camera_id', 'description', 'ip', 'label', 'source'], data)
     if f != None: return f
 
-    id = data['id']
-    owner = data['owner']
+    id = data['camera_id']
+    source = data['source']
     description = data['description']
     ip = data['ip']
     label = data['label']
     query = """
     UPDATE cameras 
-    SET owner = %s, description = %s, ip = %s, label = %s
+    SET description = %s, ip = %s, label = %s, source = %s
     WHERE camera_id = %s
     RETURNING *;
     """
 
-    result, error = executeQuery(query, owner, description, ip, id, label)
+    result, error = executeQuery(query, description, ip, label, source, id)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "There is no camera with that id.", 404)
 
@@ -54,7 +54,7 @@ async def camera_get(request):
 
     result, error = executeQuery(query, id)
     if error: return web.Response(text=str(error), status=500)
-    return web.Response(text=json.dumps(result, default=str),status=200)
+    return hasOneResult(result, "Multiple or no cameras returned from the database, when expecting exactly one.", 404)
 
 
 @routes.delete('/camera/delete')

@@ -15,7 +15,9 @@ export interface CameraData {
 })
 export class CameraDialog {
   requesting: boolean = false;
+  title = "";
   error: boolean = false;
+  isEdit: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<CameraDialog>,
@@ -23,15 +25,28 @@ export class CameraDialog {
     public cameraService: CameraService
   ) {}
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.isEdit = this.data['label'] !== "";
+    if(this.isEdit)
+    {
+      console.log(this.data)
+      this.title = "Edit"
+    }
+    else
+      this.title = "Create New Camera";
+  }
 
   close() {
     this.dialogRef.close();
   }
 
   async save() {
+    let res;
     this.requesting = true;
-    const res = await this.cameraService.createCamera(this.data);
+    if (this.isEdit)
+        res = await this.cameraService.putCamera(this.data);
+    else
+        res = await this.cameraService.createCamera(this.data);
     this.requesting = false;
 
     if (res == 200) {

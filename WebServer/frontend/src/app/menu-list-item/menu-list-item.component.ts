@@ -2,6 +2,8 @@ import {Component, HostBinding, Input, OnInit} from '@angular/core';
 import {animate, state, style, transition, trigger} from '@angular/animations';
 import { IMediaStream } from '../_services/streamMessage.service'
 import { CameraService } from '../_services/camera.service'
+import { CameraDialog } from "../add-camera/add-camera.component";
+import { MatDialog } from "@angular/material/dialog";
 
 
 @Component({
@@ -24,8 +26,9 @@ export class MenuListItemComponent implements OnInit {
   @Input() item: IMediaStream;
 
   constructor(
-    public cameraService: CameraService,
-  ) { }
+    public dialog: MatDialog, 
+    public cameraService: CameraService
+    ) {}
 
   ngOnInit() {
   }
@@ -36,8 +39,13 @@ export class MenuListItemComponent implements OnInit {
 
   async delete() {
     if(confirm("Are you sure to delete " + this.item.label)) {
-        await this.cameraService.deleteCamera(this.item);
-        window.location.reload();
+      await this.cameraService.deleteCamera(this.item);
+      window.location.reload();
     }
+  }
+
+  async edit() {
+    let data = await this.cameraService.getCamera(this.item);
+    this.dialog.open(CameraDialog, {data: data});
   }
 }

@@ -10,9 +10,9 @@ routes = web.RouteTableDef()
 
 url = "http://dbresolver:1337/camera/"
 
-@routes.post('/camera/update')
+@routes.put('/camera/update')
 async def update(request):
-    return await send_request("update", await request.json(), requests.post)
+    return await send_request("updateInfo", await request.json(), requests.put)
 
 @routes.get('/camera/get')
 async def get(request):

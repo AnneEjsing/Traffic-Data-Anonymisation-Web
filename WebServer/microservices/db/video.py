@@ -34,7 +34,7 @@ async def video_get(request):
 
     result, error = executeQuery(query, video_id)
     if error: return web.Response(text=str(error), status=500)
-    return web.Response(text=json.dumps(result, default=str), status=200)
+    return hasOneResult(result, "There is no video with that id.", 404)
 
 
 @routes.delete('/video/delete')

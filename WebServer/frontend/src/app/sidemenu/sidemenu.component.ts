@@ -27,16 +27,21 @@ export class SidemenuComponent implements OnInit {
     ) { }
     
   ngOnInit() {
+    
     if (localStorage.getItem('session_token'))
     {
-        this.profileService.listStreams().then(
-          response => {
-            this.streams = response;
+      this.profileService.listStreams().then(
+        response => {
+          this.streams = response;
+          if (this.streams.length == 0)
+              this.currentStream = this.streamService.defaultStream;
+          else {
             this.streamService.changeStream(this.streams[0])
             this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+          }
         },
         error => {})
-    }
+      }
   }
 
   onClickStream(stream: IMediaStream) {
