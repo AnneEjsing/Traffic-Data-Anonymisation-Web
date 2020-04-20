@@ -2,16 +2,16 @@
 class="menu-list-item">
     <mat-icon class="routeIcon">videocam</mat-icon>
     {{item.label}}
-    <span fxFlex>
+    <span fxFlex *ngIf="admin">
       <span fxFlex></span>
       <mat-icon [@indicatorRotate]="expanded ? 'expanded': 'collapsed'">
         expand_more
       </mat-icon>
     </span>
 </a>
-<div *ngIf="expanded">
+<div *ngIf="expanded && admin">
   <button mat-button (click)=delete()> Delete Stream </button>
   <button mat-button (click)=edit()> Edit Stream </button>
-  <button mat-button> Share Stream </button>
+  <button mat-button (click)=share()> Share Stream </button>
   <button mat-button> Change Model </button>
 </div>

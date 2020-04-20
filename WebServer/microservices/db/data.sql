@@ -47,8 +47,7 @@ CREATE TABLE public.recorded_videos (
 
 CREATE TABLE public.access_rights (
     camera_id uuid NOT NULL REFERENCES public.cameras(camera_id) ON DELETE CASCADE,
-    user_id uuid NOT NULL REFERENCES public.users(user_id) ON DELETE CASCADE,
-    expiry timestamp
+    user_id uuid NOT NULL REFERENCES public.users(user_id) ON DELETE CASCADE
 );
 
 ALTER TABLE ONLY public.access_rights
@@ -82,9 +81,9 @@ VALUES (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'closed cam', 'This is a very elaborate description of the camera closed to the public. Much exclusive, such rare, wow.', '0.0.0.0', 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
 ) RETURNING *;
 
-INSERT INTO access_rights (camera_id, user_id, expiry)
+INSERT INTO access_rights (camera_id, user_id)
 VALUES (
-    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', NOW()
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11'
 ) RETURNING *;
 
 INSERT INTO recorded_videos (video_thumbnail, camera_id, user_id, save_time)

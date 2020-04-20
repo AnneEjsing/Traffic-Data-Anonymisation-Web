@@ -158,6 +158,18 @@ async def deleteCamera(request):
     else:
         return web.Response(text="User must be logged in to delete a camera", status=401)
 
+@routes.post('/access/create')
+async def createCamera(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised = authenticate(token)
+    if isAuthorised and get_rights(token) == 'admin':
+        endpoint = cameraService + "/access/create"
+        data = await request.json()
+        return await postQueryAsync(endpoint, data)
+    else:
+        return web.Response(text="User must be logged in to allow another user to access a camera", status=401)
+
+
 # Authenticate endpoint
 @routes.get("/auth/authenticate")
 async def authenticator(request):

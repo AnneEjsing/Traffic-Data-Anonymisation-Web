@@ -4,6 +4,8 @@ import { IMediaStream } from '../_services/streamMessage.service'
 import { CameraService } from '../_services/camera.service'
 import { CameraDialog } from "../add-camera/add-camera.component";
 import { MatDialog } from "@angular/material/dialog";
+import { ShareStreamComponent } from "../share-stream/share-stream.component";
+import { AuthService } from "../_services/auth.service";
 
 
 @Component({
@@ -22,15 +24,23 @@ import { MatDialog } from "@angular/material/dialog";
 })
 export class MenuListItemComponent implements OnInit {
   expanded: boolean;
-  @HostBinding('attr.aria-expanded') ariaExpanded = this.expanded;
+  admin: boolean;
+  @HostBinding("attr.aria-expanded") ariaExpanded = this.expanded;
   @Input() item: IMediaStream;
 
   constructor(
-    public dialog: MatDialog, 
-    public cameraService: CameraService
-    ) {}
+    public dialog: MatDialog,
+    public cameraService: CameraService,
+    public authService: AuthService
+  ) {}
 
   ngOnInit() {
+    this.authService.isAuthenticatedAdmin().toPromise().then(
+      (data) => {
+        this.admin = data;
+      },
+      (error) => {}
+    );
   }
 
   onItemSelected() {
@@ -38,7 +48,7 @@ export class MenuListItemComponent implements OnInit {
   }
 
   async delete() {
-    if(confirm("Are you sure to delete " + this.item.label)) {
+    if (confirm("Are you sure to delete " + this.item.label)) {
       await this.cameraService.deleteCamera(this.item);
       window.location.reload();
     }
@@ -46,6 +56,12 @@ export class MenuListItemComponent implements OnInit {
 
   async edit() {
     let data = await this.cameraService.getCamera(this.item);
-    this.dialog.open(CameraDialog, {data: data});
+    this.dialog.open(CameraDialog, { data: data });
+  }
+
+  async share() {
+    this.dialog.open(ShareStreamComponent, {
+      data: { camera_id: this.item.camera_id, email: "" },
+    });
   }
 }

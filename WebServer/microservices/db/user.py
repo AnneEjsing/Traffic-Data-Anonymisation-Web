@@ -63,6 +63,22 @@ async def user_get(request):
     if error: return web.Response(text=str(error), status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)
 
+@routes.get('/user/get/email')
+async def user_get(request):
+    data = await request.json()
+    f = fieldCheck(['email'], data)
+    if f != None: return f
+    
+    email = data['email']
+    query = """
+    SELECT *
+    FROM users
+    WHERE email = %s;
+    """
+
+    result, error = executeQuery(query, email)
+    if error: return web.Response(text=str(error), status=500)
+    return web.Response(text=json.dumps(result, default=str), status=200)
 
 @routes.delete('/user/delete')
 async def user_delete(request):

@@ -108,7 +108,7 @@ async def camera_userlist(request):
     
     user = data['id']
     query = """
-    SELECT source, description, label, camera_id
+    SELECT source, description, label, cameras.camera_id
     FROM cameras
     JOIN access_rights ON cameras.camera_id = access_rights.camera_id
     WHERE access_rights.user_id = %s;

@@ -8,32 +8,40 @@ import json
 #Create the web app
 routes = web.RouteTableDef()
 
-url = "http://dbresolver:1337/camera/"
+url = "http://dbresolver:1337/"
 
 @routes.put('/camera/update')
 async def update(request):
-    return await send_request("updateInfo", await request.json(), requests.put)
+    return await send_request("camera/updateInfo", await request.json(), requests.put)
 
 @routes.get('/camera/get')
 async def get(request):
-    return await send_request("get", await request.json(),requests.get)
+    return await send_request("camera/get", await request.json(),requests.get)
 
 @routes.delete('/camera/delete')
 async def delete(request):
-    response = requests.delete(url+"delete?id="+request.query['id'])
+    response = requests.delete(url+"camera/delete?id="+request.query['id'])
     return web.Response(text=response.text, status=response.status_code)
 
 @routes.post('/camera/create')
 async def create(request):
-    return await send_request("create", await request.json(), requests.post)
+    return await send_request("camera/create", await request.json(), requests.post)
 
 @routes.get('/camera/userlist')
 async def userlist(request):
-    return await send_request("userlist", await request.json(), requests.get)
+    return await send_request("camera/userlist", await request.json(), requests.get)
 
 @routes.get('/camera/adminlist')
 async def adminlist(request):
-    return await send_request("adminlist", '{}', requests.get)
+    return await send_request("camera/adminlist", '{}', requests.get)
+
+@routes.post('/access/create')
+async def giveAccess(request):
+    data = await request.json()
+    response = requests.get(url + "user/get/email",headers={'Content-type': 'application/json'}, json=(data))
+    other_data = response.json()[0]
+    new_data = {'camera_id': data['camera_id'], 'user_id': other_data['user_id']}
+    return await send_request("access/create", new_data, requests.post)
 
 async def send_request(path, json, query_function):
     response = query_function(url + path,headers={'Content-type': 'application/json'}, json=(json))
