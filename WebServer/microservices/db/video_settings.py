@@ -8,12 +8,7 @@ async def video_update(request):
 
     result, error = executeQuery(query)
     if error: return web.Response(text=str(error), status=500)
-    if (len(result) == 1):
-        limit = result[0][0]
-        data = json.dumps({ "recording_limit" : limit })
-        return web.Response(text=data,status=200)
-    else:
-        return web.Response(text="An error ocurred", status=500)
+    return hasOneResult(result, "An error occurred", 500)
 
 @routes.post('/video/settings/update')
 async def update(request):

@@ -1,18 +1,18 @@
 <label> {{stream.description}} </label>
 
 <div class="row">
-    <div style="flex-wrap: wrap;align-content: flex-start;display: flex;">
-        <div class="form-group" *ngIf="!recording">
-            <button (click)="startRecord()">Record</button>
+    <div class="form-group" *ngIf="!recording">
+        <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
 
-            <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
-            <div *ngIf="ctrl.valid" class="h5">Great choice</div>
-            <div *ngIf="ctrl.errors" class="h5">
-                <div *ngIf="ctrl.errors['exceededMax']">Max: {{ settings.recording_limit }} secounds</div>
-            </div>
-        </div>
-        <div *ngIf="recording">
-            Recording started: {{ recording.start_time }} and are recording for {{ recording.recording_time }} secounds
-        </div>
+        <button [disabled]="ctrl.errors" style="height: fit-content; align-self: center; margin-left: 1rem;"
+            class="btn btn-primary" (click)="startRecord()">Record</button>
+    </div>
+
+    <div *ngIf="ctrl.errors && !recording" class="h5">
+        <div style="color: red;" *ngIf="ctrl.errors['exceededMax']">Max: {{ settings.recording_limit }} seconds</div>
+    </div>
+
+    <div *ngIf="recording">
+        Recording started: {{ recording.start_time }} and are recording for {{ recording.recording_time }} secounds
     </div>
 </div>

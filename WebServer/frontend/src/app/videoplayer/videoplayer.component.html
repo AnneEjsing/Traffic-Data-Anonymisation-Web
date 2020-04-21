@@ -28,17 +28,17 @@
 
         </vg-player>
     </div>
-    <div class="row">
-        <app-video-utils [stream]="currentStream"></app-video-utils>
-    </div>
 
-    <div class="form-group" *ngIf="role == 'admin'">
-        <div style="flex-wrap: wrap;align-content: flex-start;display: flex;">
-            <div class="form-group">
-                <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
+    <div style="margin-left: 2rem;">
+        <app-video-utils [stream]="currentStream" [recording]="recording"></app-video-utils>
+        <div class="form-group" *ngIf="role == 'admin'">
+            <div style="flex-wrap: wrap;align-content: flex-start;display: flex;">
+                <div class="form-group">
+                    <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
+                </div>
+
+                <button (click)="SetRecordingLimit()" style="align-self: center;" class="btn btn-primary">Set recording
+                    limit</button>
             </div>
-
-            <button (click)="SetRecordingLimit()" style="align-self: center;" class="btn btn-primary">Set recording
-                limit</button>
         </div>
     </div>

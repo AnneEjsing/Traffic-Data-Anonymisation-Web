@@ -9,12 +9,16 @@
 .mat-list-item {
   padding: 8px 0;
   display: flex;
-  width: auto;
+  width: 100%;
   transition-duration: 0.4s;
 
   .routeIcon {
     margin-right: 1rem;
   }
+}
+
+:host ::ng-deep .mat-list-item .mat-list-item-content {
+  width: 100%;
 }
 
 .mat-list-item:hover  {

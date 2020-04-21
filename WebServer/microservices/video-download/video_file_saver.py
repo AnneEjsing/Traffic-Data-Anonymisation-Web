@@ -62,7 +62,7 @@ def work(data):
         logger.error(f"Could not query database: {response.content.decode('utf-8')}. Userid: {user_id}, cameraid: {camera_id}")
     
     # Gets the ID of the video entry created
-    v_id = response.content['v_id']
+    v_id = response.json()[0]['video_id']
     
     # Concatenates the video segments and deletes the temporary files
     sp.call("ffmpeg -y -f concat -safe 0 -i '"+ filepath +".txt' -c copy '" + path + v_id + ".mp4'" ,shell=True)

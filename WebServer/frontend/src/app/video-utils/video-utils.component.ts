@@ -71,16 +71,18 @@ export class VideoUtilsComponent implements OnInit {
             this.stream.source,
             time,
             userId,
-            this.stream.label, // TODO: Add a real camera ID
+            this.stream.camera_id,
             3600,
           );
 
           // TODO: Something...
-          this.recordService.getRecordingInfo(this.stream.label, userId).then(recording => {
+          this.recordService.getRecordingInfo(this.stream.camera_id, userId).then(recording => {
             this.recording = recording;
           });
-          if (res === 200) {
+
+          if (res == 200) {
             this.openSnackBar("Recording started", "OK");
+            window.location.reload();
           }
           else {
             this.openSnackBar("Recording failed", "OK");
