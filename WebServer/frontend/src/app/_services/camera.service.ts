@@ -44,7 +44,6 @@ export class CameraService {
 
     async createAccessRights(data: any)
     {
-        console.log(data)
         const headers = this.constructHttpHeader();
         return await this.http.post(this.dispatcherUrl + "access/create", data, {headers, responseType: 'text'}).toPromise().then(
             data => { return 200; },
