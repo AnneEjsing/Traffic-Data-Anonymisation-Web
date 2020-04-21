@@ -135,7 +135,7 @@ async def createCamera(request):
         data["owner"] = get_user_id(token)
         return await postQueryAsync(endpoint, data)
     else:
-        return web.Response(text="User must be logged in to create a camera", status=401)
+        return web.Response(text="User must be logged in with administrative privileges to create a camera", status=401)
 
 @routes.put('/camera/update')
 async def createCamera(request):
