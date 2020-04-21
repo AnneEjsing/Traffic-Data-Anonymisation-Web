@@ -1,6 +1,6 @@
 <div class="row">
     <div style="flex-wrap: wrap;align-content: flex-start;display: flex;">
-        <div class="form-group">
+        <div class="form-group" *ngIf="!recording">
             <button (click)="startRecord()">Record</button>
 
             <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
@@ -8,6 +8,9 @@
             <div *ngIf="ctrl.errors" class="h5">
                 <div *ngIf="ctrl.errors['exceededMax']">Max: {{ settings.recording_limit }} secounds</div>
             </div>
+        </div>
+        <div *ngIf="recording">
+            Recording started: {{ recording.start_time }} and are recording for {{ recording.recording_time }} secounds
         </div>
     </div>
 </div>

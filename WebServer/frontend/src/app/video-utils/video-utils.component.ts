@@ -6,7 +6,7 @@ import { IMediaStream } from "../_services/streamMessage.service";
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl } from '@angular/forms';
 import { VideoService } from '../_services/video.service';
-import { videoSettings } from '../_models/video';
+import { videoSettings, recording_info } from '../_models/video';
 
 @Component({
   selector: 'app-video-utils',
@@ -15,6 +15,7 @@ import { videoSettings } from '../_models/video';
 })
 export class VideoUtilsComponent implements OnInit {
   @Input() stream: IMediaStream;
+  @Input() recording: recording_info;
   fileToUpload: File = null;
   canUpload: Boolean = false;
   settings: videoSettings;
@@ -73,27 +74,36 @@ export class VideoUtilsComponent implements OnInit {
   }
 
   async startRecord() {
-    var time = (((this.ctrl.value.hour * 60) + this.ctrl.value.minute) * 60) + this.ctrl.value.second;
+    if (this.ctrl.valid) {
+      var time = (((this.ctrl.value.hour * 60) + this.ctrl.value.minute) * 60) + this.ctrl.value.second;
 
-    this.auth.getId().toPromise().then(async userId => {
-      if (userId) {
-        let res = await this.recordService.postRecordInfo(
-          this.stream.source,
-          time,
-          userId,
-          "blabla", // TODO: Add a real camera ID
-          3600,
-        );
+      this.auth.getId().toPromise().then(async userId => {
+        if (userId) {
+          let res = await this.recordService.postRecordInfo(
+            this.stream.source,
+            time,
+            userId,
+            this.stream.label, // TODO: Add a real camera ID
+            3600,
+          );
 
-        // TODO: Something...
-        if (res === 200) console.log("success");
-        else console.log("error");
-      }
-      else {
-        // TODO: Error handling
-        console.log("error: unautherised")
-      }
-    })
+          // TODO: Something...
+          this.recordService.getRecordingInfo(this.stream.label, userId).then(recording => {
+            this.recording = recording;
+          });
+          if (res === 200) {
+            this.openSnackBar("Recording started", "OK");
+          }
+          else {
+            this.openSnackBar("Recording failed", "OK");
+          }
+        }
+        else {
+          // TODO: Error handling
+          console.log("error: unautherised")
+        }
+      })
+    }
   }
 
   openSnackBar(message: string, action: string) {

@@ -66,12 +66,9 @@ export class SidemenuComponent implements OnInit {
     this.streamService.changeStream(this.streams[0])
     this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
 
-    console.log("staring");
     this.auth.getId().subscribe(id => {
-      console.log(id);
       if (id) {
         this.recordService.listRecordings(id).then(recordings => {
-          console.log(recordings);
           this.recordings = recordings;
         });
       }
@@ -79,7 +76,6 @@ export class SidemenuComponent implements OnInit {
   }
 
   isRecording(camera_id) {
-    console.log(camera_id);
     return this.recordings.some(recording => recording.camera_id == camera_id);
   }
 

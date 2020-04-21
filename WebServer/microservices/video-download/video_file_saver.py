@@ -48,7 +48,7 @@ def work(data):
     # Creates video segments of length interval.
     if interval_times:
         for i in range(interval_times):
-            sp.call("ffmpeg -i " + stream + " -r " + fps + " -t " + interval +" " + filepath+str(i)+".mp4;", shell=True)
+            sp.call("ffmpeg -i " + stream + " -r " + fps + " -t " + str(interval) +" " + filepath+str(i)+".mp4;", shell=True)
             sp.call("echo file \'" + filepath+str(i) + ".mp4\' >>  " + filepath + ".txt", shell=True)
     
     # Creates video segment of length under interval

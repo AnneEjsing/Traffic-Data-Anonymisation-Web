@@ -14,7 +14,6 @@ async def list_camera_id(request):
 
     result, error = executeQuery(query, camera_id)
     
-    print(result)
     if error: return web.Response(text=str(error), status=500)
     else:
         return web.Response(text=data,status=200)
@@ -35,10 +34,22 @@ async def list_user_id(request):
 
     result, error = executeQuery(query, user_id)
     
-    print(result)
+    test = "["
+    for i in range(len(result)):
+        if (i != 0):
+            test += ","
+        camera_id = result[i][0]
+        user_id = result[i][1]
+        start_time = str(result[i][2])
+        recording_time = result[i][3]
+        recording_intervals = result[i][4]
+        temp_data = json.dumps({ "camera_id" : camera_id, "user_id" : user_id, "start_time": start_time, "recording_time": recording_time, "recording_intervals": recording_intervals })
+        test += temp_data
+    test += "]"
+
     if error: return web.Response(text=str(error), status=500)
     else:
-        return web.Response(text=data,status=200)
+        return web.Response(text=test,status=200)
 
 @routes.get('/recordings/get')
 async def get(request):
@@ -56,7 +67,6 @@ async def get(request):
     """
     
     result, error = executeQuery(query, user_id, camera_id)
-    print(result)
     if error: return web.Response(text=str(error), status=500)
     elif (len(result) == 1):
         camera_id = result[0][0]
@@ -82,7 +92,8 @@ async def delete(request):
     query = """
     DELETE FROM recordings
     WHERE user_id = %s
-    AND camera_id = %s;
+    AND camera_id = %s
+    RETURNING *;
     """
 
     result, error = executeQuery(query, user_id, camera_id)

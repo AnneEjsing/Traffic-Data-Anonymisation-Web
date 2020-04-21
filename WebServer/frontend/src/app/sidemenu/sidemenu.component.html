@@ -4,9 +4,8 @@
         [ngClass]="{'selected': currentStream === stream}">
         {{ stream.label }}
 
-        <!-- Får vi ikke id på vores streams? -->
-        <!-- <div *ngIf="isRecording(stream.id)">
-                recording!
-            </div> -->
+        <div *ngIf="isRecording(stream.label)">
+            recording!
+        </div>
     </li>
 </ul>

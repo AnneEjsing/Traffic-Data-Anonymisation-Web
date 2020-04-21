@@ -7,7 +7,6 @@ async def video_update(request):
     """
 
     result, error = executeQuery(query)
-    print(result)
     if error: return web.Response(text=str(error), status=500)
     if (len(result) == 1):
         limit = result[0][0]
@@ -31,6 +30,5 @@ async def update(request):
     """
 
     result, error = executeQuery(query, limit)
-    print(result)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "An error occurred", 404)
