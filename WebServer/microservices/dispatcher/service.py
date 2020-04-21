@@ -167,7 +167,7 @@ async def createCamera(request):
         data = await request.json()
         return await postQueryAsync(endpoint, data)
     else:
-        return web.Response(text="User must be logged in to allow another user to access a camera", status=401)
+        return web.Response(text="User must be logged in with administrative privileges to allow another user to access a camera", status=401)
 
 
 # Authenticate endpoint
