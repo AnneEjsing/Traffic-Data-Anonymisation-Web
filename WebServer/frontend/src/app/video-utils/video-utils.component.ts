@@ -16,26 +16,11 @@ export class VideoUtilsComponent implements OnInit {
   canUpload: Boolean = false;
 
   constructor(
-    private snackBar: MatSnackBar,
     private recordService: RecordService, 
-    private fileUploadService: FileuploadService,
     private auth: AuthService,
     ) { }
 
   ngOnInit(): void {
-  }
-
-  handleFileInput(files: FileList) {
-    this.fileToUpload = files.item(0);
-    this.canUpload = files.length > 0;
-  }
-
-  async uploadFile() {
-    let res = await this.fileUploadService.postFile(this.fileToUpload);
-    if (res === 200) { 
-      this.canUpload = false; 
-    }
-    else this.openSnackBar("An error occured. Try again later", "OK");
   }
 
   async startRecord(time: string) {
@@ -57,11 +42,5 @@ export class VideoUtilsComponent implements OnInit {
         console.log("error: unautherised")
       }
     })
-  }
-
-  openSnackBar(message: string, action: string) {
-    this.snackBar.open(message, action, {
-      duration: 5000,
-    });
   }
 }

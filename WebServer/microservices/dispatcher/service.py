@@ -201,7 +201,7 @@ async def upload_model(request):
         # Data cannot just be forwarded. File need to be sent using the format below.
         model = data['file']
         files = {'file': (model.filename, model.file, model.content_type, model.headers)}
-        data={'ip':data['ip']}
+        data={'camera_id':data['camera_id']}
         response = requests.post(endpoint,data=data, files=files)
         return web.Response(status=response.status_code)
     else:

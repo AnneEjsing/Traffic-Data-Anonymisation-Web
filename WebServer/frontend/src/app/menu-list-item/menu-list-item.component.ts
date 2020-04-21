@@ -6,6 +6,7 @@ import { CameraDialog } from "../add-camera/add-camera.component";
 import { MatDialog } from "@angular/material/dialog";
 import { ShareStreamComponent } from "../share-stream/share-stream.component";
 import { AuthService } from "../_services/auth.service";
+import { ModelChangerComponent } from '../model-changer/model-changer.component';
 
 
 @Component({
@@ -62,6 +63,12 @@ export class MenuListItemComponent implements OnInit {
   async share() {
     this.dialog.open(ShareStreamComponent, {
       data: { camera_id: this.item.camera_id, email: "" },
+    });
+  }
+
+  async change() {
+    this.dialog.open(ModelChangerComponent, {
+      data: { camera_id: this.item.camera_id },
     });
   }
 }
