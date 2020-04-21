@@ -146,7 +146,7 @@ async def createCamera(request):
         data = await request.json()
         return await putQueryAsync(endpoint, data)
     else:
-        return web.Response(text="User must be logged in to create a camera", status=401)
+        return web.Response(text="User must be logged in with administrative privileges to update a camera", status=401)
 
 @routes.delete('/camera/delete')
 async def deleteCamera(request):
