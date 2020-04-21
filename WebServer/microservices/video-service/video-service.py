@@ -30,4 +30,4 @@ async def send_request(path, json, query_function):
 
 app = web.Application()
 app.add_routes(routes)
-web.run_app(app, host='0.0.0.0', port=1341)
+web.run_app(app, host='0.0.0.0', port=1342)
