@@ -156,7 +156,7 @@ async def deleteCamera(request):
         endpoint = cameraService + "/camera/delete?id=" + request.query['id']
         return await deleteQueryAsync(endpoint)
     else:
-        return web.Response(text="User must be logged in to delete a camera", status=401)
+        return web.Response(text="User must be logged in with administrative privileges to delete a camera", status=401)
 
 @routes.post('/access/create')
 async def createCamera(request):
