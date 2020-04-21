@@ -77,7 +77,23 @@ services: # Here we define our service(s)
       context: ./microservices/video-service/
       dockerfile: Dockerfile
     ports:
-      - "1341:1341"
+      - "1342:1342"
+    links:
+      - dbresolver
+    depends_on:
+      - dbresolver
+    networks:
+      - traffic_net
+
+  cameraservice:
+    container_name: cameraservice
+    build:
+      context: ./microservices/camera-service/
+      dockerfile: Dockerfile
+    ports:
+      - "1340:1340"
+    links:
+      - dbresolver
     depends_on:
       - dbresolver
     networks:
@@ -117,7 +133,7 @@ services: # Here we define our service(s)
       context: ./microservices/model-changer/
       dockerfile: Dockerfile
     ports:
-      - "1340:1340"
+      - "1341:1341"
     networks:
       - traffic_net
 

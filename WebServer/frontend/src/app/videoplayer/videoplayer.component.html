@@ -28,22 +28,17 @@
 
         </vg-player>
     </div>
+    <div class="row">
+        <app-video-utils [stream]="currentStream"></app-video-utils>
+    </div>
 
-    <div class="ml-2">
-        <label>
-            Media Url (add url to see different stream): <input type="text" [(ngModel)]="currentStream.source">
-        </label>
-        <app-video-utils [stream]="currentStream" [recording]="recording"></app-video-utils>
-
-        <br>
-        <div class="form-group" *ngIf="role == 'admin'">
-            <div style="flex-wrap: wrap;align-content: flex-start;display: flex;">
-                <div class="form-group">
-                    <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
-                </div>
-
-                <button (click)="SetRecordingLimit()" style="align-self: center;" class="btn btn-primary">Set recording
-                    limit</button>
+    <div class="form-group" *ngIf="role == 'admin'">
+        <div style="flex-wrap: wrap;align-content: flex-start;display: flex;">
+            <div class="form-group">
+                <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
             </div>
+
+            <button (click)="SetRecordingLimit()" style="align-self: center;" class="btn btn-primary">Set recording
+                limit</button>
         </div>
     </div>

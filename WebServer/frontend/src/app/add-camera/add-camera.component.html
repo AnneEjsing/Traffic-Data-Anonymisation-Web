@@ -1,0 +1,36 @@
+<h1 mat-dialog-title>{{title}}</h1>
+
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Label</mat-label>
+    <input matInput [(ngModel)]="data.label">
+  </mat-form-field>
+</div>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Description</mat-label>
+    <textarea matInput
+            cdkTextareaAutosize
+            #autosize="cdkTextareaAutosize"
+            cdkAutosizeMinRows="1"
+            cdkAutosizeMaxRows="5"
+            [(ngModel)]="data.description"></textarea>
+  </mat-form-field>
+</div>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>URL</mat-label>
+    <input matInput [(ngModel)]="data.source">
+  </mat-form-field>
+</div>
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>IP</mat-label>
+    <input matInput [(ngModel)]="data.ip">
+  </mat-form-field>
+</div>
+
+<div mat-dialog-actions>
+  <button mat-button [disabled]="requesting" (click)="save()" cdkFocusInitial>Save</button>
+  <button mat-button (click)="close()">Close</button>
+</div>

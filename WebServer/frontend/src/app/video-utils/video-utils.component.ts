@@ -20,26 +20,6 @@ export class VideoUtilsComponent implements OnInit {
   canUpload: Boolean = false;
   settings: videoSettings;
 
-  constructor(
-    private snackBar: MatSnackBar,
-    private recordService: RecordService,
-    private fileUploadService: FileuploadService,
-    private auth: AuthService,
-    private videoService: VideoService,
-  ) {
-    this.settings = <videoSettings>{};
-    this.ctrl.setValue({ hour: 1, minute: 0, second: 0 });
-  }
-
-  ngOnInit(): void {
-    this.getSettings();
-  }
-
-  handleFileInput(files: FileList) {
-    this.fileToUpload = files.item(0);
-    this.canUpload = files.length > 0;
-  }
-
   ctrl = new FormControl('', (control: FormControl) => {
     const value = control.value;
 
@@ -53,12 +33,20 @@ export class VideoUtilsComponent implements OnInit {
     return null;
   });
 
-  async uploadFile() {
-    let res = await this.fileUploadService.postFile(this.fileToUpload, this.stream.ip);
-    if (res === 200) {
-      this.canUpload = false;
-    }
-    else this.openSnackBar("An error occured. Try again later", "OK");
+
+  constructor(
+    private snackBar: MatSnackBar,
+    private recordService: RecordService,
+    private fileUploadService: FileuploadService,
+    private auth: AuthService,
+    private videoService: VideoService,
+  ) {
+    this.settings = <videoSettings>{};
+    this.ctrl.setValue({ hour: 1, minute: 0, second: 0 });
+  }
+
+  ngOnInit(): void {
+    this.getSettings();
   }
 
   getSettings() {
@@ -108,7 +96,7 @@ export class VideoUtilsComponent implements OnInit {
 
   openSnackBar(message: string, action: string) {
     this.snackBar.open(message, action, {
-      duration: 5000,
+      duration: 2000,
     });
   }
 }

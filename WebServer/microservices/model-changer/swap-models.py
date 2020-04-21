@@ -3,13 +3,16 @@ import asyncio
 import requests
 
 routes = web.RouteTableDef()
+dbresolver = 'http://dbresolver:1337/'
 
 @routes.post("/model/upload")
 async def remote_change_ml(request):
     # request.post is nessecary as data is not json, but a file.
     data = await request.post()
-    ip = data['ip']
+    camera_id = data['camera_id']
     model = data['file']
+    response = requests.get(dbresolver+'camera/get', headers={'Content-type': 'application/json'}, json={'id': camera_id})
+    ip = response.json()['ip']
 
     # File extension .pb is for SSD models, and extension .m5 is for retinanet models.
     extension = model.filename.split('.')[1]
@@ -29,4 +32,4 @@ async def remote_change_ml(request):
 if __name__ == "__main__":  
     app = web.Application(client_max_size=0)
     app.add_routes(routes)
-    web.run_app(app, host='0.0.0.0', port=1340)
+    web.run_app(app, host='0.0.0.0', port=1341)

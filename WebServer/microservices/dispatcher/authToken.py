@@ -48,7 +48,7 @@ def verify_token(token, desired_role):
     if (isSuccess):
         isAuth = is_authorized(token, desired_role)
         if (isAuth):
-            return True, "Pass"
+            return True, 200
         else:
             return False, 403
     else:
@@ -66,6 +66,10 @@ def get_user_id(token):
     id, subject, role, expiration = get_payload_info(payload)
     return subject
 
+def get_rights(token):
+    header, payload, signature = token.split('.')
+    id, subject, role, expiration = get_payload_info(payload)
+    return role
 
 def verify_date(date):
     return (datetime.utcnow() < datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%f'))

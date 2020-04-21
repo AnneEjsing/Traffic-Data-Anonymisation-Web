@@ -1,0 +1,17 @@
+<a mat-list-item [ngStyle]="{'padding-left': (1 * 12) + 'px'}" class="menu-list-item" (click)=onItemSelected()
+class="menu-list-item">
+    <mat-icon class="routeIcon">videocam</mat-icon>
+    {{item.label}}
+    <span fxFlex *ngIf="admin">
+      <span fxFlex></span>
+      <mat-icon [@indicatorRotate]="expanded ? 'expanded': 'collapsed'">
+        expand_more
+      </mat-icon>
+    </span>
+</a>
+<div *ngIf="expanded && admin">
+  <button mat-button (click)=delete()> Delete Stream </button>
+  <button mat-button (click)=edit()> Edit Stream </button>
+  <button mat-button (click)=share()> Share Stream </button>
+  <button mat-button (click)=change()> Change Model </button>
+</div>
