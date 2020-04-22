@@ -13,7 +13,7 @@ export class ShareStreamComponent {
 
   constructor(
     public dialogRef: MatDialogRef<string>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: {[key: string]: string},
     public cameraService: CameraService
   ) {}
 
