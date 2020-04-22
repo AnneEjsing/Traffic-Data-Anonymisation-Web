@@ -36,7 +36,6 @@ export class VideoUtilsComponent implements OnInit {
   constructor(
     private snackBar: MatSnackBar,
     private recordService: RecordService,
-    private fileUploadService: FileuploadService,
     private auth: AuthService,
     private videoService: VideoService,
   ) {
