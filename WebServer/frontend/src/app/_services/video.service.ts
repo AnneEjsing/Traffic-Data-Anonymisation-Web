@@ -29,12 +29,4 @@ export class VideoService {
 
         return httpOptions;
     }
-
-    constructHttpHeaders() {
-        const httpHeader = new HttpHeaders({
-            'Content-Type': 'application/json',
-        });
-
-        return httpHeader;
-    }
 }

@@ -33,19 +33,6 @@ async def list_user_id(request):
     """
 
     result, error = executeQuery(query, user_id)
-    #test = "["
-    #for i in range(len(result)):
-    #    if (i != 0):
-    #        test += ","
-    #    camera_id = result[i][0]
-    #    user_id = result[i][1]
-    #    start_time = str(result[i][2])
-    #    recording_time = result[i][3]
-    #    recording_intervals = result[i][4]
-    #    temp_data = json.dumps({ "camera_id" : camera_id, "user_id" : user_id, "start_time": start_time, "recording_time": recording_time, "recording_intervals": recording_intervals })
-    #    test += temp_data
-    #test += "]"
-
     if error: return web.Response(text=str(error), status=500)
     else:
         return web.Response(text=json.dumps(result, default=str),status=200)

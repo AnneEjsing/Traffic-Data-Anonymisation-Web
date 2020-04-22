@@ -42,7 +42,6 @@ def work(data):
     
     if insert_response.status_code != 200:
         logger.error(f"Cound not insert recording in database for camera_id {camera_id}, user_id: {user_id}. With error: {insert_response.text}")
-        #TODO: what should happen if this fails??
 
     # Creates video segments of length interval.
     if interval_times:
