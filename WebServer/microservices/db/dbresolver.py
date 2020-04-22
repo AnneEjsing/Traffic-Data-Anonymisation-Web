@@ -76,7 +76,8 @@ exec(open("user.py").read())
 exec(open("camera.py").read())
 exec(open("access-right.py").read())
 exec(open("video.py").read())
-
+exec(open("video_settings.py").read())
+exec(open("recordings.py").read())
 
 if __name__ == "__main__":
     app = web.Application()

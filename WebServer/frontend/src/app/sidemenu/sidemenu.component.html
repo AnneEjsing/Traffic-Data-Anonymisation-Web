@@ -6,6 +6,8 @@
 </button>
 
 <ul style="padding-left: 0%;">
-    <app-menu-list-item *ngFor="let stream of streams" [item]="stream" (click)="onClickStream(stream)"
-    [ngClass]="{'selected': currentStream === stream}">{{ stream.label }}></app-menu-list-item>
+    <app-menu-list-item style="cursor: pointer;" *ngFor="let stream of streams" [item]="stream"
+        [isRecording]="isRecording(stream.camera_id)" (click)="onClickStream(stream)"
+        [ngClass]="{'selected': currentStream === stream}">{{ stream.label }}>
+    </app-menu-list-item>
 </ul>

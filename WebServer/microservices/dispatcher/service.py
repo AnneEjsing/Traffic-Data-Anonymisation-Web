@@ -9,8 +9,9 @@ from authToken import create_token, verify_credentials, verify_token, get_user_i
 
 routes = web.RouteTableDef()
 
-profileService = "http://profileservice:1338"
 videoDownloadService = "http://videodownloader:1336"
+profileService = "http://profileservice:1338"
+videoSettingsService = "http://videoservice:1342"
 modelChangerService = "http://modelchanger:1341"
 cameraService = "http://cameraservice:1340"
 
@@ -188,6 +189,29 @@ async def record_continuous(request):
         return await postQueryAsync(endpoint, data)
     else:
         return web.Response(text="User must be logged in to downloade a video", status=401)
+
+###### Video endpoints
+@routes.get('/settings/get')
+async def get_settings(request):
+    return await getQueryAsync(videoSettingsService + "/get", { })
+
+@routes.post('/settings/update')
+async def update_settings(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised, status_code = verify_token(token, "admin")
+    if(isAuthorised):
+        string = videoSettingsService + "/update"
+        return await postQueryAsync(string, (await request.json()))
+    else:
+        return web.Response(status=status_code)
+
+@routes.post('/get/recording')
+async def get_recording_info(request):
+    return await getQueryAsync(videoSettingsService + "/get/recording", (await request.json()))
+
+@routes.post('/recordings/list/user_id')
+async def get_recording_info(request):
+    return await getQueryAsync(videoSettingsService + "/recordings/list/user_id", (await request.json()))
 
 # Model changer
 @routes.post("/model/upload")

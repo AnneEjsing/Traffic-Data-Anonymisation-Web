@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { HomepageComponent } from './homepage/homepage.component';
@@ -19,6 +19,8 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { LoginService } from './_services/login.service';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { AuthService } from './_services/auth.service';
+import { VideoService } from './_services/video.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { TopbarComponent } from './topbar/topbar.component';
 import { AboutComponent } from './about/about.component';
 import { CameraDialog } from './add-camera/add-camera.component';
@@ -43,10 +45,11 @@ import { ModelChangerComponent } from './model-changer/model-changer.component'
     ModelChangerComponent
   ],
   imports: [
-    MatDialogModule, //IDK why this needs to be explicit imported when part of DemoMatherialModule, the rest does not
+    MatDialogModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     DemoMaterialModule,
     AppRoutingModule,
     VgCoreModule,
@@ -54,7 +57,8 @@ import { ModelChangerComponent } from './model-changer/model-changer.component'
     VgOverlayPlayModule,
     VgBufferingModule,
     VgStreamingModule,
-    HttpClientModule
+    HttpClientModule,
+    NgbModule
   ],
   providers: [
     ProfileService,
@@ -63,6 +67,7 @@ import { ModelChangerComponent } from './model-changer/model-changer.component'
     StreamMessageService,
     JwtHelperService,
     AuthService,
+    VideoService,
     CameraService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
   ],

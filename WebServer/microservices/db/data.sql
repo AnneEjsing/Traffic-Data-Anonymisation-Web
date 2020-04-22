@@ -37,6 +37,10 @@ CREATE TABLE public.cameras (
     owner uuid NOT NULL REFERENCES public.users(user_id)
 );
 
+CREATE TABLE public.video_settings (
+    recording_limit integer NOT NULL
+);
+
 CREATE TABLE public.recorded_videos (
     video_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     user_id uuid REFERENCES public.users(user_id) ON DELETE CASCADE,
@@ -53,12 +57,27 @@ CREATE TABLE public.access_rights (
 ALTER TABLE ONLY public.access_rights
     ADD CONSTRAINT access_rights_pkey PRIMARY KEY (camera_id,user_id);
 
+CREATE TABLE public.recordings (
+    camera_id uuid NOT NULL REFERENCES public.cameras(camera_id),
+    user_id uuid NOT NULL REFERENCES public.users(user_id),
+    start_time timestamp NOT NULL,
+    recording_time integer NOT NULL,
+    recording_intervals integer NOT NULL
+);
+
+ALTER TABLE ONLY public.access_rights
+    ADD CONSTRAINT recordings_pkey PRIMARY KEY (camera_id,user_id);
 
 -- Table ownership
 ALTER TABLE public.users OWNER TO postgres;
 ALTER TABLE public.recorded_videos OWNER TO postgres;
 ALTER TABLE public.cameras OWNER TO postgres;
 ALTER TABLE public.access_rights OWNER TO postgres;
+ALTER TABLE public.video_settings OWNER TO postgres;
+ALTER TABLE public.recordings OWNER TO postgres;
+
+-- Start up data
+INSERT INTO public.video_settings(recording_limit) VALUES (18000);
 
 
 INSERT INTO users (user_id,email,role,password)

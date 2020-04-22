@@ -1,40 +1,44 @@
-<! https://github.com/videogular/videogular2/tree/master/docs/modules/streaming/vg-hls >
-<div class="videogular-container" >
-    <vg-player (onPlayerReady)="onPlayerReady($event)">
-        <vg-overlay-play></vg-overlay-play>
-        <vg-buffering></vg-buffering>
-    
-        <vg-controls>
-            <vg-play-pause></vg-play-pause>
-    
-            <vg-scrub-bar>
-                <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
-                <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
-            </vg-scrub-bar>
-    
-            <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
-    
-            <vg-quality-selector *ngIf="bitrates"
-                                 (onBitrateChange)="setBitrate($event)"
-                                 [bitrates]="bitrates">
-            </vg-quality-selector>
-    
-            <vg-mute></vg-mute>
-            <vg-volume></vg-volume>
-    
-            <vg-fullscreen></vg-fullscreen>
-        </vg-controls>
-        <video #media
-               (onGetBitrates)="bitrates = $event"
-               [vgMedia]="media"
-               [vgDash]="currentStream.source"
-               [vgHls]="currentStream.source"
-               id="singleVideo"
-               crossorigin>
-        </video>
-        
-    </vg-player>
-</div>
-<div class="row">
-    <app-video-utils [stream]="currentStream"></app-video-utils>
-</div>
+<! https://github.com/videogular/videogular2/tree/master/docs/modules/streaming/vg-hls>
+    <div class="videogular-container">
+        <vg-player (onPlayerReady)="onPlayerReady($event)">
+            <vg-overlay-play></vg-overlay-play>
+            <vg-buffering></vg-buffering>
+
+            <vg-controls>
+                <vg-play-pause></vg-play-pause>
+
+                <vg-scrub-bar>
+                    <vg-scrub-bar-current-time></vg-scrub-bar-current-time>
+                    <vg-scrub-bar-buffering-time></vg-scrub-bar-buffering-time>
+                </vg-scrub-bar>
+
+                <vg-time-display vgProperty="left" vgFormat="mm:ss"></vg-time-display>
+
+                <vg-quality-selector *ngIf="bitrates" (onBitrateChange)="setBitrate($event)" [bitrates]="bitrates">
+                </vg-quality-selector>
+
+                <vg-mute></vg-mute>
+                <vg-volume></vg-volume>
+
+                <vg-fullscreen></vg-fullscreen>
+            </vg-controls>
+            <video #media (onGetBitrates)="bitrates = $event" [vgMedia]="media" [vgDash]="currentStream.source"
+                [vgHls]="currentStream.source" id="singleVideo" crossorigin>
+            </video>
+
+        </vg-player>
+    </div>
+
+    <div style="margin-left: 2rem;">
+        <app-video-utils [stream]="currentStream" [recording]="recording"></app-video-utils>
+        <div class="form-group" *ngIf="role == 'admin'">
+            <div style="flex-wrap: wrap;align-content: flex-start;display: flex;">
+                <div class="form-group">
+                    <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
+                </div>
+
+                <button (click)="SetRecordingLimit()" style="align-self: center;" class="btn btn-primary">Set recording
+                    limit</button>
+            </div>
+        </div>
+    </div>

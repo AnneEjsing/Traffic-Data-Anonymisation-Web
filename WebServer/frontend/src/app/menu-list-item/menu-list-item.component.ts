@@ -1,5 +1,5 @@
-import {Component, HostBinding, Input, OnInit} from '@angular/core';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 import { IMediaStream } from '../_services/streamMessage.service'
 import { CameraService } from '../_services/camera.service'
 import { CameraDialog } from "../add-camera/add-camera.component";
@@ -15,8 +15,8 @@ import { ModelChangerComponent } from '../model-changer/model-changer.component'
   styleUrls: ['./menu-list-item.component.scss'],
   animations: [
     trigger('indicatorRotate', [
-      state('collapsed', style({transform: 'rotate(0deg)'})),
-      state('expanded', style({transform: 'rotate(180deg)'})),
+      state('collapsed', style({ transform: 'rotate(0deg)' })),
+      state('expanded', style({ transform: 'rotate(180deg)' })),
       transition('expanded <=> collapsed',
         animate('225ms cubic-bezier(0.4,0.0,0.2,1)')
       ),
@@ -28,19 +28,22 @@ export class MenuListItemComponent implements OnInit {
   admin: boolean;
   @HostBinding("attr.aria-expanded") ariaExpanded = this.expanded;
   @Input() item: IMediaStream;
+  @Input() isRecording: Boolean;
 
   constructor(
     public dialog: MatDialog,
     public cameraService: CameraService,
     public authService: AuthService
-  ) {}
+  ) {
+
+  }
 
   ngOnInit() {
     this.authService.isAuthenticatedAdmin().toPromise().then(
       (data) => {
         this.admin = data;
       },
-      (error) => {}
+      (error) => { }
     );
   }
 
