@@ -136,7 +136,7 @@ async def createCamera(request):
         data["owner"] = get_user_id(token)
         return await postQueryAsync(endpoint, data)
     else:
-        return web.Response(text="User must be logged in to create a camera", status=401)
+        return web.Response(text="User must be logged in with administrative privileges to create a camera", status=401)
 
 @routes.put('/camera/update')
 async def createCamera(request):
@@ -147,7 +147,7 @@ async def createCamera(request):
         data = await request.json()
         return await putQueryAsync(endpoint, data)
     else:
-        return web.Response(text="User must be logged in to create a camera", status=401)
+        return web.Response(text="User must be logged in with administrative privileges to update a camera", status=401)
 
 @routes.delete('/camera/delete')
 async def deleteCamera(request):
@@ -157,7 +157,7 @@ async def deleteCamera(request):
         endpoint = cameraService + "/camera/delete?id=" + request.query['id']
         return await deleteQueryAsync(endpoint)
     else:
-        return web.Response(text="User must be logged in to delete a camera", status=401)
+        return web.Response(text="User must be logged in with administrative privileges to delete a camera", status=401)
 
 @routes.post('/access/create')
 async def createCamera(request):
@@ -168,7 +168,7 @@ async def createCamera(request):
         data = await request.json()
         return await postQueryAsync(endpoint, data)
     else:
-        return web.Response(text="User must be logged in to allow another user to access a camera", status=401)
+        return web.Response(text="User must be logged in with administrative privileges to allow another user to access a camera", status=401)
 
 
 # Authenticate endpoint

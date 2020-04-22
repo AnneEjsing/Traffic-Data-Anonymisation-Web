@@ -29,7 +29,6 @@ export class CameraDialog {
     this.isEdit = this.data['label'] !== "";
     if(this.isEdit)
     {
-      console.log(this.data)
       this.title = "Edit"
     }
     else

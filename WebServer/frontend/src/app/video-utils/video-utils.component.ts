@@ -1,6 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { RecordService } from "../_services/record.service";
-import { FileuploadService } from "../_services/fileupload.service"
 import { AuthService } from '../_services/auth.service';
 import { IMediaStream } from "../_services/streamMessage.service";
 import { MatSnackBar } from '@angular/material/snack-bar';

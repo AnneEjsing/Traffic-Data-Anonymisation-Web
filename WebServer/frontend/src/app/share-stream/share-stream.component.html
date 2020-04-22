@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>Share this stream with:</h1>
+<h1 mat-dialog-title>Make stream available to:</h1>
 
 <div mat-dialog-content>
   <mat-form-field>
@@ -7,9 +7,9 @@
   </mat-form-field>
 </div>
 <div *ngIf="failed" mat-dialog-content>
-  <p style="color: red;">This person already has access to the camera</p>
+  <p style="color: red;">{{failedstring}}</p>
 </div>
 <div mat-dialog-actions>
-  <button mat-button [disabled]="requesting" (click)="save()" cdkFocusInitial>Share</button>
+  <button mat-button [disabled]="requesting" (click)="save()" cdkFocusInitial>Make Available</button>
   <button mat-button (click)="close()">Close</button>
 </div>

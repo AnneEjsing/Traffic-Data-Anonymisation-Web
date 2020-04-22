@@ -10,10 +10,11 @@ import { CameraService } from "../_services/camera.service";
 export class ShareStreamComponent {
   requesting: boolean = false;
   failed: boolean = false;
+  failedstring:string = ""
 
   constructor(
     public dialogRef: MatDialogRef<string>,
-    @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: {[key: string]: string},
     public cameraService: CameraService
   ) {}
 
@@ -25,10 +26,18 @@ export class ShareStreamComponent {
     if (res == 200) {
       this.dialogRef.close();
       window.location.reload();
-    } else if (res == 500){
+    } 
+    else if (res == 404) {
       this.failed = true;
+      this.failedstring = "This person does not exist"
+    }
+    else if (res == 409){
+      this.failed = true;
+      this.failedstring = "This person already has access to the stream"
     }
      else {
+      this.failed = true;
+      this.failedstring = "Something went wrong. Please try again."
     }
   }
 
