@@ -19,15 +19,14 @@ def periodically_delete(delay,days):
             logger.error(f"Could not query database: {response.status_code} {response.content.decode('utf-8')}. Query: {queryString}")
         
         #Decode response
-        content = response.content.decode('utf-8').replace("datetime.datetime","")
-        videos = ast.literal_eval(content)
+        videos = response.json()
 
         #Delete too old videos
         now = datetime.datetime.utcnow()
-        for v_id,_,_,_,date in videos:
+        for video in videos:
             #Extract date
-            y,mo,d,h,min,s,ms = date
-            save_time = datetime.datetime(y,mo,d,h,min,s,ms)
+            v_id = video['video_id']
+            save_time = datetime.datetime.strptime(video['save_time'],'%Y-%m-%d %H:%M:%S.%f')
             delete_time = save_time + datetime.timedelta(days=days)
 
             #Skip if it is not time to delete yet

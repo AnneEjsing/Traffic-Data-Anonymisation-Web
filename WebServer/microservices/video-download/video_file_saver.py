@@ -4,7 +4,6 @@ import subprocess as sp
 import requests
 import uuid
 import datetime
-import ast
 import os
 import threading
 from loguru import logger
@@ -52,8 +51,7 @@ def work(data):
         logger.error(f"Could not query database: {response.content.decode('utf-8')}. Userid: {user_id}, cameraid: {camera_id}")
     
     # Gets the ID of the video entry created
-    content = response.content.decode('utf-8').replace("datetime.datetime","")
-    v_id,_,_,_,_ = ast.literal_eval(content)[0]
+    v_id = response.content['v_id']
     
     # Concatenates the video segments and deletes the temporary files
     sp.call("ffmpeg -y -f concat -safe 0 -i '"+ filepath +".txt' -c copy '" + path + v_id + ".mp4'" ,shell=True)

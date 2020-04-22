@@ -70,6 +70,20 @@ services: # Here we define our service(s)
       - dbresolver
     networks:
       - traffic_net
+
+  cameraservice:
+    container_name: cameraservice
+    build:
+      context: ./microservices/camera-service/
+      dockerfile: Dockerfile
+    ports:
+      - "1340:1340"
+    links:
+      - dbresolver
+    depends_on:
+      - dbresolver
+    networks:
+      - traffic_net
   
   streamer:
     container_name: streamer

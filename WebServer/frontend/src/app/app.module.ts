@@ -21,6 +21,11 @@ import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { AuthService } from './_services/auth.service';
 import { TopbarComponent } from './topbar/topbar.component';
 import { AboutComponent } from './about/about.component';
+import { CameraDialog } from './add-camera/add-camera.component';
+import { CameraService } from './_services/camera.service'
+import { MenuListItemComponent } from './menu-list-item/menu-list-item.component';
+import { ShareStreamComponent } from './share-stream/share-stream.component';
+import { ModelChangerComponent } from './model-changer/model-changer.component'
 
 @NgModule({
   declarations: [
@@ -32,6 +37,10 @@ import { AboutComponent } from './about/about.component';
     LoginDialog,
     TopbarComponent,
     AboutComponent,
+    CameraDialog,
+    MenuListItemComponent,
+    ShareStreamComponent,
+    ModelChangerComponent
   ],
   imports: [
     MatDialogModule, //IDK why this needs to be explicit imported when part of DemoMatherialModule, the rest does not
@@ -45,8 +54,7 @@ import { AboutComponent } from './about/about.component';
     VgOverlayPlayModule,
     VgBufferingModule,
     VgStreamingModule,
-    HttpClientModule,
-    MatDialogModule, //IDK why this needs to be explicit imported when part of DemoMatherialModule, the rest does not
+    HttpClientModule
   ],
   providers: [
     ProfileService,
@@ -55,6 +63,7 @@ import { AboutComponent } from './about/about.component';
     StreamMessageService,
     JwtHelperService,
     AuthService,
+    CameraService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
   ],
   bootstrap: [

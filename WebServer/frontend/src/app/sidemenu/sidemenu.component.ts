@@ -1,6 +1,10 @@
 import { Component, OnInit, Inject } from '@angular/core';
 import { Subscription, timer } from "rxjs";
 import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service";
+import { ProfileService } from "../_services/profile.service"
+import { CameraDialog } from '../add-camera/add-camera.component'
+import { MatDialog } from '@angular/material/dialog';
+
 
 @Component({
   selector: 'app-sidemenu',
@@ -11,47 +15,33 @@ import { StreamMessageService, IMediaStream } from "../_services/streamMessage.s
 
 export class SidemenuComponent implements OnInit {
   currentStream: IMediaStream;
-
-  //Change this to something that fetches it from a microservice.
-  streams: IMediaStream[] = [
-    {
-      label: "LiveCamera 1",
-      /*source: 'http://192.168.1.107:8080/hls/stream.m3u8'*/
-      source:
-        "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8",
-      ip: "localhost"
-    },
-    {
-      label: "NotLiveCamera 2",
-      source:
-        "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8",
-      ip: "localhost"
-    },
-    {
-      label: "NotLiveCamera 3",
-      source:
-        "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8",
-      ip: "localhost"
-    },
-    {
-      label: "NotLiveCamera 4",
-      source:
-        "https://mnmedias.api.telequebec.tv/m3u8/29880.m3u8",
-      ip: "localhost"
-    }
-  ];
+  streams: IMediaStream[];
 
   loggedIn: boolean = false;
   email: string;
 
   constructor(
+    public dialog: MatDialog,
     private streamService: StreamMessageService,
-  ) { }
-
-  ngOnInit(): void {
+    private profileService: ProfileService
+    ) { }
     
-    this.streamService.changeStream(this.streams[0])
-    this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+  ngOnInit() {
+    
+    if (localStorage.getItem('session_token'))
+    {
+      this.profileService.listStreams().then(
+        response => {
+          this.streams = response;
+          if (this.streams.length == 0)
+              this.currentStream = this.streamService.defaultStream;
+          else {
+            this.streamService.changeStream(this.streams[0])
+            this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+          }
+        },
+        error => {})
+      }
   }
 
   onClickStream(stream: IMediaStream) {
@@ -61,5 +51,12 @@ export class SidemenuComponent implements OnInit {
         t.unsubscribe();
       }
     );
+  }
+
+
+  openCameraDialog(): void {
+    this.dialog.open(CameraDialog, {
+      data: { label: "", source: "", description: "", ip: "" }
+    });
   }
 }

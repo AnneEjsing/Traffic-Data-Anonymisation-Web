@@ -5,13 +5,14 @@ import asyncio
 import aiohttp_cors
 
 # Used for token creation and Verification
-from authToken import create_token, verify_credentials, verify_token, get_user_id, authenticate
+from authToken import create_token, verify_credentials, verify_token, get_user_id, authenticate, get_rights
 
 routes = web.RouteTableDef()
 
 profileService = "http://profileservice:1338"
 videoDownloadService = "http://videodownloader:1336"
 modelChangerService = "http://modelchanger:1341"
+cameraService = "http://cameraservice:1340"
 
 # Standard Get, Post, Delete, Out Requests
 
@@ -96,6 +97,78 @@ async def listUsers(request):
     listString = profileService + "/list"
     return await getQueryAsync(listString, json.dumps({}))
 
+# Camera endpoints
+@routes.get('/camera/list')
+async def listCamera(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    userId = get_user_id(token)
+    rights = get_rights(token)
+    isAuthorised, status_code = verify_token(token, rights)
+    if isAuthorised:
+        listString = ""
+        if rights == "admin":
+            listString = cameraService + "/camera/adminlist"
+        else: 
+            listString = cameraService + "/camera/userlist"
+        return await getQueryAsync(listString,{"id": userId}) 
+    else:
+        return web.Response(status=status_code)
+
+@routes.get('/camera/get')
+async def getCamera(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised = authenticate(token)
+    if isAuthorised:
+        endpoint = cameraService + "/camera/get"
+        data = {'id': request.query['id']}
+        return await getQueryAsync(endpoint, data)
+    else:
+        return web.Response(text="User must be logged in to edit a camera", status=401)
+
+@routes.post('/camera/create')
+async def createCamera(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised = authenticate(token)
+    if isAuthorised and get_rights(token) == 'admin':
+        endpoint = cameraService + "/camera/create"
+        data = await request.json()
+        data["owner"] = get_user_id(token)
+        return await postQueryAsync(endpoint, data)
+    else:
+        return web.Response(text="User must be logged in with administrative privileges to create a camera", status=401)
+
+@routes.put('/camera/update')
+async def createCamera(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised = authenticate(token)
+    if isAuthorised and get_rights(token) == 'admin':
+        endpoint = cameraService + "/camera/update"
+        data = await request.json()
+        return await putQueryAsync(endpoint, data)
+    else:
+        return web.Response(text="User must be logged in with administrative privileges to update a camera", status=401)
+
+@routes.delete('/camera/delete')
+async def deleteCamera(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised = authenticate(token)
+    if isAuthorised and get_rights(token) == 'admin':
+        endpoint = cameraService + "/camera/delete?id=" + request.query['id']
+        return await deleteQueryAsync(endpoint)
+    else:
+        return web.Response(text="User must be logged in with administrative privileges to delete a camera", status=401)
+
+@routes.post('/access/create')
+async def createCamera(request):
+    token = request.headers['Authorization'].split('Bearer ')[1]
+    isAuthorised = authenticate(token)
+    if isAuthorised and get_rights(token) == 'admin':
+        endpoint = cameraService + "/access/create"
+        data = await request.json()
+        return await postQueryAsync(endpoint, data)
+    else:
+        return web.Response(text="User must be logged in with administrative privileges to allow another user to access a camera", status=401)
+
 
 # Authenticate endpoint
 @routes.get("/auth/authenticate")
@@ -128,7 +201,7 @@ async def upload_model(request):
         # Data cannot just be forwarded. File need to be sent using the format below.
         model = data['file']
         files = {'file': (model.filename, model.file, model.content_type, model.headers)}
-        data={'ip':data['ip']}
+        data={'camera_id':data['camera_id']}
         response = requests.post(endpoint,data=data, files=files)
         return web.Response(status=response.status_code)
     else:

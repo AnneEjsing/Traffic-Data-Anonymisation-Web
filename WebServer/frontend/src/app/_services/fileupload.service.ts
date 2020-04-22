@@ -10,10 +10,10 @@ export class FileuploadService {
   readonly dispatcherUrl = global.dispatcherUrl;
   constructor(private http: HttpClient) {}
 
-  async postFile(file: File, cameraIp: string) {
+  async postFile(file: File, camera_id:string) {
     let formData:FormData = new FormData();
     formData.append('file', file, file.name);
-    formData.append('ip', cameraIp);
+    formData.append('camera_id', camera_id);
     
     var endpoint: string = this.dispatcherUrl + "model/upload"
     let res = await this.http.post(

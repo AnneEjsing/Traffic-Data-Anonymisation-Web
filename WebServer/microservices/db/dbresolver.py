@@ -1,4 +1,5 @@
 from psycopg2 import connect, errors
+from psycopg2.extras import RealDictCursor
 from aiohttp import web
 import asyncio
 import json
@@ -21,7 +22,8 @@ def executeQuery(query,*inputs):
 
     try:
         # declare a cursor object from the connection
-        cursor = conn.cursor()
+        # The cursor_factory=RealDictCursor makes everything go json!
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
 
         # execute an SQL statement using the psycopg2 cursor object.
         # By seperating the query and the inputs, psycopg2 does sanitation.
@@ -29,8 +31,7 @@ def executeQuery(query,*inputs):
         conn.commit()
 
         # enumerate() over the PostgreSQL records
-        for i, record in enumerate(cursor):
-            results.append(record)
+        results = cursor.fetchall()
 
     except errors.InvalidTextRepresentation as e:
         error = e
@@ -65,7 +66,7 @@ def fieldCheck(requiredFields, data):
 
 def hasOneResult(result, errorString, errorCode):
     if len(result) == 1:
-        return web.Response(text="Success",status=200)
+        return web.Response(text=json.dumps(result[0], default=str),status=200)
     else:
         return web.Response(text=errorString, status=errorCode)
 
