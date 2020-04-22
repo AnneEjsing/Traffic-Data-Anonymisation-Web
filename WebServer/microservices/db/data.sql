@@ -38,7 +38,7 @@ CREATE TABLE public.cameras (
 );
 
 CREATE TABLE public.video_settings (
-    recording_limit integer NOT NULL --secounds
+    recording_limit integer NOT NULL
 );
 
 CREATE TABLE public.recorded_videos (
@@ -58,13 +58,15 @@ ALTER TABLE ONLY public.access_rights
     ADD CONSTRAINT access_rights_pkey PRIMARY KEY (camera_id,user_id);
 
 CREATE TABLE public.recordings (
-    -- camera_id uuid NOT NULL REFERENCES public.cameras(camera_id),
-    camera_id text NOT NULL,
+    camera_id uuid NOT NULL REFERENCES public.cameras(camera_id),
     user_id uuid NOT NULL REFERENCES public.users(user_id),
     start_time timestamp NOT NULL,
     recording_time integer NOT NULL,
     recording_intervals integer NOT NULL
 );
+
+ALTER TABLE ONLY public.access_rights
+    ADD CONSTRAINT recordings_pkey PRIMARY KEY (camera_id,user_id);
 
 -- Table ownership
 ALTER TABLE public.users OWNER TO postgres;
