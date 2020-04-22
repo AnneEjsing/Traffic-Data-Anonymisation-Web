@@ -73,7 +73,6 @@ export class VideoUtilsComponent implements OnInit {
             3600,
           );
 
-          // TODO: Something...
           this.recordService.getRecordingInfo(this.stream.camera_id, userId).then(recording => {
             this.recording = recording;
           });
@@ -87,8 +86,7 @@ export class VideoUtilsComponent implements OnInit {
           }
         }
         else {
-          // TODO: Error handling
-          console.log("error: unautherised")
+          this.openSnackBar("You must be logged in to start a recording!", "OK");
         }
       })
     }
