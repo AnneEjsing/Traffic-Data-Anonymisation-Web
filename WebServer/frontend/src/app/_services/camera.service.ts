@@ -47,7 +47,7 @@ export class CameraService {
         const headers = this.constructHttpHeader();
         return await this.http.post(this.dispatcherUrl + "access/create", data, {headers, responseType: 'text'}).toPromise().then(
             data => { return 200; },
-            error => { console.log(error); return error.status; }
+            error => { return error.status; }
         );
     }
 

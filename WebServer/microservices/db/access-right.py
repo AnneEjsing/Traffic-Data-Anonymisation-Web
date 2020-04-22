@@ -51,7 +51,7 @@ async def right_create(request):
     RETURNING *;
     """
     result, error = executeQuery(query,camera_id,user_id)
-    if error: return web.Response(text=str(error),status=500)
+    if error: return web.Response(text=str(error),status=409)
     return web.Response(text=json.dumps(result, default=str), status=200)
 
 @routes.get('/access/list')
