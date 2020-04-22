@@ -33,7 +33,6 @@ def work(data):
     rest_time = seconds % interval
 
     #Inserts into recordings in database
-    #['user_id', 'camera_id', 'start_time', 'recording_time', 'recording_intervals']
     insert_response = requests.post(dbr + 'recordings/insert', headers={'Content-type': 'application/json'},json={
         "user_id":user_id,
         "camera_id":camera_id,
