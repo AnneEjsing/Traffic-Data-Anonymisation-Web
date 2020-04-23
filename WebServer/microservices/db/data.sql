@@ -65,7 +65,7 @@ CREATE TABLE public.recordings (
     recording_intervals integer NOT NULL
 );
 
-ALTER TABLE ONLY public.access_rights
+ALTER TABLE ONLY public.recordings
     ADD CONSTRAINT recordings_pkey PRIMARY KEY (camera_id,user_id);
 
 -- Table ownership

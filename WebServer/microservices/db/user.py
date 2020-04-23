@@ -13,17 +13,9 @@ async def user_login(request):
     WHERE email = %s AND password = crypt(%s,password);
     """
     result, error = executeQuery(query,email,password)
-
     if error: return web.Response(text=str(error),status=500)
+    return hasOneResult(result, "Login credentials are not valid.", 401)
 
-    if (len(result) != 0):
-        id = result[0]['user_id']
-        rights = result[0]['role']
-        data = json.dumps({ "id" : id, "rights": rights })
-
-        return web.Response(text=data,status=200)
-    else: 
-        return web.Response(text="Login credentials are not valid", status=401)
 
 @routes.post('/user/update')
 async def user_update(request):
