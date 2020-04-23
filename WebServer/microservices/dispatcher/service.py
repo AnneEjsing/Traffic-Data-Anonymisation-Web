@@ -72,19 +72,8 @@ async def userSignup(request):
 @routes.get('/get/user')
 async def getUser(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised, status_code = verify_token(token, "user")
-    if(isAuthorised):
-        userId = get_user_id(token)
-        string = profileService + "/get"
-        return await getQueryAsync(string, {"id": userId})
-    else:
-        return web.Response(status=status_code)
-
-
-@routes.get('/get/admin')
-async def getAdmin(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised, status_code = verify_token(token, "admin")
+    role = get_rights(token)
+    isAuthorised, status_code = verify_token(token, role)
     if(isAuthorised):
         userId = get_user_id(token)
         string = profileService + "/get"

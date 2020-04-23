@@ -1,11 +1,11 @@
 import { Component, OnInit, HostListener } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
-import {AuthService} from '../_services/auth.service';
+import { AuthService } from '../_services/auth.service';
 import { ProfileService } from '../_services/profile.service';
 import { Rights } from "../_models/user";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
-import {LoginDialog} from '../login/loginDialog.component'
+import { LoginDialog } from '../login/loginDialog.component'
 
 @Component({
   selector: 'app-topbar',
@@ -13,11 +13,11 @@ import {LoginDialog} from '../login/loginDialog.component'
   styleUrls: ['./topbar.component.scss']
 })
 export class TopbarComponent implements OnInit {
-  isHomepage:boolean = true;
-  isLoggedIn:boolean;
-  isAdmin:boolean;
-  email:string;
-  
+  isHomepage: boolean = true;
+  isLoggedIn: boolean;
+  isAdmin: boolean;
+  public email: string;
+
   constructor(
     private snackBar: MatSnackBar,
     private router: Router,
@@ -27,35 +27,23 @@ export class TopbarComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    if(this.router.url.includes('about'))
+    if (this.router.url.includes('about'))
       this.isHomepage = false;
-    
-      this.authService.getRole().toPromise().then(rights => {
-        if (rights) {
-          this.isLoggedIn = true;
-  
-          if (rights == Rights.user) {
-            this.profileService.getUser().then(user => {
-              this.email = user.email;
-              this.isAdmin = false;
-            });
-          }
-          else if (rights = Rights.admin) {
-            this.profileService.getAdmin().then(admin => {
-              this.email = admin.email;
-              this.isAdmin = true;
-            })
-          }
-        }
+
+    if (localStorage.getItem('session_token')) {
+      this.profileService.getUser().then(user => {
+        this.isLoggedIn = true;
+        this.email = user.email;
+        this.isAdmin = user.rights == "admin";
       });
+    }
+  };
 
-  }
-
-  doToggleAbout():void{
-    if(this.isHomepage){
+  doToggleAbout(): void {
+    if (this.isHomepage) {
       this.router.navigateByUrl("/about");
     }
-    else{
+    else {
       this.router.navigateByUrl("");
     }
     this.isHomepage = !this.isHomepage;
