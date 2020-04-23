@@ -6,6 +6,10 @@
   width: 100%;
 }
 
+.list-group-item{
+  background-color: transparent;
+}
+
 .mat-list-item {
   padding: 8px 0;
   display: flex;
@@ -18,9 +22,4 @@
 
 :host ::ng-deep .mat-list-item .mat-list-item-content {
   width: 100%;
-}
-
-.mat-list-item:hover  {
-  background-color: #4CAF50; /* Green */
-  color: white;
 }
