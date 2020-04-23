@@ -53,7 +53,7 @@ async def user_get(request):
 
     result, error = executeQuery(query, id)
     if error: return web.Response(text=str(error), status=500)
-    return web.Response(text=json.dumps(result, default=str), status=200)
+    return hasOneResult(result, "No user with that id.", 404)
 
 @routes.get('/user/get/email')
 async def user_get(request):
@@ -70,7 +70,7 @@ async def user_get(request):
 
     result, error = executeQuery(query, email)
     if error: return web.Response(text=str(error), status=500)
-    return web.Response(text=json.dumps(result, default=str), status=200)
+    return hasOneResult(result, "No user with that email.", 404)
 
 @routes.delete('/user/delete')
 async def user_delete(request):

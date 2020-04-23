@@ -100,6 +100,11 @@ VALUES (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'closed cam', 'This is a very elaborate description of the camera closed to the public. Much exclusive, such rare, wow.', '0.0.0.0', 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
 ) RETURNING *;
 
+INSERT INTO cameras (camera_id,owner,label,description,ip,source)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'Best movie', 'This is not a live stream. However it is a good movie, so you should watch it', '0.0.0.0','https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8'
+) RETURNING *;
+
 INSERT INTO access_rights (camera_id, user_id)
 VALUES (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11'

@@ -42,7 +42,6 @@ async def giveAccess(request):
     other_data = response.json()
     if not other_data:
         return web.Response(text=response.text, status=404)
-    other_data = other_data[0]
     new_data = {'camera_id': data['camera_id'], 'user_id': other_data['user_id']}
     return await send_request("access/create", new_data, requests.post)
 
