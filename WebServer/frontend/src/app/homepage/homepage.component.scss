@@ -1,23 +1,27 @@
 .column-left{
-    width: 14%;
     min-width: 200px;
-    float: left; 
     background-color: darkgrey; 
     height: 100%; 
     min-height: 100%;
     margin-right: 6px;
-
 }
 
 .column{
-    width: 85%; 
-    float: left; 
     background-color: darkgrey; 
     height: 100%;
 }
-.row{
-    height: 100%;
-    margin: 0;
-    padding: 0;
-    
+
+.dual-container{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
 }
+
+.example-container {
+    height: 100%;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: darkgray;
+  }

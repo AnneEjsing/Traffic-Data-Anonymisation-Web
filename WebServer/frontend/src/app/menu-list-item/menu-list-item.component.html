@@ -1,20 +1,31 @@
 <a mat-list-item class="menu-list-item">
-  <mat-icon *ngIf="!isRecording" class="routeIcon">videocam</mat-icon>
-  <mat-icon *ngIf="isRecording" style="color: red;" class="routeIcon">videocam</mat-icon>
+  <div class="label">
+    <mat-icon *ngIf="!isRecording" class="routeIcon">videocam</mat-icon>
+    <mat-icon *ngIf="isRecording" style="color: red;" class="routeIcon">videocam</mat-icon>
 
-  {{item.label}}
+    {{item.label}}
 
-  <span fxFlex *ngIf="admin" style="width: 100%;">
-    <span fxFlex></span>
-    <mat-icon style="cursor:pointer;float: right;margin-right: 1rem;"
-      [@indicatorRotate]="expanded ? 'expanded': 'collapsed'" (click)=onItemSelected()>
-      expand_more
-    </mat-icon>
-  </span>
+    <span fxFlex *ngIf="admin" style="width: 100%;">
+      <span fxFlex></span>
+      <mat-icon style="cursor:pointer;float: right;margin-right: 1rem;"
+        [@indicatorRotate]="expanded ? 'expanded': 'collapsed'" (click)=onItemSelected()>
+        expand_more
+      </mat-icon>
+    </span>
+  </div>
+
+  <ul class="list-group" *ngIf="expanded && admin">
+    <li class="list-group-item">
+      <button mat-button (click)=delete()> Delete Stream </button>
+    </li>
+    <li class="list-group-item">
+      <button mat-button (click)=edit()> Edit Stream </button>
+    </li>
+    <li class="list-group-item">
+      <button mat-button (click)=share()> Share Stream </button>
+    </li>
+    <li class="list-group-item">
+      <button mat-button (click)=change()> Change Model </button>
+    </li>
+  </ul>
 </a>
-<div *ngIf="expanded && admin">
-  <button mat-button (click)=delete()> Delete Stream </button>
-  <button mat-button (click)=edit()> Edit Stream </button>
-  <button mat-button (click)=share()> Share Stream </button>
-  <button mat-button (click)=change()> Change Model </button>
-</div>

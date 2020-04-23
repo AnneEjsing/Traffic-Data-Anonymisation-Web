@@ -1,6 +1,6 @@
 <label> {{stream.description}} </label>
 
-<div class="row">
+<div style="display: flex; flex-wrap: wrap;">
     <div class="form-group" *ngIf="!recording">
         <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
 
@@ -8,8 +8,8 @@
             class="btn btn-primary" (click)="startRecord()">Record</button>
     </div>
 
-    <div *ngIf="ctrl.errors && !recording" class="h5">
-        <div style="color: red;" *ngIf="ctrl.errors['exceededMax']">Max: {{ settings.recording_limit }} seconds</div>
+    <div *ngIf="ctrl.errors && !recording" class="h5 ml-2">
+        <div *ngIf="ctrl.errors['exceededMax']">Max: {{ settings.recording_limit }} seconds</div>
     </div>
 
     <div *ngIf="recording">
