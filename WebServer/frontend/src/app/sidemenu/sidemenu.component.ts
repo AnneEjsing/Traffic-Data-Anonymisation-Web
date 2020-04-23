@@ -46,14 +46,15 @@ export class SidemenuComponent implements OnInit {
           }
         },
         error => { })
+
+      this.auth.getId().subscribe(id => {
+        if (id) {
+          this.recordService.listRecordings(id).then(recordings => {
+            this.recordings = recordings;
+          });
+        }
+      });
     }
-    this.auth.getId().subscribe(id => {
-      if (id) {
-        this.recordService.listRecordings(id).then(recordings => {
-          this.recordings = recordings;
-        });
-      }
-    });
   }
 
   isRecording(camera_id) {

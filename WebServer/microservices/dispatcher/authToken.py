@@ -16,7 +16,7 @@ def verify_credentials(email, pwd):
 
     if (resp.status_code == 200):
         json_data = resp.json()
-        return (True, json_data['id'], json_data['rights'])
+        return (True, json_data['user_id'], json_data['role'])
     else:
         return (False, "", "")
 

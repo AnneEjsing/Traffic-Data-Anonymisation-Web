@@ -75,17 +75,20 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
         let t: Subscription = timer(0, 10).subscribe(
           () => {
             this.currentStream = selectedStream;
-            this.auth.getId().toPromise().then(id => {
-              this.user_id = id;
-              this.recordService.getRecordingInfo(this.currentStream.camera_id, id).then(recording => {
-                if (recording != 404 && recording != 500) {
-                  this.recording = recording;
-                }
-                else {
-                  this.recording = undefined;
-                }
+
+            if (localStorage.getItem('session_token')) {
+              this.auth.getId().toPromise().then(id => {
+                this.user_id = id;
+                this.recordService.getRecordingInfo(this.currentStream.camera_id, id).then(recording => {
+                  if (recording != 404 && recording != 500) {
+                    this.recording = recording;
+                  }
+                  else {
+                    this.recording = undefined;
+                  }
+                });
               });
-            });
+            }
             t.unsubscribe();
           }
         );
