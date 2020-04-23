@@ -6,8 +6,19 @@
   width: 100%;
 }
 
+.line{
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center;
+  justify-content: space-between;
+}
+
 .list-group-item{
   background-color: transparent;
+}
+
+.list-group-item:hover{
+  background-color: green;
 }
 
 .mat-list-item {
