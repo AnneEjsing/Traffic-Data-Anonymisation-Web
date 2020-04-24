@@ -11,12 +11,12 @@ dbr = "http://dbresolver:1337/"
 path = "/var/lib/videodata/"
 
 def periodically_delete(delay,days):
-    queryString = dbr + "video/list"
+    query_string = dbr + "video/list"
     while True:
         #Query the database
-        response = requests.get(queryString)
+        response = requests.get(query_string)
         if response.status_code != 200:
-            logger.error(f"Could not query database: {response.status_code} {response.content.decode('utf-8')}. Query: {queryString}")
+            logger.error(f"Could not query database: {response.status_code} {response.content.decode('utf-8')}. Query: {query_string}")
         
         #Decode response
         videos = response.json()

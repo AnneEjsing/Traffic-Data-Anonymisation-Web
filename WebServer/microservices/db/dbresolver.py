@@ -56,19 +56,19 @@ def execute_query(query,*inputs):
 routes = web.RouteTableDef()
 
 ####### Helper functions
-def field_check(requiredFields, data):
+def field_check(required_fields, data):
     fields_not_found = []
-    for i in requiredFields:
+    for i in required_fields:
         if i not in data:
             fields_not_found.append(i)
     if fields_not_found: return web.Response(text="Field(s) " + str(fields_not_found) + " not found in the request to the database resolver.",status=500)
     return None
 
-def has_one_result(result, errorString, errorCode):
+def has_one_result(result, error_string, error_code):
     if len(result) == 1:
         return web.Response(text=json.dumps(result[0], default=str),status=200)
     else:
-        return web.Response(text=errorString, status=errorCode)
+        return web.Response(text=error_string, status=error_code)
 
 
 ####### Endpoints

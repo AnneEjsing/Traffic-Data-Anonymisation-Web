@@ -10,6 +10,7 @@ from loguru import logger
 from datetime import date
 
 routes = web.RouteTableDef()
+headers = {'Content-type': 'application/json'}
 
 @routes.post("/record/interval")
 async def record_continuous(request):
@@ -33,7 +34,7 @@ def work(data):
     rest_time = seconds % interval
 
     #Inserts into recordings in database
-    insert_response = requests.post(dbr + 'recordings/insert', headers={'Content-type': 'application/json'},json={
+    insert_response = requests.post(dbr + 'recordings/insert', headers=headers,json={
         "user_id":user_id,
         "camera_id":camera_id,
         "recording_time": seconds,
@@ -54,7 +55,7 @@ def work(data):
         sp.call("echo file \'" + filepath + str(interval_times) + ".mp4\' >>  " + filepath + ".txt", shell=True)
 
     # Queries the database with the video entry.
-    response = requests.post(dbr+"video/create", headers={'Content-type': 'application/json'},json={"user_id":user_id,"camera_id":camera_id,"video_thumbnail":""})
+    response = requests.post(dbr+"video/create", headers=headers,json={"user_id":user_id,"camera_id":camera_id,"video_thumbnail":""})
 
     if response.status_code != 200:
         logger.error(f"Could not query database: {response.content.decode('utf-8')}. Userid: {user_id}, cameraid: {camera_id}")
@@ -67,7 +68,7 @@ def work(data):
     sp.call("rm "+ filepath + "*", shell=True)
 
     # Remove the recording in database:
-    delete_response = requests.delete(dbr+"recordings/delete", headers={'Content-type': 'application/json'},json={"user_id":user_id,"camera_id":camera_id})
+    delete_response = requests.delete(dbr+"recordings/delete", headers=headers,json={"user_id":user_id,"camera_id":camera_id})
     if (delete_response.status_code != 200):
         logger.error(f"Could not delete recording for userid: {user_id}, cameraid: {camera_id}. failed with error: {delete_response.text}")
 
