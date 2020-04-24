@@ -10,10 +10,10 @@ from authToken import create_token, verify_credentials, verify_token, get_user_i
 routes = web.RouteTableDef()
 
 video_download_service = "http://videodownloader:1336"
-profile_service = "http://profile_service:1338"
+profile_service = "http://profileservice:1338"
 video_settings_service = "http://videoservice:1342"
 model_changer_service = "http://modelchanger:1341"
-camera_service = "http://camera_service:1340"
+camera_service = "http://cameraservice:1340"
 split_at_bearer = 'Bearer '
 # Standard Get, Post, Delete, Out Requests
 
