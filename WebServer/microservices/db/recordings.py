@@ -12,7 +12,7 @@ async def list_camera_id(request):
     WHERE camera_id = %s;
     """
 
-    result, error = executeQuery(query, camera_id)
+    result, error = execute_query(query, camera_id)
     
     if error: return web.Response(text=str(error), status=500)
     else:
@@ -32,7 +32,7 @@ async def list_user_id(request):
     WHERE user_id = %s;
     """
 
-    result, error = executeQuery(query, user_id)
+    result, error = execute_query(query, user_id)
     if error: return web.Response(text=str(error), status=500)
     else:
         return web.Response(text=json.dumps(result, default=str),status=200)
@@ -52,7 +52,7 @@ async def get(request):
     AND camera_id = %s;
     """
     
-    result, error = executeQuery(query, user_id, camera_id)
+    result, error = execute_query(query, user_id, camera_id)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "No such recording found", 404)
 
@@ -72,7 +72,7 @@ async def delete(request):
     RETURNING *;
     """
 
-    result, error = executeQuery(query, user_id, camera_id)
+    result, error = execute_query(query, user_id, camera_id)
     if error: return web.Response(text=str(error),status=500)
     return hasOneResult(result, "There is no recording with this id.", 404)
 
@@ -95,7 +95,7 @@ async def insert(request):
     RETURNING *;
     """
 
-    result, error = executeQuery(query,user_id, camera_id, recording_time, recording_intervals)
+    result, error = execute_query(query,user_id, camera_id, recording_time, recording_intervals)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)
 

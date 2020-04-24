@@ -12,7 +12,7 @@ async def user_login(request):
     FROM users 
     WHERE email = %s AND password = crypt(%s,password);
     """
-    result, error = executeQuery(query,email,password)
+    result, error = execute_query(query,email,password)
     if error: return web.Response(text=str(error),status=500)
     return hasOneResult(result, "Login credentials are not valid.", 401)
 
@@ -34,7 +34,7 @@ async def user_update(request):
     RETURNING *;
     """
 
-    result, error = executeQuery(query, email, password, role, id)
+    result, error = execute_query(query, email, password, role, id)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "There is no user with that id.", 404)
 
@@ -51,7 +51,7 @@ async def user_get(request):
     WHERE user_id = %s;
     """
 
-    result, error = executeQuery(query, id)
+    result, error = execute_query(query, id)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "No user with that id.", 404)
 
@@ -68,7 +68,7 @@ async def user_get(request):
     WHERE email = %s;
     """
 
-    result, error = executeQuery(query, email)
+    result, error = execute_query(query, email)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "No user with that email.", 404)
 
@@ -84,7 +84,7 @@ async def user_delete(request):
     WHERE user_id = %s
     RETURNING user_id;
     """
-    result, error = executeQuery(query, id)
+    result, error = execute_query(query, id)
     if error: return web.Response(text=str(error),status=500)
     
     return hasOneResult(result, "There is no user with this id.", 404)
@@ -105,13 +105,13 @@ async def user_signup(request):
     )
     RETURNING *;
     """
-    result, error = executeQuery(query,email,rights,password)
+    result, error = execute_query(query,email,rights,password)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)
 
 @routes.get('/user/list')
 def user_list(request):
     query = "SELECT * FROM users;"
-    result, error = executeQuery(query)
+    result, error = execute_query(query)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)

@@ -12,7 +12,7 @@ async def right_get(request):
     WHERE camera_id = %s AND user_id = %s;
     """
 
-    result, error = executeQuery(query, camera_id, user_id)
+    result, error = execute_query(query, camera_id, user_id)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)
 
@@ -30,7 +30,7 @@ async def right_delete(request):
     WHERE camera_id = %s AND user_id = %s
     RETURNING *;
     """
-    result, error = executeQuery(query, camera_id, user_id)
+    result, error = execute_query(query, camera_id, user_id)
     if error: return web.Response(text=str(error),status=500)
     
     return hasOneResult(result, "There are no access for that user and camera.", 404)
@@ -50,13 +50,13 @@ async def right_create(request):
     )
     RETURNING *;
     """
-    result, error = executeQuery(query,camera_id,user_id)
+    result, error = execute_query(query,camera_id,user_id)
     if error: return web.Response(text=str(error),status=409)
     return web.Response(text=json.dumps(result, default=str), status=200)
 
 @routes.get('/access/list')
 def right_list(request):
     query = "SELECT * FROM access_rights;"
-    result, error = executeQuery(query)
+    result, error = execute_query(query)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)

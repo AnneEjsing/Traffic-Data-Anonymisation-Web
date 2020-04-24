@@ -6,7 +6,7 @@ async def video_update(request):
     FROM video_settings
     """
 
-    result, error = executeQuery(query)
+    result, error = execute_query(query)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "An error occurred", 500)
 
@@ -24,6 +24,6 @@ async def update(request):
     RETURNING *;
     """
 
-    result, error = executeQuery(query, limit)
+    result, error = execute_query(query, limit)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "An error occurred", 404)

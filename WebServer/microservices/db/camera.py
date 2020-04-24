@@ -12,7 +12,7 @@ async def camera_updatelsol(request):
     RETURNING last_sign_of_life;
     """
 
-    result, error = executeQuery(query, id)
+    result, error = execute_query(query, id)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "There is no camera with that id.", 404)
 
@@ -35,7 +35,7 @@ async def camera_update(request):
     RETURNING *;
     """
 
-    result, error = executeQuery(query, description, ip, label, source, id)
+    result, error = execute_query(query, description, ip, label, source, id)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "There is no camera with that id.", 404)
 
@@ -52,7 +52,7 @@ async def camera_get(request):
     WHERE camera_id = %s;
     """
 
-    result, error = executeQuery(query, id)
+    result, error = execute_query(query, id)
     if error: return web.Response(text=str(error), status=500)
     return hasOneResult(result, "Multiple or no cameras returned from the database, when expecting exactly one.", 404)
 
@@ -65,7 +65,7 @@ async def camera_delete(request):
     WHERE camera_id = %s
     RETURNING *;
     """
-    result, error = executeQuery(query, id)
+    result, error = execute_query(query, id)
     if error: return web.Response(text=str(error),status=500)
     
     return hasOneResult(result, "There is no camera with this id.", 404)
@@ -89,14 +89,14 @@ async def camera_create(request):
     )
     RETURNING *;
     """
-    result, error = executeQuery(query,owner,description,ip,label,source)
+    result, error = execute_query(query,owner,description,ip,label,source)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str),status=200)
 
 @routes.get('/camera/adminlist')
 def camera_list(request):
     query = "SELECT source, description, label, camera_id FROM cameras;"
-    result, error = executeQuery(query)
+    result, error = execute_query(query)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str),status=200)
 
@@ -113,6 +113,6 @@ async def camera_userlist(request):
     JOIN access_rights ON cameras.camera_id = access_rights.camera_id
     WHERE access_rights.user_id = %s;
     """
-    result, error = executeQuery(query,user)
+    result, error = execute_query(query,user)
     if error: return web.Response(text=error,status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)

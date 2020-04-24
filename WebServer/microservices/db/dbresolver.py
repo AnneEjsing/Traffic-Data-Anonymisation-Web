@@ -7,7 +7,7 @@ import os
 
 # Sends a query to the database and returns the response.
 # Inspired by: #https://kb.objectrocket.com/postgresql/python-and-postgresql-docker-container-part-2-1063
-def executeQuery(query,*inputs):
+def execute_query(query,*inputs):
     # declare connection instance
     conn = connect(
         dbname = os.getenv('POSTGRES_DB'),
