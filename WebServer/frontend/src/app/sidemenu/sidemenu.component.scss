@@ -1,16 +1,56 @@
-li {
-    list-style-type: none;
-    cursor: pointer;
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    padding-left:1rem ;
-}
-
-li:hover{
-    background-color: rgb(192, 192, 192);
-}
 
 li.selected {
     font-weight: bold;
     background-color: honeydew;
 }
+
+ul{
+    padding-left: 0px;
+}
+
+<<<<<<< Updated upstream
+li.selected {
+    font-weight: bold;
+    background-color: honeydew;
+}
+=======
+span{
+    vertical-align: middle;
+}
+
+:host {
+    display: flex;
+    flex-direction: column;
+    outline: none;
+    width: 100%;
+}
+
+.line{
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+    justify-content: flex-start;
+}
+
+.list-group-item{
+    background-color: transparent;
+}
+
+.list-group-item:hover{
+    background-color: green;
+}
+
+.mat-list-item {
+    padding: 8px 0;
+    display: flex;
+    width: auto;
+
+    .routeIcon {
+        margin-right: 1rem;
+    }
+}
+
+:host ::ng-deep .mat-list-item .mat-list-item-content {
+    width: 100%;
+}
+>>>>>>> Stashed changes

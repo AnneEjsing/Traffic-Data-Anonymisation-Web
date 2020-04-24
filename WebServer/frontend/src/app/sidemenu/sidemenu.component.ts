@@ -6,7 +6,15 @@ import { LoginDialog, DialogData } from "../login/loginDialog.component";
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { AuthService } from '../_services/auth.service';
 import { ProfileService } from '../_services/profile.service';
+<<<<<<< Updated upstream
 import { Rights } from "../_models/user";
+=======
+import { recording_info } from '../_models/video';
+import { RecordService } from '../_services/record.service';
+import { CameraDialog } from '../add-camera/add-camera.component'
+import { SettingsDialog } from '../settings.dialog.component/settings.dialog.component';
+
+>>>>>>> Stashed changes
 
 @Component({
   selector: 'app-sidemenu',
@@ -74,6 +82,7 @@ export class SidemenuComponent implements OnInit {
     });
   }
 
+<<<<<<< Updated upstream
   ngOnInit(): void {
     this.auth.getRole().toPromise().then(rights => {
       if (rights) {
@@ -94,6 +103,14 @@ export class SidemenuComponent implements OnInit {
 
     this.streamService.changeStream(this.streams[0])
     this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+=======
+  openSettings() {
+    this.dialog.open(SettingsDialog);
+  }
+
+  isRecording(camera_id) {
+    return this.recordings.some(recording => recording.camera_id == camera_id);
+>>>>>>> Stashed changes
   }
 
   onClickStream(stream: IMediaStream) {

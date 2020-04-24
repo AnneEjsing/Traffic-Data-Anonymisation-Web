@@ -19,6 +19,16 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { LoginService } from './_services/login.service';
 import { JwtHelperService, JWT_OPTIONS } from '@auth0/angular-jwt';
 import { AuthService } from './_services/auth.service';
+import { VideoService } from './_services/video.service';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { TopbarComponent } from './topbar/topbar.component';
+import { AboutComponent } from './about/about.component';
+import { CameraDialog } from './add-camera/add-camera.component';
+import { CameraService } from './_services/camera.service'
+import { MenuListItemComponent } from './menu-list-item/menu-list-item.component';
+import { ShareStreamComponent } from './share-stream/share-stream.component';
+import { ModelChangerComponent } from './model-changer/model-changer.component'
+import { SettingsDialog } from './settings.dialog.component/settings.dialog.component';
 
 @NgModule({
   declarations: [
@@ -28,6 +38,13 @@ import { AuthService } from './_services/auth.service';
     VideoplayerComponent,
     SidemenuComponent,
     LoginDialog,
+    SettingsDialog,
+    TopbarComponent,
+    AboutComponent,
+    CameraDialog,
+    MenuListItemComponent,
+    ShareStreamComponent,
+    ModelChangerComponent
   ],
   imports: [
     MatDialogModule, //IDK why this needs to be explicit imported when part of DemoMatherialModule, the rest does not

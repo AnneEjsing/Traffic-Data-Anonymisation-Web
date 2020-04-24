@@ -37,6 +37,11 @@ CREATE TABLE public.cameras (
     owner uuid NOT NULL REFERENCES public.users(user_id)
 );
 
+CREATE TABLE public.video_settings (
+    recording_limit integer NOT NULL, -- seconds
+    keep_days integer NOT NULL -- How old a video can be, before deleted
+);
+
 CREATE TABLE public.recorded_videos (
     video_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     user_id uuid NOT NULL REFERENCES public.users(user_id),
@@ -60,5 +65,36 @@ ALTER TABLE public.users OWNER TO postgres;
 ALTER TABLE public.recorded_videos OWNER TO postgres;
 ALTER TABLE public.cameras OWNER TO postgres;
 ALTER TABLE public.access_rights OWNER TO postgres;
+ALTER TABLE public.video_settings OWNER TO postgres;
+ALTER TABLE public.recordings OWNER TO postgres;
+
+-- Start up data
+INSERT INTO public.video_settings(recording_limit, keep_days) VALUES (18000, 1);
+
+
+INSERT INTO users (user_id,email,role,password)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11','notadmin@notadmin.no', 'user', crypt('passpass', gen_salt('bf'))
+) RETURNING *;
+
+INSERT INTO users (user_id,email,role,password)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12','admin@admin.no', 'admin', crypt('passpass', gen_salt('bf'))
+) RETURNING *;
+
+INSERT INTO cameras (camera_id,owner,label,description,ip,source)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'open cam', 'This is a description for the open cam', '0.0.0.0','https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8'
+) RETURNING *;
+
+INSERT INTO cameras (camera_id,owner,label,description,ip,source)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'closed cam', 'This is a very elaborate description of the camera closed to the public. Much exclusive, such rare, wow.', '0.0.0.0', 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
+) RETURNING *;
+
+INSERT INTO cameras (camera_id,owner,label,description,ip,source)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'Best movie', 'This is not a live stream. However it is a good movie, so you should watch it', '0.0.0.0','https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8'
+) RETURNING *;
 
 

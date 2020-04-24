@@ -20,6 +20,9 @@ export class VideoplayerComponent implements AfterViewInit {
   api: VgAPI;
   bitrates: BitrateOption[];
 
+  role: string;
+  user_id: string;
+
   constructor(
     private recordService: RecordService,
     private streamService: StreamMessageService,
@@ -58,26 +61,5 @@ export class VideoplayerComponent implements AfterViewInit {
 
   setBitrate(option: BitrateOption) {
     if (this.currentStream.type == "hls") this.vgHls.setBitrate(option);
-  }
-
-  async startRecord(time: string) {
-    this.auth.getId().toPromise().then(async userId => {
-      if (userId) {
-        let res = await this.recordService.postRecordInfo(
-          this.currentStream.source,
-          time,
-          userId,
-          "blabla" // TODO: Add a real camera ID
-        );
-
-        // TODO: Something...
-        if (res === 200) console.log("success");
-        else console.log("error");
-      }
-      else {
-        // TODO: Error handling
-        console.log("error: unautherised")
-      }
-    })
   }
 }
