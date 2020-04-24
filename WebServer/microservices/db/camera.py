@@ -48,7 +48,7 @@ async def camera_update(request):
 @routes.get('/camera/get')
 async def camera_get(request):
     data = await request.json()
-    f = field_check(['id'], data)
+    f = dbresolver.field_check(['id'], data)
     if f != None: return f
     
     id = data['id']

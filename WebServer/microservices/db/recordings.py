@@ -7,7 +7,7 @@ routes = web.RouteTableDef()
 @routes.get('/recordings/list/camera_id')
 async def list_camera_id(request):
     data = await request.json()
-    f = field_check(['camera_id'], data)
+    f = dbresolver.field_check(['camera_id'], data)
     if f != None : return f
 
     camera_id = data['camera_id']
