@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import * as global from "./dispatcherConnection.service";
-import { recording_info } from '../_models/video';
 
 @Injectable({
   providedIn: 'root'
@@ -11,7 +10,7 @@ export class RecordService {
   constructor(private http: HttpClient) { }
 
   async postRecordInfo(url: string, seconds: number, userId: string, cameraId: string, recording_intervals: number) {
-    var data: any = {
+    var record_info: any = {
       "url": url,
       "length": seconds,
       "user_id": userId,
@@ -23,7 +22,7 @@ export class RecordService {
 
     let res = await this.http.post(
       endpoint,
-      data,
+      record_info,
       this.constructHttpOptions())
       .toPromise().then(
         data => { return '200' },
@@ -34,7 +33,7 @@ export class RecordService {
   }
 
   async getRecordingInfo(camera_id: string, user_id: string) {
-    var data = {
+    var record_info = {
       "camera_id": camera_id,
       "user_id": user_id
     }
@@ -43,7 +42,7 @@ export class RecordService {
 
     let res = await this.http.post(
       endpoint,
-      data,
+      record_info,
       this.constructHttpOptions())
       .toPromise().then(
         data => { return data },
@@ -54,7 +53,7 @@ export class RecordService {
   }
 
   async listRecordings(user_id: string) {
-    var data = {
+    var record_info = {
       "user_id": user_id
     }
 
@@ -62,7 +61,7 @@ export class RecordService {
 
     let res = await this.http.post(
       endpoint,
-      data,
+      record_info,
       this.constructHttpOptions())
       .toPromise().then(
         data => { return data },
