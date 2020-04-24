@@ -9,42 +9,42 @@ from authToken import create_token, verify_credentials, verify_token, get_user_i
 
 routes = web.RouteTableDef()
 
-videoDownloadService = "http://videodownloader:1336"
-profileService = "http://profileservice:1338"
-videoSettingsService = "http://videoservice:1342"
-modelChangerService = "http://modelchanger:1341"
-cameraService = "http://cameraservice:1340"
+video_download_service = "http://videodownloader:1336"
+profile_service = "http://profile_service:1338"
+video_settings_service = "http://videoservice:1342"
+model_changer_service = "http://modelchanger:1341"
+camera_service = "http://camera_service:1340"
 
 # Standard Get, Post, Delete, Out Requests
 
 
-async def getQueryAsync(queryString, json):
+async def get_query_async(query_string, json):
     async with ClientSession() as session:
-        async with session.get(queryString, json=json) as response:
+        async with session.get(query_string, json=json) as response:
             if(response.status == 200):
                 return web.Response(text=await response.text())
             return web.Response(status=response.status)
 
 
-async def deleteQueryAsync(queryString):
+async def delete_query_async(query_string):
     async with ClientSession() as session:
-        async with session.delete(queryString) as response:
+        async with session.delete(query_string) as response:
             if(response.status == 200):
                 return web.Response(text=await response.text())
             return web.Response(status=response.status)
 
 
-async def postQueryAsync(queryString, data):
+async def post_query_async(query_string, data):
     async with ClientSession(headers={'Content-type': 'application/json'}) as session:
-        async with session.post(queryString, json=data) as response:
+        async with session.post(query_string, json=data) as response:
             if(response.status == 200):
                 return web.Response(text=await response.text())
             return web.Response(status=response.status)
 
 
-async def putQueryAsync(queryString, data):
+async def put_query_async(query_string, data):
     async with ClientSession(headers={'Content-type': 'application/json'}) as session:
-        async with session.put(queryString, json=data) as response:
+        async with session.put(query_string, json=data) as response:
             if(response.status == 200):
                 return web.Response(text=await response.text())
             return web.Response(status=response.status)
@@ -54,108 +54,108 @@ async def putQueryAsync(queryString, data):
 async def login(request):
     auth = request.headers['Authorization']
     decoded = BasicAuth.decode(auth)
-    isSuccess, userId, rights = verify_credentials(
+    is_success, user_id, rights = verify_credentials(
         decoded.login, decoded.password)
-    if (isSuccess):
-        return web.Response(text=create_token(userId, rights))
+    if (is_success):
+        return web.Response(text=create_token(user_id, rights))
     else:
         return web.Response(status=401)
 
 
 @routes.post('/signup')
-async def userSignup(request):
-    signupString = profileService + "/signup"
+async def user_signup(request):
+    signup_string = profile_service + "/signup"
     data = await request.json()
-    return await postQueryAsync(signupString, data)
+    return await post_query_async(signup_string, data)
 
 
 @routes.get('/get/user')
-async def getUser(request):
+async def get_user(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
     role = get_rights(token)
-    isAuthorised, status_code = verify_token(token, role)
-    if(isAuthorised):
-        userId = get_user_id(token)
-        string = profileService + "/get"
-        return await getQueryAsync(string, {"id": userId})
+    is_authorised, status_code = verify_token(token, role)
+    if(is_authorised):
+        user_id = get_user_id(token)
+        string = profile_service + "/get"
+        return await get_query_async(string, {"id": user_id})
     else:
         return web.Response(status=status_code)
 
 
 @routes.get('/user/list')
-async def listUsers(request):
-    listString = profileService + "/list"
-    return await getQueryAsync(listString, json.dumps({}))
+async def list_users(request):
+    list_string = profile_service + "/list"
+    return await get_query_async(list_string, json.dumps({}))
 
 # Camera endpoints
 @routes.get('/camera/list')
-async def listCamera(request):
+async def list_camera(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
-    userId = get_user_id(token)
+    user_id = get_user_id(token)
     rights = get_rights(token)
-    isAuthorised, status_code = verify_token(token, rights)
-    if isAuthorised:
-        listString = ""
+    is_authorised, status_code = verify_token(token, rights)
+    if is_authorised:
+        list_string = ""
         if rights == "admin":
-            listString = cameraService + "/camera/adminlist"
+            list_string = camera_service + "/camera/adminlist"
         else: 
-            listString = cameraService + "/camera/userlist"
-        return await getQueryAsync(listString,{"id": userId}) 
+            list_string = camera_service + "/camera/userlist"
+        return await get_query_async(list_string,{"id": user_id}) 
     else:
         return web.Response(status=status_code)
 
 @routes.get('/camera/get')
-async def getCamera(request):
+async def get_camera(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised = authenticate(token)
-    if isAuthorised:
-        endpoint = cameraService + "/camera/get"
+    is_authorised = authenticate(token)
+    if is_authorised:
+        endpoint = camera_service + "/camera/get"
         data = {'id': request.query['id']}
-        return await getQueryAsync(endpoint, data)
+        return await get_query_async(endpoint, data)
     else:
         return web.Response(text="User must be logged in to edit a camera", status=401)
 
 @routes.post('/camera/create')
-async def createCamera(request):
+async def create_camera(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised = authenticate(token)
-    if isAuthorised and get_rights(token) == 'admin':
-        endpoint = cameraService + "/camera/create"
+    is_authorised = authenticate(token)
+    if is_authorised and get_rights(token) == 'admin':
+        endpoint = camera_service + "/camera/create"
         data = await request.json()
         data["owner"] = get_user_id(token)
-        return await postQueryAsync(endpoint, data)
+        return await post_query_async(endpoint, data)
     else:
         return web.Response(text="User must be logged in with administrative privileges to create a camera", status=401)
 
 @routes.put('/camera/update')
-async def createCamera(request):
+async def update_camera(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised = authenticate(token)
-    if isAuthorised and get_rights(token) == 'admin':
-        endpoint = cameraService + "/camera/update"
+    is_authorised = authenticate(token)
+    if is_authorised and get_rights(token) == 'admin':
+        endpoint = camera_service + "/camera/update"
         data = await request.json()
-        return await putQueryAsync(endpoint, data)
+        return await put_query_async(endpoint, data)
     else:
         return web.Response(text="User must be logged in with administrative privileges to update a camera", status=401)
 
 @routes.delete('/camera/delete')
-async def deleteCamera(request):
+async def delete_camera(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised = authenticate(token)
-    if isAuthorised and get_rights(token) == 'admin':
-        endpoint = cameraService + "/camera/delete?id=" + request.query['id']
-        return await deleteQueryAsync(endpoint)
+    is_authorised = authenticate(token)
+    if is_authorised and get_rights(token) == 'admin':
+        endpoint = camera_service + "/camera/delete?id=" + request.query['id']
+        return await delete_query_async(endpoint)
     else:
         return web.Response(text="User must be logged in with administrative privileges to delete a camera", status=401)
 
 @routes.post('/access/create')
-async def createCamera(request):
+async def create_access(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised = authenticate(token)
-    if isAuthorised and get_rights(token) == 'admin':
-        endpoint = cameraService + "/access/create"
+    is_authorised = authenticate(token)
+    if is_authorised and get_rights(token) == 'admin':
+        endpoint = camera_service + "/access/create"
         data = await request.json()
-        return await postQueryAsync(endpoint, data)
+        return await post_query_async(endpoint, data)
     else:
         return web.Response(text="User must be logged in with administrative privileges to allow another user to access a camera", status=401)
 
@@ -171,44 +171,44 @@ async def authenticator(request):
 @routes.post("/record/interval")
 async def record_continuous(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised = authenticate(token)
-    if (isAuthorised):
-        endpoint = videoDownloadService + "/record/interval"
+    is_authorised = authenticate(token)
+    if (is_authorised):
+        endpoint = video_download_service + "/record/interval"
         data = await request.json()
-        return await postQueryAsync(endpoint, data)
+        return await post_query_async(endpoint, data)
     else:
         return web.Response(text="User must be logged in to downloade a video", status=401)
 
 ###### Video endpoints
 @routes.get('/settings/get')
 async def get_settings(request):
-    return await getQueryAsync(videoSettingsService + "/get", { })
+    return await get_query_async(video_settings_service + "/get", { })
 
 @routes.post('/settings/update')
 async def update_settings(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised, status_code = verify_token(token, "admin")
-    if(isAuthorised):
-        string = videoSettingsService + "/update"
-        return await postQueryAsync(string, (await request.json()))
+    is_authorised, status_code = verify_token(token, "admin")
+    if(is_authorised):
+        string = video_settings_service + "/update"
+        return await post_query_async(string, (await request.json()))
     else:
         return web.Response(status=status_code)
 
 @routes.post('/get/recording')
 async def get_recording_info(request):
-    return await getQueryAsync(videoSettingsService + "/get/recording", (await request.json()))
+    return await get_query_async(video_settings_service + "/get/recording", (await request.json()))
 
 @routes.post('/recordings/list/user_id')
 async def get_recording_info(request):
-    return await getQueryAsync(videoSettingsService + "/recordings/list/user_id", (await request.json()))
+    return await get_query_async(video_settings_service + "/recordings/list/user_id", (await request.json()))
 
 # Model changer
 @routes.post("/model/upload")
 async def upload_model(request):
     token = request.headers['Authorization'].split('Bearer ')[1]
-    isAuthorised = authenticate(token)
-    if (isAuthorised):
-        endpoint = modelChangerService + "/model/upload"
+    is_authorised = authenticate(token)
+    if (is_authorised):
+        endpoint = model_changer_service + "/model/upload"
         data = await request.post()
         
         # Data cannot just be forwarded. File need to be sent using the format below.
