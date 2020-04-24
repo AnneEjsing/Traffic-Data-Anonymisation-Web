@@ -2,7 +2,7 @@
 @routes.get('/recordings/list/camera_id')
 async def list_camera_id(request):
     data = await request.json()
-    f = fieldCheck(['camera_id'], data)
+    f = field_check(['camera_id'], data)
     if f != None : return f
 
     camera_id = data['camera_id']
@@ -22,7 +22,7 @@ async def list_camera_id(request):
 @routes.get('/recordings/list/user_id')
 async def list_user_id(request):
     data = await request.json()
-    f = fieldCheck(['user_id'], data)
+    f = field_check(['user_id'], data)
     if f != None : return f
 
     user_id = data['user_id']
@@ -40,7 +40,7 @@ async def list_user_id(request):
 @routes.get('/recordings/get')
 async def get(request):
     data = await request.json()
-    f = fieldCheck(['user_id', 'camera_id'], data)
+    f = field_check(['user_id', 'camera_id'], data)
     if f != None : return f
 
     user_id = data['user_id']
@@ -54,13 +54,13 @@ async def get(request):
     
     result, error = execute_query(query, user_id, camera_id)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "No such recording found", 404)
+    return has_one_result(result, "No such recording found", 404)
 
 
 @routes.delete('/recordings/delete')
 async def delete(request):
     data = await request.json()
-    f = fieldCheck(['user_id', 'camera_id'], data)
+    f = field_check(['user_id', 'camera_id'], data)
     if f != None : return f
 
     user_id = data['user_id']
@@ -74,12 +74,12 @@ async def delete(request):
 
     result, error = execute_query(query, user_id, camera_id)
     if error: return web.Response(text=str(error),status=500)
-    return hasOneResult(result, "There is no recording with this id.", 404)
+    return has_one_result(result, "There is no recording with this id.", 404)
 
 @routes.post('/recordings/insert')
 async def insert(request):
     data = await request.json()
-    f = fieldCheck(['user_id', 'camera_id', 'recording_time', 'recording_intervals'], data)
+    f = field_check(['user_id', 'camera_id', 'recording_time', 'recording_intervals'], data)
     if f != None : return f
 
     user_id = data['user_id']

@@ -1,7 +1,7 @@
 @routes.put('/camera/updateLSOL')
 async def camera_updatelsol(request):
     data = await request.json()
-    f = fieldCheck(['id'], data)
+    f = field_check(['id'], data)
     if f != None: return f
 
     id = data['id']
@@ -14,13 +14,13 @@ async def camera_updatelsol(request):
 
     result, error = execute_query(query, id)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "There is no camera with that id.", 404)
+    return has_one_result(result, "There is no camera with that id.", 404)
 
 
 @routes.put('/camera/updateInfo')
 async def camera_update(request):
     data = await request.json()
-    f = fieldCheck(['camera_id', 'description', 'ip', 'label', 'source'], data)
+    f = field_check(['camera_id', 'description', 'ip', 'label', 'source'], data)
     if f != None: return f
 
     id = data['camera_id']
@@ -37,12 +37,12 @@ async def camera_update(request):
 
     result, error = execute_query(query, description, ip, label, source, id)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "There is no camera with that id.", 404)
+    return has_one_result(result, "There is no camera with that id.", 404)
 
 @routes.get('/camera/get')
 async def camera_get(request):
     data = await request.json()
-    f = fieldCheck(['id'], data)
+    f = field_check(['id'], data)
     if f != None: return f
     
     id = data['id']
@@ -54,7 +54,7 @@ async def camera_get(request):
 
     result, error = execute_query(query, id)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "Multiple or no cameras returned from the database, when expecting exactly one.", 404)
+    return has_one_result(result, "Multiple or no cameras returned from the database, when expecting exactly one.", 404)
 
 
 @routes.delete('/camera/delete')
@@ -68,13 +68,13 @@ async def camera_delete(request):
     result, error = execute_query(query, id)
     if error: return web.Response(text=str(error),status=500)
     
-    return hasOneResult(result, "There is no camera with this id.", 404)
+    return has_one_result(result, "There is no camera with this id.", 404)
 
 @routes.post('/camera/create')
 async def camera_create(request):
     data = await request.json()
 
-    f = fieldCheck(['owner', 'description', 'ip', 'label', 'source'], data)
+    f = field_check(['owner', 'description', 'ip', 'label', 'source'], data)
     if f != None: return f
     
     owner = data['owner']
@@ -103,7 +103,7 @@ def camera_list(request):
 @routes.get('/camera/userlist')
 async def camera_userlist(request):
     data = await request.json()
-    f = fieldCheck(['id'], data)
+    f = field_check(['id'], data)
     if f != None: return f
     
     user = data['id']

@@ -1,7 +1,7 @@
 @routes.get('/access/get')
 async def right_get(request):
     data = await request.json()
-    f = fieldCheck(['camera_id', 'user_id'], data)
+    f = field_check(['camera_id', 'user_id'], data)
     if f != None: return f
     
     camera_id = data['camera_id']
@@ -20,7 +20,7 @@ async def right_get(request):
 @routes.delete('/access/delete')
 async def right_delete(request):
     data = await request.json()
-    f = fieldCheck(['camera_id', 'user_id'], data)
+    f = field_check(['camera_id', 'user_id'], data)
     if f != None: return f
 
     camera_id = data['camera_id']
@@ -33,12 +33,12 @@ async def right_delete(request):
     result, error = execute_query(query, camera_id, user_id)
     if error: return web.Response(text=str(error),status=500)
     
-    return hasOneResult(result, "There are no access for that user and camera.", 404)
+    return has_one_result(result, "There are no access for that user and camera.", 404)
 
 @routes.post('/access/create')
 async def right_create(request):
     data = await request.json()
-    f = fieldCheck(['camera_id', 'user_id'], data)
+    f = field_check(['camera_id', 'user_id'], data)
     if f != None: return f
     
     camera_id = data['camera_id']    

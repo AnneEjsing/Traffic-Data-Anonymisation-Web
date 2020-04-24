@@ -1,7 +1,7 @@
 @routes.post('/video/update')
 async def video_update(request):
     data = await request.json()
-    f = fieldCheck(['video_id', 'user_id', 'camera_id', 'video_thumbnail'], data)
+    f = field_check(['video_id', 'user_id', 'camera_id', 'video_thumbnail'], data)
     if f != None: return f
 
     video_id = data['video_id']
@@ -15,14 +15,14 @@ async def video_update(request):
     RETURNING *;
     """
 
-    result, error = executeQuery(query, user_id, camera_id, video_thumbnail, video_id)
+    result, error = execute_query(query, user_id, camera_id, video_thumbnail, video_id)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "There is no video with that id.", 404)
+    return has_one_result(result, "There is no video with that id.", 404)
 
 @routes.get('/video/get')
 async def video_get(request):
     data = await request.json()
-    f = fieldCheck(['video_id'], data)
+    f = field_check(['video_id'], data)
     if f != None: return f
     
     video_id = data['video_id']
@@ -32,15 +32,15 @@ async def video_get(request):
     WHERE video_id = %s;
     """
 
-    result, error = executeQuery(query, video_id)
+    result, error = execute_query(query, video_id)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "There is no video with that id.", 404)
+    return has_one_result(result, "There is no video with that id.", 404)
 
 
 @routes.delete('/video/delete')
 async def video_delete(request):
     data = await request.json()
-    f = fieldCheck(['video_id'], data)
+    f = field_check(['video_id'], data)
     if f != None: return f
 
     video_id = data['video_id']
@@ -49,15 +49,15 @@ async def video_delete(request):
     WHERE video_id = %s
     RETURNING *;
     """
-    result, error = executeQuery(query, video_id)
+    result, error = execute_query(query, video_id)
     if error: return web.Response(text=str(error),status=500)
     
-    return hasOneResult(result, "There is no video with this id.", 404)
+    return has_one_result(result, "There is no video with this id.", 404)
 
 @routes.post('/video/create')
 async def video_create(request):
     data = await request.json()
-    f = fieldCheck(['user_id', 'camera_id', 'video_thumbnail'], data)
+    f = field_check(['user_id', 'camera_id', 'video_thumbnail'], data)
     if f != None: return f
     
     user_id = data['user_id']
@@ -71,13 +71,13 @@ async def video_create(request):
     )
     RETURNING *;
     """
-    result, error = executeQuery(query, user_id, camera_id, video_thumbnail)
+    result, error = execute_query(query, user_id, camera_id, video_thumbnail)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)
 
 @routes.get('/video/list')
 def video_list(request):
     query = "SELECT * FROM recorded_videos;"
-    result, error = executeQuery(query)
+    result, error = execute_query(query)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str),status=200)

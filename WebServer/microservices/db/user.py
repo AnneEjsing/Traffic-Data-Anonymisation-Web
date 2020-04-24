@@ -2,7 +2,7 @@
 @routes.get('/user/login')
 async def user_login(request):
     data = await request.json()
-    f = fieldCheck(['email','password'], data)
+    f = field_check(['email','password'], data)
     if f != None: return f
     
     email = data['email']    
@@ -14,13 +14,13 @@ async def user_login(request):
     """
     result, error = execute_query(query,email,password)
     if error: return web.Response(text=str(error),status=500)
-    return hasOneResult(result, "Login credentials are not valid.", 401)
+    return has_one_result(result, "Login credentials are not valid.", 401)
 
 
 @routes.post('/user/update')
 async def user_update(request):
     data = await request.json()
-    f = fieldCheck(['id', 'email', 'password', 'rights'], data)
+    f = field_check(['id', 'email', 'password', 'rights'], data)
     if f != None: return f
 
     id = data['id']
@@ -36,12 +36,12 @@ async def user_update(request):
 
     result, error = execute_query(query, email, password, role, id)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "There is no user with that id.", 404)
+    return has_one_result(result, "There is no user with that id.", 404)
 
 @routes.get('/user/get')
 async def user_get(request):
     data = await request.json()
-    f = fieldCheck(['id'], data)
+    f = field_check(['id'], data)
     if f != None: return f
     
     id = data['id']
@@ -53,12 +53,12 @@ async def user_get(request):
 
     result, error = execute_query(query, id)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "No user with that id.", 404)
+    return has_one_result(result, "No user with that id.", 404)
 
 @routes.get('/user/get/email')
 async def user_get(request):
     data = await request.json()
-    f = fieldCheck(['email'], data)
+    f = field_check(['email'], data)
     if f != None: return f
     
     email = data['email']
@@ -70,12 +70,12 @@ async def user_get(request):
 
     result, error = execute_query(query, email)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "No user with that email.", 404)
+    return has_one_result(result, "No user with that email.", 404)
 
 @routes.delete('/user/delete')
 async def user_delete(request):
     data = await request.json()
-    f = fieldCheck(['id'], data)
+    f = field_check(['id'], data)
     if f != None: return f
 
     id = data['id']
@@ -87,12 +87,12 @@ async def user_delete(request):
     result, error = execute_query(query, id)
     if error: return web.Response(text=str(error),status=500)
     
-    return hasOneResult(result, "There is no user with this id.", 404)
+    return has_one_result(result, "There is no user with this id.", 404)
 
 @routes.post('/user/signup')
 async def user_signup(request):
     data = await request.json()
-    f = fieldCheck(['email', 'password', 'rights'], data)
+    f = field_check(['email', 'password', 'rights'], data)
     if f != None: return f
     
     email = data['email']    
