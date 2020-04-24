@@ -14,7 +14,7 @@ profile_service = "http://profile_service:1338"
 video_settings_service = "http://videoservice:1342"
 model_changer_service = "http://modelchanger:1341"
 camera_service = "http://camera_service:1340"
-
+split_at_bearer = 'Bearer '
 # Standard Get, Post, Delete, Out Requests
 
 
@@ -71,7 +71,7 @@ async def user_signup(request):
 
 @routes.get('/get/user')
 async def get_user(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
     role = get_rights(token)
     is_authorised, status_code = verify_token(token, role)
     if(is_authorised):
@@ -90,7 +90,7 @@ async def list_users(request):
 # Camera endpoints
 @routes.get('/camera/list')
 async def list_camera(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
     user_id = get_user_id(token)
     rights = get_rights(token)
     is_authorised, status_code = verify_token(token, rights)
@@ -106,7 +106,7 @@ async def list_camera(request):
 
 @routes.get('/camera/get')
 async def get_camera(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
     is_authorised = authenticate(token)
     if is_authorised:
         endpoint = camera_service + "/camera/get"
@@ -117,7 +117,7 @@ async def get_camera(request):
 
 @routes.post('/camera/create')
 async def create_camera(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
     is_authorised = authenticate(token)
     if is_authorised and get_rights(token) == 'admin':
         endpoint = camera_service + "/camera/create"
@@ -129,7 +129,7 @@ async def create_camera(request):
 
 @routes.put('/camera/update')
 async def update_camera(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
     is_authorised = authenticate(token)
     if is_authorised and get_rights(token) == 'admin':
         endpoint = camera_service + "/camera/update"
@@ -140,7 +140,7 @@ async def update_camera(request):
 
 @routes.delete('/camera/delete')
 async def delete_camera(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
     is_authorised = authenticate(token)
     if is_authorised and get_rights(token) == 'admin':
         endpoint = camera_service + "/camera/delete?id=" + request.query['id']
@@ -150,7 +150,7 @@ async def delete_camera(request):
 
 @routes.post('/access/create')
 async def create_access(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
     is_authorised = authenticate(token)
     if is_authorised and get_rights(token) == 'admin':
         endpoint = camera_service + "/access/create"
@@ -163,14 +163,14 @@ async def create_access(request):
 # Authenticate endpoint
 @routes.get("/auth/authenticate")
 async def authenticator(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
     return web.Response(text=json.dumps((authenticate(token))))
 
 
 # Video downloader endpoints
 @routes.post("/record/interval")
 async def record_continuous(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
     is_authorised = authenticate(token)
     if (is_authorised):
         endpoint = video_download_service + "/record/interval"
@@ -186,7 +186,7 @@ async def get_settings(request):
 
 @routes.post('/settings/update')
 async def update_settings(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
     is_authorised, status_code = verify_token(token, "admin")
     if(is_authorised):
         string = video_settings_service + "/update"
@@ -205,7 +205,7 @@ async def get_recording_info(request):
 # Model changer
 @routes.post("/model/upload")
 async def upload_model(request):
-    token = request.headers['Authorization'].split('Bearer ')[1]
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
     is_authorised = authenticate(token)
     if (is_authorised):
         endpoint = model_changer_service + "/model/upload"
