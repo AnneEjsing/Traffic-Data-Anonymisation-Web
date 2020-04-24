@@ -1,3 +1,8 @@
+from aiohttp import web
+import json
+import dbresolver
+
+routes = web.RouteTableDef()
 
 @routes.get('/recordings/list/camera_id')
 async def list_camera_id(request):
@@ -12,7 +17,7 @@ async def list_camera_id(request):
     WHERE camera_id = %s;
     """
 
-    result, error = execute_query(query, camera_id)
+    result, error = dbresolver.execute_query(query, camera_id)
     
     if error: return web.Response(text=str(error), status=500)
     else:
@@ -22,7 +27,7 @@ async def list_camera_id(request):
 @routes.get('/recordings/list/user_id')
 async def list_user_id(request):
     data = await request.json()
-    f = field_check(['user_id'], data)
+    f = dbresolver.field_check(['user_id'], data)
     if f != None : return f
 
     user_id = data['user_id']
@@ -32,7 +37,7 @@ async def list_user_id(request):
     WHERE user_id = %s;
     """
 
-    result, error = execute_query(query, user_id)
+    result, error = dbresolver.execute_query(query, user_id)
     if error: return web.Response(text=str(error), status=500)
     else:
         return web.Response(text=json.dumps(result, default=str),status=200)
@@ -40,7 +45,7 @@ async def list_user_id(request):
 @routes.get('/recordings/get')
 async def get(request):
     data = await request.json()
-    f = field_check(['user_id', 'camera_id'], data)
+    f = dbresolver.field_check(['user_id', 'camera_id'], data)
     if f != None : return f
 
     user_id = data['user_id']
@@ -52,15 +57,15 @@ async def get(request):
     AND camera_id = %s;
     """
     
-    result, error = execute_query(query, user_id, camera_id)
+    result, error = dbresolver.execute_query(query, user_id, camera_id)
     if error: return web.Response(text=str(error), status=500)
-    return has_one_result(result, "No such recording found", 404)
+    return dbresolver.has_one_result(result, "No such recording found", 404)
 
 
 @routes.delete('/recordings/delete')
 async def delete(request):
     data = await request.json()
-    f = field_check(['user_id', 'camera_id'], data)
+    f = dbresolver.field_check(['user_id', 'camera_id'], data)
     if f != None : return f
 
     user_id = data['user_id']
@@ -72,14 +77,14 @@ async def delete(request):
     RETURNING *;
     """
 
-    result, error = execute_query(query, user_id, camera_id)
+    result, error = dbresolver.execute_query(query, user_id, camera_id)
     if error: return web.Response(text=str(error),status=500)
-    return has_one_result(result, "There is no recording with this id.", 404)
+    return dbresolver.has_one_result(result, "There is no recording with this id.", 404)
 
 @routes.post('/recordings/insert')
 async def insert(request):
     data = await request.json()
-    f = field_check(['user_id', 'camera_id', 'recording_time', 'recording_intervals'], data)
+    f = dbresolver.field_check(['user_id', 'camera_id', 'recording_time', 'recording_intervals'], data)
     if f != None : return f
 
     user_id = data['user_id']
@@ -95,7 +100,7 @@ async def insert(request):
     RETURNING *;
     """
 
-    result, error = execute_query(query,user_id, camera_id, recording_time, recording_intervals)
+    result, error = dbresolver.execute_query(query,user_id, camera_id, recording_time, recording_intervals)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)
 
