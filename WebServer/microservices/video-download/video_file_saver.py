@@ -55,7 +55,6 @@ def work(data):
     user_id = data['user_id']
     camera_id = data['camera_id']
     interval = data['recording_intervals']
-    interval = 10
     path = "/var/lib/videodata/"
     filepath = path + "temp" + str(uuid.uuid4())
     dbr = "http://dbresolver:1337/"
