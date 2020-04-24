@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { user } from '../_models/user';
 import { rejects } from 'assert';
 import * as global from "./dispatcherConnection.service";
+import { IMediaStream } from "./streamMessage.service"
 
 @Injectable()
 export class ProfileService {
@@ -13,15 +14,20 @@ export class ProfileService {
     readonly dispatcherUrl = global.dispatcherUrl;
 
     async getUser(): Promise<user> {
-        return this.http.get<user>(this.dispatcherUrl + 'get/user', this.constructHttpOptions()).toPromise();
+        return this.http.get<user>(this.dispatcherUrl + 'get/user', {headers: this.constructHttpOptions()}).toPromise();
     }
 
     async getAdmin(): Promise<user> {
-        return this.http.get<user>(this.dispatcherUrl + 'get/admin', this.constructHttpOptions()).toPromise();
+        return this.http.get<user>(this.dispatcherUrl + 'get/admin', {headers: this.constructHttpOptions()}).toPromise();
     }
 
     async listUsers(): Promise<string> {
         return this.http.get<string>(this.dispatcherUrl + "user/list").toPromise();
+    }
+
+    async listStreams(): Promise<Array<IMediaStream>> {
+        const headers = this.constructHttpOptions();
+        return this.http.get<Array<IMediaStream>>(this.dispatcherUrl + "camera/list", { headers, responseType: 'json' }).toPromise();
     }
 
     async signupUser(email: String, password: String) {
@@ -41,12 +47,10 @@ export class ProfileService {
     }
 
     constructHttpOptions() {
-        const httpOptions = {
-            headers: new HttpHeaders({
+        const httpOptions =  new HttpHeaders({
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('session_token'),
-            })
-        };
+                'Authorization': 'Bearer ' + localStorage.getItem('session_token')
+        });
 
         return httpOptions;
     }

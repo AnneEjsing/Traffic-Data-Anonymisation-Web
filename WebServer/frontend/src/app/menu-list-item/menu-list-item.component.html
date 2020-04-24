@@ -1,0 +1,29 @@
+<div mat-list-item class="menu-list-item">
+  <li class="list-group-item line">
+    <mat-icon *ngIf="!isRecording" class="routeIcon">videocam</mat-icon>
+    <mat-icon *ngIf="isRecording" style="color: red;" class="routeIcon">videocam</mat-icon>
+
+    {{item.label}}
+
+    <span *ngIf="admin">
+      <mat-icon style="cursor:pointer" [@indicatorRotate]="expanded ? 'expanded': 'collapsed'" (click)=onItemSelected()>
+        expand_more
+      </mat-icon>
+    </span>
+  </li>
+
+  <ul class="list-group" *ngIf="expanded && admin">
+    <li class="list-group-item">
+      <button mat-button (click)=delete()> Delete Stream </button>
+    </li>
+    <li class="list-group-item">
+      <button mat-button (click)=edit()> Edit Stream </button>
+    </li>
+    <li class="list-group-item">
+      <button mat-button (click)=share()> Share Stream </button>
+    </li>
+    <li class="list-group-item">
+      <button mat-button (click)=change()> Change Model </button>
+    </li>
+  </ul>
+</div>

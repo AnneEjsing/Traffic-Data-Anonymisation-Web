@@ -10,6 +10,11 @@ li:hover{
     background-color: rgb(192, 192, 192);
 }
 
+
+.mat-list-item-content{
+    width: 100%;
+  }
+
 li.selected {
     font-weight: bold;
     background-color: honeydew;

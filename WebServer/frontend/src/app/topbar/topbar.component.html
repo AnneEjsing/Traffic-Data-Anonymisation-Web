@@ -1,0 +1,14 @@
+<mat-toolbar style="height: 3rem;margin-bottom: auto;">
+  <h1>ICU</h1>
+  <span class="fill-space"></span>
+  <button mat-button style="margin-right: 1rem;" (click)="doToggleAbout()">{{isHomepage? 'About': 'Stream'}}</button>
+  <button mat-button *ngIf="!isLoggedIn" (click)="openDialog()">Login</button>
+  <button mat-button [matMenuTriggerFor]="menu" *ngIf="isLoggedIn">{{email}}
+    <i class="material-icons" style="vertical-align: middle;">arrow_drop_down</i>
+  </button>
+  <mat-menu #menu="matMenu">
+    <button mat-menu-item>Profile</button>
+    <button mat-menu-item *ngIf="isAdmin">CreateUser</button>
+    <button mat-menu-item (click)="logout()">Logout</button>
+  </mat-menu>
+</mat-toolbar>

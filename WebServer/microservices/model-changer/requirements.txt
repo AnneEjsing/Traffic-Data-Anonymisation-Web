@@ -1,0 +1,4 @@
+requests==2.23.0
+aiohttp
+aiohttp_cors
+asyncio

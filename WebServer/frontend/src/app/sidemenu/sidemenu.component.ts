@@ -1,12 +1,13 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Subscription, timer } from "rxjs";
 import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service"
-import { Router } from '@angular/router';
-import { LoginDialog, DialogData } from "../login/loginDialog.component";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../_services/auth.service';
 import { ProfileService } from '../_services/profile.service';
-import { Rights } from "../_models/user";
+import { recording_info } from '../_models/video';
+import { RecordService } from '../_services/record.service';
+import { CameraDialog } from '../add-camera/add-camera.component'
+
 
 @Component({
   selector: 'app-sidemenu',
@@ -17,83 +18,47 @@ import { Rights } from "../_models/user";
 
 export class SidemenuComponent implements OnInit {
   currentStream: IMediaStream;
-
-  //Change this to something that fetches it from a microservice.
-  streams: IMediaStream[] = [
-    {
-      type: "hls",
-      label: "LiveCamera 1",
-      /*source: 'http://192.168.1.107:8080/hls/stream.m3u8'*/
-      source:
-        "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8"
-    },
-    {
-      type: "hls",
-      label: "NotLiveCamera 2",
-      source:
-        "https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8"
-    },
-    {
-      type: "hls",
-      label: "NotLiveCamera 3",
-      source:
-        "https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8"
-    },
-    {
-      type: "hls",
-      label: "NotLiveCamera 4",
-      source:
-        "https://mnmedias.api.telequebec.tv/m3u8/29880.m3u8"
-    }
-  ];
+  streams: IMediaStream[];
 
   loggedIn: boolean = false;
   email: string;
+  recordings: Array<recording_info> = [];
 
   constructor(
-    private streamService: StreamMessageService,
-    private router: Router,
     public dialog: MatDialog,
-    private auth: AuthService,
+    private streamService: StreamMessageService,
     private profileService: ProfileService,
+    private recordService: RecordService,
+    private auth: AuthService,
   ) { }
 
-  openDialog(): void {
-    const dialogRef = this.dialog.open(LoginDialog, {
-      width: '250px',
-      data: { email: "", password: "" }
-    });
+  ngOnInit() {
 
-    dialogRef.afterClosed().subscribe(data => {
-      this.auth.isAuthenticated().toPromise().then(response => {
-        if (response) {
-          this.loggedIn = true;
-          this.email = data;
-        }
-      });
-    });
-  }
+    if (localStorage.getItem('session_token')) {
+      this.profileService.listStreams().then(
+        response => {
+          this.streams = response;
+          if (this.streams.length == 0)
+            this.currentStream = this.streamService.defaultStream;
+          else {
+            this.streamService.changeStream(this.streams[0])
+            this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+          }
+        },
+        error => { })
 
-  ngOnInit(): void {
-    this.auth.getRole().toPromise().then(rights => {
-      if (rights) {
-        this.loggedIn = true;
-
-        if (rights == Rights.user) {
-          this.profileService.getUser().then(user => {
-            this.email = user.email;
+      this.auth.getId().subscribe(id => {
+        if (id) {
+          this.recordService.listRecordings(id).then(recordings => {
+            this.recordings = recordings;
           });
         }
-        else if (rights = Rights.admin) {
-          this.profileService.getAdmin().then(user => {
-            this.email = user.email;
-          })
-        }
-      }
-    });
+      });
+    }
+  }
 
-    this.streamService.changeStream(this.streams[0])
-    this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+  isRecording(camera_id) {
+    return this.recordings.some(recording => recording.camera_id == camera_id);
   }
 
   onClickStream(stream: IMediaStream) {
@@ -103,5 +68,12 @@ export class SidemenuComponent implements OnInit {
         t.unsubscribe();
       }
     );
+  }
+
+
+  openCameraDialog(): void {
+    this.dialog.open(CameraDialog, {
+      data: { label: "", source: "", description: "", ip: "" }
+    });
   }
 }

@@ -1,9 +1,12 @@
-import { Component, AfterViewInit, ViewChild, ChangeDetectionStrategy } from "@angular/core";
+import { Component, AfterViewInit, ViewChild, ChangeDetectionStrategy, OnInit } from "@angular/core";
 import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
-import { RecordService } from "../_services/record.service";
 import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service";
 import { AuthService } from '../_services/auth.service';
+import { VideoService } from '../_services/video.service';
+import { videoSettings, recording_info } from '../_models/video';
+import { FormControl } from '@angular/forms';
+import { RecordService } from '../_services/record.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -11,20 +14,42 @@ import { AuthService } from '../_services/auth.service';
   templateUrl: "./videoplayer.component.html",
   styleUrls: ["./videoplayer.component.scss"]
 })
-export class VideoplayerComponent implements AfterViewInit {
+export class VideoplayerComponent implements AfterViewInit, OnInit {
   @ViewChild(VgHLS) vgHls: VgHLS;
 
   //Needs to be inizialised to something or it break...
   currentStream: IMediaStream = this.streamService.defaultStream;
+  recording: recording_info;
 
   api: VgAPI;
   bitrates: BitrateOption[];
 
+  role: string;
+  user_id: string;
+  ctrl = new FormControl('', (control: FormControl) => {
+    const value = control.value;
+
+    if (!value) {
+      return null;
+    }
+
+    return null;
+  });
+
   constructor(
-    private recordService: RecordService,
     private streamService: StreamMessageService,
     private auth: AuthService,
-  ) { }
+    private videoService: VideoService,
+    private recordService: RecordService,
+  ) {
+    this.auth.getRole().subscribe(role => {
+      this.role = role;
+    });
+  }
+
+  ngOnInit() {
+
+  }
 
   onPlayerReady(api: VgAPI) {
     this.api = api;
@@ -50,6 +75,20 @@ export class VideoplayerComponent implements AfterViewInit {
         let t: Subscription = timer(0, 10).subscribe(
           () => {
             this.currentStream = selectedStream;
+
+            if (localStorage.getItem('session_token')) {
+              this.auth.getId().toPromise().then(id => {
+                this.user_id = id;
+                this.recordService.getRecordingInfo(this.currentStream.camera_id, id).then(recording => {
+                  if (recording != 404 && recording != 500) {
+                    this.recording = recording;
+                  }
+                  else {
+                    this.recording = undefined;
+                  }
+                });
+              });
+            }
             t.unsubscribe();
           }
         );
@@ -57,27 +96,14 @@ export class VideoplayerComponent implements AfterViewInit {
   }
 
   setBitrate(option: BitrateOption) {
-    if (this.currentStream.type == "hls") this.vgHls.setBitrate(option);
+    this.vgHls.setBitrate(option);
   }
 
-  async startRecord(time: string) {
-    this.auth.getId().toPromise().then(async userId => {
-      if (userId) {
-        let res = await this.recordService.postRecordInfo(
-          this.currentStream.source,
-          time,
-          userId,
-          "blabla" // TODO: Add a real camera ID
-        );
+  SetRecordingLimit() {
+    var newSettings: videoSettings = {
+      recording_limit: (((this.ctrl.value.hour * 60) + this.ctrl.value.minute) * 60) + this.ctrl.value.second
+    }
 
-        // TODO: Something...
-        if (res === 200) console.log("success");
-        else console.log("error");
-      }
-      else {
-        // TODO: Error handling
-        console.log("error: unautherised")
-      }
-    })
+    this.videoService.updateSettings(newSettings).then(response => { });
   }
 }

@@ -1,0 +1,15 @@
+<h1 mat-dialog-title>Make stream available to:</h1>
+
+<div mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Email</mat-label>
+    <input matInput [(ngModel)]="data.email">
+  </mat-form-field>
+</div>
+<div *ngIf="failed" mat-dialog-content>
+  <p style="color: red;">{{failedstring}}</p>
+</div>
+<div mat-dialog-actions>
+  <button mat-button [disabled]="requesting" (click)="save()" cdkFocusInitial>Make Available</button>
+  <button mat-button (click)="close()">Close</button>
+</div>
