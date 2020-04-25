@@ -11,8 +11,6 @@ SET xmloption = content;
 SET client_min_messages = warning;
 SET row_security = off;
 
-CREATE DATABASE traffic_annonymisation_db;
-
 \connect "traffic_annonymisation_db"
 
 -- Access type
@@ -32,7 +30,9 @@ CREATE TABLE public.users (
 CREATE TABLE public.cameras (
     camera_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     description text,
+    label text,
     ip text,
+    source text UNIQUE NOT NULL,
     last_sign_of_life timestamp,
     owner uuid NOT NULL REFERENCES public.users(user_id)
 );
@@ -44,21 +44,30 @@ CREATE TABLE public.video_settings (
 
 CREATE TABLE public.recorded_videos (
     video_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
-    user_id uuid NOT NULL REFERENCES public.users(user_id),
-    camera_id uuid NOT NULL REFERENCES public.cameras(camera_id),
+    user_id uuid REFERENCES public.users(user_id) ON DELETE CASCADE,
+    camera_id uuid REFERENCES public.cameras(camera_id) ON DELETE SET NULL,
     video_thumbnail text,
     save_time timestamp NOT NULL
 );
 
 CREATE TABLE public.access_rights (
     camera_id uuid NOT NULL REFERENCES public.cameras(camera_id) ON DELETE CASCADE,
-    user_id uuid NOT NULL REFERENCES public.users(user_id) ON DELETE CASCADE,
-    expiry timestamp
+    user_id uuid NOT NULL REFERENCES public.users(user_id) ON DELETE CASCADE
 );
 
 ALTER TABLE ONLY public.access_rights
     ADD CONSTRAINT access_rights_pkey PRIMARY KEY (camera_id,user_id);
 
+CREATE TABLE public.recordings (
+    camera_id uuid NOT NULL REFERENCES public.cameras(camera_id),
+    user_id uuid NOT NULL REFERENCES public.users(user_id),
+    start_time timestamp NOT NULL,
+    recording_time integer NOT NULL,
+    recording_intervals integer NOT NULL
+);
+
+ALTER TABLE ONLY public.recordings
+    ADD CONSTRAINT recordings_pkey PRIMARY KEY (camera_id,user_id);
 
 -- Table ownership
 ALTER TABLE public.users OWNER TO postgres;
@@ -97,4 +106,12 @@ VALUES (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'Best movie', 'This is not a live stream. However it is a good movie, so you should watch it', '0.0.0.0','https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8'
 ) RETURNING *;
 
+INSERT INTO access_rights (camera_id, user_id)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11'
+) RETURNING *;
 
+INSERT INTO recorded_videos (video_thumbnail, camera_id, user_id, save_time)
+VALUES (
+    'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', NOW()
+) RETURNING *;

@@ -48,8 +48,6 @@ export class MenuListItemComponent implements OnInit {
     );
   }
 
-
-
   onItemSelected() {
     this.expanded = !this.expanded;
   }

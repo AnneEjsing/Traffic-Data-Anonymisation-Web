@@ -1,10 +1,9 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from "@angular/forms";
+import { FormsModule, ReactiveFormsModule } from "@angular/forms";
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { AppRoutingModule } from './app-routing.module';
 import { HomepageComponent } from './homepage/homepage.component';
-import { LoginComponent } from './login/login.component';
 import { VideoplayerComponent } from './videoplayer/videoplayer.component';
 import { VgCoreModule, VgControlsModule, VgStreamingModule, VgOverlayPlayModule, VgBufferingModule } from 'ngx-videogular';
 import { ProfileService } from './_services/profile.service';
@@ -12,6 +11,7 @@ import { HttpClientModule } from "@angular/common/http";
 import { RecordService } from './_services/record.service';
 import { SidemenuComponent } from './sidemenu/sidemenu.component';
 import { StreamMessageService } from './_services/streamMessage.service';
+import { VideoUtilsComponent } from './video-utils/video-utils.component';
 import { AppComponent } from './app.component';
 import { DemoMaterialModule } from './material-module';
 import { LoginDialog } from "./login/loginDialog.component";
@@ -34,9 +34,9 @@ import { SettingsDialog } from './settings.dialog.component/settings.dialog.comp
   declarations: [
     AppComponent,
     HomepageComponent,
-    LoginComponent,
     VideoplayerComponent,
     SidemenuComponent,
+    VideoUtilsComponent,
     LoginDialog,
     SettingsDialog,
     TopbarComponent,
@@ -47,10 +47,11 @@ import { SettingsDialog } from './settings.dialog.component/settings.dialog.comp
     ModelChangerComponent
   ],
   imports: [
-    MatDialogModule, //IDK why this needs to be explicit imported when part of DemoMatherialModule, the rest does not
+    MatDialogModule,
     BrowserModule,
     BrowserAnimationsModule,
     FormsModule,
+    ReactiveFormsModule,
     DemoMaterialModule,
     AppRoutingModule,
     VgCoreModule,
@@ -59,6 +60,7 @@ import { SettingsDialog } from './settings.dialog.component/settings.dialog.comp
     VgBufferingModule,
     VgStreamingModule,
     HttpClientModule,
+    NgbModule
   ],
   providers: [
     ProfileService,
@@ -67,6 +69,8 @@ import { SettingsDialog } from './settings.dialog.component/settings.dialog.comp
     StreamMessageService,
     JwtHelperService,
     AuthService,
+    VideoService,
+    CameraService,
     { provide: JWT_OPTIONS, useValue: JWT_OPTIONS },
   ],
   bootstrap: [

@@ -1,24 +1,4 @@
-@routes.post('/right/update')
-async def right_update(request):
-    data = await request.json()
-    f = fieldCheck(['camera_id', 'user_id', 'expiry'], data)
-    if f != None: return f
-
-    camera_id = data['camera_id']
-    user_id = data['user_id']
-    expiry = data['expiry']
-    query = """
-    UPDATE access_rights 
-    SET expiry = %s
-    WHERE camera_id = %s AND user_id = %s
-    RETURNING *;
-    """
-
-    result, error = executeQuery(query, expiry, camera_id, user_id)
-    if error: return web.Response(text=str(error),status=500)
-    return hasOneResult(result, "There are no access rights for that user and camera.", 404)
-
-@routes.get('/right/get')
+@routes.get('/access/get')
 async def right_get(request):
     data = await request.json()
     f = fieldCheck(['camera_id', 'user_id'], data)
@@ -34,10 +14,10 @@ async def right_get(request):
 
     result, error = executeQuery(query, camera_id, user_id)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=str(result), status=200)
+    return web.Response(text=json.dumps(result, default=str), status=200)
 
 
-@routes.delete('/right/delete')
+@routes.delete('/access/delete')
 async def right_delete(request):
     data = await request.json()
     f = fieldCheck(['camera_id', 'user_id'], data)
@@ -55,29 +35,28 @@ async def right_delete(request):
     
     return hasOneResult(result, "There are no access for that user and camera.", 404)
 
-@routes.post('/right/create')
+@routes.post('/access/create')
 async def right_create(request):
     data = await request.json()
-    f = fieldCheck(['camera_id', 'user_id', 'expiry'], data)
+    f = fieldCheck(['camera_id', 'user_id'], data)
     if f != None: return f
     
     camera_id = data['camera_id']    
     user_id = data['user_id']
-    expiry = data['expiry']
     query = """
-    INSERT INTO access_rights (camera_id,user_id,expiry)
+    INSERT INTO access_rights (camera_id,user_id)
     VALUES (
-        %s, %s, %s
+        %s, %s
     )
     RETURNING *;
     """
-    result, error = executeQuery(query,camera_id,user_id,expiry)
-    if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=str(result), status=200)
+    result, error = executeQuery(query,camera_id,user_id)
+    if error: return web.Response(text=str(error),status=409)
+    return web.Response(text=json.dumps(result, default=str), status=200)
 
-@routes.get('/right/list')
+@routes.get('/access/list')
 def right_list(request):
     query = "SELECT * FROM access_rights;"
     result, error = executeQuery(query)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=str(result), status=200)
+    return web.Response(text=json.dumps(result, default=str), status=200)

@@ -16,7 +16,7 @@ services: # Here we define our service(s)
     depends_on:
       - dispatcher
     networks:
-    - traffic_net
+      - traffic_net
 
   videodownloader:
     container_name: videodownloader
@@ -39,12 +39,23 @@ services: # Here we define our service(s)
       dockerfile: Dockerfile
     ports:
       - "1337:1337"
+    env_file:
+      - secrets.env
+    environment:
+      - POSTGRES_USER:${POSTGRES_USER}
+      - POSTGRES_PASSWORD:${POSTGRES_PASSWORD}
+      - POSTGRES_DB:${POSTGRES_DB}
+      - POSTGRES_HOST:${POSTGRES_HOST}
+      - POSTGRES_PORT:${POSTGRES_PORT}
     links:
       - postgres
     depends_on:
       - postgres
     networks:
       - traffic_net
+    depends_on:
+      - postgres
+
 
   profileservice:
     container_name: profileservice
@@ -59,17 +70,70 @@ services: # Here we define our service(s)
       - dbresolver
     networks:
       - traffic_net
+
+  videoservice:
+    container_name: videoservice
+    build:
+      context: ./microservices/video-service/
+      dockerfile: Dockerfile
+    ports:
+      - "1342:1342"
+    links:
+      - dbresolver
+    depends_on:
+      - dbresolver
+    networks:
+      - traffic_net
+
+  cameraservice:
+    container_name: cameraservice
+    build:
+      context: ./microservices/camera-service/
+      dockerfile: Dockerfile
+    ports:
+      - "1340:1340"
+    links:
+      - dbresolver
+    depends_on:
+      - dbresolver
+    networks:
+      - traffic_net
+
+  streamer:
+    container_name: streamer
+    build:
+      context: ./microservices/streamer/
+      dockerfile: Dockerfile
+    ports:
+      - "1935:1935" # Receive RTMP
+      - "1339:1339" # Output HLS
+    networks:
+      - traffic_net
   
   dispatcher:
     container_name: dispatcher
-    depends_on:
-      - profileservice
-      - videodownloader
     build:
       context: ./microservices/dispatcher/
       dockerfile: Dockerfile
     ports:
       - "443:443"
+    env_file:
+      - secrets.env
+    environment:
+      - SECRET_KEY:${SECRET_KEY}
+    networks:
+      - traffic_net
+    depends_on:
+      - profileservice
+      - videodownloader
+      
+  modelchanger:
+    container_name: modelchanger
+    build:
+      context: ./microservices/model-changer/
+      dockerfile: Dockerfile
+    ports:
+      - "1341:1341"
     networks:
       - traffic_net
 
@@ -82,10 +146,8 @@ services: # Here we define our service(s)
     volumes:
       - ./microservices/db/data.sql:/docker-entrypoint-initdb.d/seed.sql
       - ./microservices/db/pgData:/var/lib/psotgresql/data
-    environment:
-      POSTGRES_USER: "postgres"
-      POSTGRES_PASSWORD: "postgres"
-      POSTGRES_DB: "Traffic_Annonymisation_DB"
+    env_file:
+      - secrets.env
     networks:
       - traffic_net
 

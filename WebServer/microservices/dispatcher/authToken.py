@@ -5,9 +5,10 @@ import hashlib
 import hmac
 from enum import IntEnum
 from datetime import datetime, timedelta
+import os
 
 
-secretKey = 'The perfect trafic thing!'
+secretKey = os.getenv("SECRET_KEY")
 
 def verify_credentials(email, pwd):
     data = {"email": email, "password": pwd}
@@ -15,7 +16,7 @@ def verify_credentials(email, pwd):
 
     if (resp.status_code == 200):
         json_data = resp.json()
-        return (True, json_data['id'], json_data['rights'])
+        return (True, json_data['user_id'], json_data['role'])
     else:
         return (False, "", "")
 
@@ -47,7 +48,7 @@ def verify_token(token, desired_role):
     if (isSuccess):
         isAuth = is_authorized(token, desired_role)
         if (isAuth):
-            return True, "Pass"
+            return True, 200
         else:
             return False, 403
     else:
@@ -65,6 +66,10 @@ def get_user_id(token):
     id, subject, role, expiration = get_payload_info(payload)
     return subject
 
+def get_rights(token):
+    header, payload, signature = token.split('.')
+    id, subject, role, expiration = get_payload_info(payload)
+    return role
 
 def verify_date(date):
     return (datetime.utcnow() < datetime.strptime(date, '%Y-%m-%dT%H:%M:%S.%f'))

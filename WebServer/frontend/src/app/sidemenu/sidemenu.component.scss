@@ -8,12 +8,15 @@ ul{
     padding-left: 0px;
 }
 
-<<<<<<< Updated upstream
+.mat-list-item-content{
+    width: 100%;
+}
+
 li.selected {
     font-weight: bold;
     background-color: honeydew;
 }
-=======
+
 span{
     vertical-align: middle;
 }
@@ -53,4 +56,3 @@ span{
 :host ::ng-deep .mat-list-item .mat-list-item-content {
     width: 100%;
 }
->>>>>>> Stashed changes

@@ -1,18 +1,20 @@
 from psycopg2 import connect, errors
+from psycopg2.extras import RealDictCursor
 from aiohttp import web
 import asyncio
 import json
+import os 
 
 # Sends a query to the database and returns the response.
 # Inspired by: #https://kb.objectrocket.com/postgresql/python-and-postgresql-docker-container-part-2-1063
 def executeQuery(query,*inputs):
     # declare connection instance
     conn = connect(
-        dbname = "traffic_annonymisation_db",
-        user = "postgres",
-        host = "postgres",
-        password = "postgres",
-        port = 5432
+        dbname = os.getenv('POSTGRES_DB'),
+        user = os.getenv('POSTGRES_USER'),
+        host = os.getenv('POSTGRES_HOST'),
+        password = os.getenv('POSTGRES_PASSWORD'),
+        port = os.getenv('POSTGRES_PORT')
     )
 
     results = []
@@ -20,7 +22,8 @@ def executeQuery(query,*inputs):
 
     try:
         # declare a cursor object from the connection
-        cursor = conn.cursor()
+        # The cursor_factory=RealDictCursor makes everything go json!
+        cursor = conn.cursor(cursor_factory=RealDictCursor)
 
         # execute an SQL statement using the psycopg2 cursor object.
         # By seperating the query and the inputs, psycopg2 does sanitation.
@@ -28,8 +31,7 @@ def executeQuery(query,*inputs):
         conn.commit()
 
         # enumerate() over the PostgreSQL records
-        for i, record in enumerate(cursor):
-            results.append(record)
+        results = cursor.fetchall()
 
     except errors.InvalidTextRepresentation as e:
         error = e
@@ -64,7 +66,7 @@ def fieldCheck(requiredFields, data):
 
 def hasOneResult(result, errorString, errorCode):
     if len(result) == 1:
-        return web.Response(text="Success",status=200)
+        return web.Response(text=json.dumps(result[0], default=str),status=200)
     else:
         return web.Response(text=errorString, status=errorCode)
 
@@ -74,7 +76,8 @@ exec(open("user.py").read())
 exec(open("camera.py").read())
 exec(open("access-right.py").read())
 exec(open("video.py").read())
-
+exec(open("video_settings.py").read())
+exec(open("recordings.py").read())
 
 if __name__ == "__main__":
     app = web.Application()

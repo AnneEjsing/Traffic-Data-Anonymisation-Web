@@ -2,3 +2,15 @@ vg-player, video {
     width: 100%;
     height: 100%;
 }
+
+.videogular-container {
+	position: relative;
+    width: auto;
+	margin: 2rem;
+}
+
+.form-group{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+}
