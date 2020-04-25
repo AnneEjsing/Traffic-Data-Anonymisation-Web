@@ -20,7 +20,7 @@ import { RecordService } from '../_services/record.service';
 export class SidemenuComponent implements OnInit {
   currentStream: IMediaStream;
   streams: IMediaStream[];
-
+  role: string;
   loggedIn: boolean = false;
   email: string;
   recordings: Array<recording_info> = [];
@@ -49,6 +49,7 @@ export class SidemenuComponent implements OnInit {
       this.auth.getRole().toPromise().then(rights => {
         if (rights) {
           this.loggedIn = true;
+          this.role = rights;
 
           if (rights == Rights.user) {
             this.profileService.getUser().then(user => {
