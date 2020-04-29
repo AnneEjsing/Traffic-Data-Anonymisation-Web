@@ -26,8 +26,8 @@ def is_not_expiered(token):
         return False
     header, payload, signature = token.split('.')
     id, subject, role, expiration = get_payload_info(payload)
-    isValid = verify_date(expiration)
-    if not isValid:
+    is_valid = verify_date(expiration)
+    if not is_valid:
         return False
     else:
         return True
@@ -44,10 +44,10 @@ def authenticate(token):
 
 
 def verify_token(token, desired_role):
-    isSuccess = authenticate(token)
-    if (isSuccess):
-        isAuth = is_authorized(token, desired_role)
-        if (isAuth):
+    is_success = authenticate(token)
+    if (is_success):
+        is_auth = is_authorized(token, desired_role)
+        if (is_auth):
             return True, 200
         else:
             return False, 403
@@ -55,10 +55,10 @@ def verify_token(token, desired_role):
         return False, 401
 
 
-def is_authorized(token, desiredRole):
+def is_authorized(token, desired_role):
     header, payload, signature = token.split('.')
     id, subject, role, expiration = get_payload_info(payload)
-    return role == desiredRole
+    return role == desired_role
 
 
 def get_user_id(token):
@@ -77,23 +77,23 @@ def verify_date(date):
 
 def get_payload_info(payload):
     text = base64.urlsafe_b64decode(payload + '=' * (4 - len(payload) % 4))
-    jsonObj = json.loads(text)
-    return jsonObj['jid'], jsonObj['sub'], jsonObj['rights'], jsonObj['exp']
+    json_obj = json.loads(text)
+    return json_obj['jid'], json_obj['sub'], json_obj['rights'], json_obj['exp']
 
 
-def create_token(userId, rights):
+def create_token(user_id, rights):
     header = encode(create_header())
-    payload = encode(create_payload(userId, rights))
+    payload = encode(create_payload(user_id, rights))
     signature = encode(create_signature(header, payload))
     return '.'.join([header, payload, signature])
 
 
-def encode(encodingInput):
+def encode(encoding_input):
     """This function converts a string to base64, and removes trailing ="""
-    if (isinstance(encodingInput, str)):
-        byte = str.encode(encodingInput)
+    if (isinstance(encoding_input, str)):
+        byte = str.encode(encoding_input)
     else:
-        byte = encodingInput
+        byte = encoding_input
 
     b64 = base64.urlsafe_b64encode(byte)
     res = b64.decode('utf-8')
@@ -104,8 +104,8 @@ def create_header():
     return json.dumps({"alg": "HS512", "type": "JWT"})
 
 
-def create_payload(userId, rights):
-    return json.dumps({'jid': '1', 'sub': userId, 'rights': rights, 'exp': generate_token_exp_time()})
+def create_payload(user_id, rights):
+    return json.dumps({'jid': '1', 'sub': user_id, 'rights': rights, 'exp': generate_token_exp_time()})
 
 
 def create_signature(header, payload):

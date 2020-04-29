@@ -36,7 +36,7 @@ async def adminlist(request):
     return await send_request("camera/adminlist", '{}', requests.get)
 
 @routes.post('/access/create')
-async def giveAccess(request):
+async def give_access(request):
     data = await request.json()
     response = requests.get(url + "user/get/email",headers={'Content-type': 'application/json'}, json=(data))
     other_data = response.json()

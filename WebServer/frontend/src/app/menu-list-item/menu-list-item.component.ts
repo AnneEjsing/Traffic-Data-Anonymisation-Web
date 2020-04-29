@@ -28,7 +28,7 @@ export class MenuListItemComponent implements OnInit {
   admin: boolean;
   @HostBinding("attr.aria-expanded") ariaExpanded = this.expanded;
   @Input() item: IMediaStream;
-  @Input() isRecording: Boolean;
+  @Input() isRecording: boolean;
 
   constructor(
     public dialog: MatDialog,

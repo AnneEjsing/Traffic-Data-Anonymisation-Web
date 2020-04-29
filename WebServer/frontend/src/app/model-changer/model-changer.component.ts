@@ -12,7 +12,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ModelChangerComponent implements OnInit {
   requesting: boolean;
   fileToUpload: File = null;
-  canUpload: Boolean = false;
+  canUpload: boolean = false;
 
   constructor(
     public dialogRef: MatDialogRef<string>,
