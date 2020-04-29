@@ -3,3 +3,4 @@ aiohttp
 asyncio
 loguru
 datetime
+ffmpeg-python
