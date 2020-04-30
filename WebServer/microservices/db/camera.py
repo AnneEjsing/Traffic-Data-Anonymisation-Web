@@ -7,7 +7,7 @@ routes = web.RouteTableDef()
 @routes.put('/camera/updateLSOL')
 async def camera_updatelsol(request):
     data = await request.json()
-    f = field_check(['id'], data)
+    f = dbresolver.field_check(['id'], data)
     if f != None: return f
 
     id = data['id']
