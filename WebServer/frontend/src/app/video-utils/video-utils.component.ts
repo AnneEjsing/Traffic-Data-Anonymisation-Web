@@ -16,7 +16,7 @@ export class VideoUtilsComponent implements OnInit {
   @Input() stream: IMediaStream;
   @Input() recording: recording_info;
   fileToUpload: File = null;
-  canUpload: Boolean = false;
+  canUpload: boolean = false;
   settings: videoSettings;
 
   ctrl = new FormControl('', (control: FormControl) => {

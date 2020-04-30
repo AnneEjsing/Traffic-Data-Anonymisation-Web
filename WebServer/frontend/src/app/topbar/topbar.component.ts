@@ -1,10 +1,9 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { AuthService } from '../_services/auth.service';
 import { ProfileService } from '../_services/profile.service';
-import { Rights } from "../_models/user";
-import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog } from '@angular/material/dialog';
 import { LoginDialog } from '../login/loginDialog.component'
 
 @Component({
@@ -37,7 +36,7 @@ export class TopbarComponent implements OnInit {
         this.isAdmin = user.rights == "admin";
       });
     }
-  };
+  }
 
   doToggleAbout(): void {
     if (this.isHomepage) {

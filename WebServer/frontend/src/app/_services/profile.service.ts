@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import { user } from '../_models/user';
-import { rejects } from 'assert';
 import * as global from "./dispatcherConnection.service";
 import { IMediaStream } from "./streamMessage.service"
 
@@ -26,7 +25,7 @@ export class ProfileService {
         return this.http.get<Array<IMediaStream>>(this.dispatcherUrl + "camera/list", { headers, responseType: 'json' }).toPromise();
     }
 
-    async signupUser(email: String, password: String) {
+    async signupUser(email: string, password: string) {
         const headers = this.constructHttpHeaders();
         var newUser = {
             email: email,

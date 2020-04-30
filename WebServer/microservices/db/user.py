@@ -1,8 +1,14 @@
+from aiohttp import web
+import json
+import dbresolver
+
+routes = web.RouteTableDef()
+
 
 @routes.get('/user/login')
 async def user_login(request):
     data = await request.json()
-    f = fieldCheck(['email','password'], data)
+    f = dbresolver.field_check(['email','password'], data)
     if f != None: return f
     
     email = data['email']    
@@ -12,15 +18,15 @@ async def user_login(request):
     FROM users 
     WHERE email = %s AND password = crypt(%s,password);
     """
-    result, error = executeQuery(query,email,password)
+    result, error = dbresolver.execute_query(query,email,password)
     if error: return web.Response(text=str(error),status=500)
-    return hasOneResult(result, "Login credentials are not valid.", 401)
+    return dbresolver.has_one_result(result, "Login credentials are not valid.", 401)
 
 
 @routes.post('/user/update')
 async def user_update(request):
     data = await request.json()
-    f = fieldCheck(['id', 'email', 'password', 'rights'], data)
+    f = dbresolver.field_check(['id', 'email', 'password', 'rights'], data)
     if f != None: return f
 
     id = data['id']
@@ -34,14 +40,14 @@ async def user_update(request):
     RETURNING *;
     """
 
-    result, error = executeQuery(query, email, password, role, id)
+    result, error = dbresolver.execute_query(query, email, password, role, id)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "There is no user with that id.", 404)
+    return dbresolver.has_one_result(result, "There is no user with that id.", 404)
 
 @routes.get('/user/get')
 async def user_get(request):
     data = await request.json()
-    f = fieldCheck(['id'], data)
+    f = dbresolver.field_check(['id'], data)
     if f != None: return f
     
     id = data['id']
@@ -51,14 +57,14 @@ async def user_get(request):
     WHERE user_id = %s;
     """
 
-    result, error = executeQuery(query, id)
+    result, error = dbresolver.execute_query(query, id)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "No user with that id.", 404)
+    return dbresolver.has_one_result(result, "No user with that id.", 404)
 
 @routes.get('/user/get/email')
 async def user_get(request):
     data = await request.json()
-    f = fieldCheck(['email'], data)
+    f = dbresolver.field_check(['email'], data)
     if f != None: return f
     
     email = data['email']
@@ -68,14 +74,14 @@ async def user_get(request):
     WHERE email = %s;
     """
 
-    result, error = executeQuery(query, email)
+    result, error = dbresolver.execute_query(query, email)
     if error: return web.Response(text=str(error), status=500)
-    return hasOneResult(result, "No user with that email.", 404)
+    return dbresolver.has_one_result(result, "No user with that email.", 404)
 
 @routes.delete('/user/delete')
 async def user_delete(request):
     data = await request.json()
-    f = fieldCheck(['id'], data)
+    f = dbresolver.field_check(['id'], data)
     if f != None: return f
 
     id = data['id']
@@ -84,15 +90,15 @@ async def user_delete(request):
     WHERE user_id = %s
     RETURNING user_id;
     """
-    result, error = executeQuery(query, id)
+    result, error = dbresolver.execute_query(query, id)
     if error: return web.Response(text=str(error),status=500)
     
-    return hasOneResult(result, "There is no user with this id.", 404)
+    return dbresolver.has_one_result(result, "There is no user with this id.", 404)
 
 @routes.post('/user/signup')
 async def user_signup(request):
     data = await request.json()
-    f = fieldCheck(['email', 'password', 'rights'], data)
+    f = dbresolver.field_check(['email', 'password', 'rights'], data)
     if f != None: return f
     
     email = data['email']    
@@ -105,13 +111,13 @@ async def user_signup(request):
     )
     RETURNING *;
     """
-    result, error = executeQuery(query,email,rights,password)
+    result, error = dbresolver.execute_query(query,email,rights,password)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)
 
 @routes.get('/user/list')
 def user_list(request):
     query = "SELECT * FROM users;"
-    result, error = executeQuery(query)
+    result, error = dbresolver.execute_query(query)
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)

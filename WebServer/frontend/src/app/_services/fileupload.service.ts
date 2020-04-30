@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import * as global from "./dispatcherConnection.service";
-import { promise } from 'protractor';
 
 @Injectable({
   providedIn: "root"
