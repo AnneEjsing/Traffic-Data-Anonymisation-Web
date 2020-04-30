@@ -23,7 +23,7 @@
                 <vg-fullscreen></vg-fullscreen>
             </vg-controls>
             <video #media (onGetBitrates)="bitrates = $event" [vgMedia]="media" [vgDash]="currentStream.source"
-                [vgHls]="currentStream.source" id="singleVideo" autoplay crossorigin>
+                [vgHls]="currentStream.source" id="singleVideo" crossorigin>
             </video>
 
         </vg-player>

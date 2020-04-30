@@ -51,19 +51,12 @@ export class SidemenuComponent implements OnInit {
           this.loggedIn = true;
           this.role = rights;
 
-          if (rights == Rights.user) {
-            this.profileService.getUser().then(user => {
-              this.email = user.email;
-
-              this.auth.getId().subscribe(id => {
-                if (id) {
-                  this.recordService.listRecordings(id).then(recordings => {
-                    this.recordings = recordings;
-                  });
-                }
-              });
+          this.profileService.getUser().then(user => {
+            this.email = user.email;
+            this.recordService.listRecordings(user.user_id).then(recordings => {
+              this.recordings = recordings;
             });
-          }
+          });
         }
       });
     }

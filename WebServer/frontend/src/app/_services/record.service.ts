@@ -53,14 +53,14 @@ export class RecordService {
     return res;
   }
 
-  async listRecordings(user_id: string) {
+  async listRecordings(user_id: string): Promise<recording_info[]> {
     var data = {
       "user_id": user_id
     }
 
     let endpoint = global.dispatcherUrl + "recordings/list/user_id";
 
-    let res = await this.http.post(
+    let res = await this.http.post<recording_info[]>(
       endpoint,
       data,
       this.constructHttpOptions())
