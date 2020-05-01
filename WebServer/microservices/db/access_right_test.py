@@ -12,13 +12,13 @@ import asyncio
 import os
 
 class request:
-    dic = {"hej":"du"}
+    dic = {}
     def __init__(self,dict):
         self.dic = dict
     async def json(self):
         return self.dic
 
-class MyTest(aiounittest.AsyncTestCase):
+class AccessRightGetTests(aiounittest.AsyncTestCase):
     @classmethod
     def setUpClass(cls):
         cls.postgresql = testing.postgresql.Postgresql(port=7654)
@@ -39,19 +39,32 @@ class MyTest(aiounittest.AsyncTestCase):
         cls.postgresql.stop()
 
     @asyncio.coroutine
-    async def test_get(cls):
+    async def test_get_pass(cls):
         dbresolver.connection_func = lambda: psycopg2.connect(**cls.postgresql.dsn())
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_get(req)
         cls.assertEqual(response.body, b'[{"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"}]')
 
     @asyncio.coroutine
-    async def test_get_wrong_uid(cls):
+    async def test_get_fail_wrong_user_uuid(cls):
         dbresolver.connection_func = lambda: psycopg2.connect(**cls.postgresql.dsn())
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_get(req)
         cls.assertEqual(response.body, b'[]')
     
+    @asyncio.coroutine
+    async def test_get_fail_wrong_camera_uuid(cls):
+        dbresolver.connection_func = lambda: psycopg2.connect(**cls.postgresql.dsn())
+        req = request({"camera_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
+        response = await access_right.right_get(req)
+        cls.assertEqual(response.body, b'[]')
 
+    @asyncio.coroutine
+    async def test_get_fail_missing_input(cls):
+        dbresolver.connection_func = lambda: psycopg2.connect(**cls.postgresql.dsn())
+        req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"})
+        response = await access_right.right_get(req)
+        cls.assertEqual(response.status, 500)
+    
 if __name__ == '__main__':
     unittest2.main()
