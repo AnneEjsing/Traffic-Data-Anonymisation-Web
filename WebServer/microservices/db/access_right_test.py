@@ -34,46 +34,46 @@ class AccessRightGetCreateTests(aiounittest.AsyncTestCase):
         cls.postgresql.stop()
 
     ## GET TESTS
-    async def test_get_pass(cls):
+    async def test_get_pass(self):
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_get(req)
-        cls.assertEqual(response.body, b'[{"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"}]')
+        self.assertEqual(response.body, b'[{"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"}]')
 
-    async def test_get_fail_wrong_user_uuid(cls):
+    async def test_get_fail_wrong_user_uuid(self):
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_get(req)
-        cls.assertEqual(response.body, b'[]')
+        self.assertEqual(response.body, b'[]')
     
-    async def test_get_fail_wrong_camera_uuid(cls):
+    async def test_get_fail_wrong_camera_uuid(self):
         req = request({"camera_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_get(req)
-        cls.assertEqual(response.body, b'[]')
+        self.assertEqual(response.body, b'[]')
 
-    async def test_get_fail_missing_input(cls):
+    async def test_get_fail_missing_input(self):
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"})
         response = await access_right.right_get(req)
-        cls.assertEqual(response.status, 500)
+        self.assertEqual(response.status, 500)
 
     ## POST TESTS
-    async def test_create_pass(cls):
+    async def test_create_pass(self):
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_create(req)
-        cls.assertEqual(response.body, b'[{"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"}]')
+        self.assertEqual(response.body, b'[{"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"}]')
         
-    async def test_create_fail_wrong_user_uuid(cls):
+    async def test_create_fail_wrong_user_uuid(self):
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "user_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_create(req)
-        cls.assertEqual(response.status, 409)
+        self.assertEqual(response.status, 409)
 
-    async def test_create_fail_wrong_camera_uuid(cls):
+    async def test_create_fail_wrong_camera_uuid(self):
         req = request({"camera_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_create(req)
-        cls.assertEqual(response.status, 409)       
+        self.assertEqual(response.status, 409)       
 
-    async def test_create_fail_missing_input(cls):
+    async def test_create_fail_missing_input(self):
         req = request({"camera_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12"})
         response = await access_right.right_create(req)
-        cls.assertEqual(response.status, 500)   
+        self.assertEqual(response.status, 500)   
 
 class AccessRightDeleteTests(aiounittest.AsyncTestCase):
     @classmethod
@@ -96,20 +96,20 @@ class AccessRightDeleteTests(aiounittest.AsyncTestCase):
         cls.postgresql.stop()
 
     ## DELETE TESTS
-    async def test_delete_pass(cls):
+    async def test_delete_pass(self):
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_delete(req)
-        cls.assertEqual(response.body, b'{"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"}')
+        self.assertEqual(response.body, b'{"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"}')
 
-    async def test_delete_fail_wrong_input(cls):
+    async def test_delete_fail_wrong_input(self):
         req = request({"camera_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_delete(req)
-        cls.assertEqual(response.status, 404)
+        self.assertEqual(response.status, 404)
         
-    async def test_delete_fail_input_param(cls):
+    async def test_delete_fail_input_param(self):
         req = request({"camera_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"})
         response = await access_right.right_delete(req)
-        cls.assertEqual(response.status, 500)
+        self.assertEqual(response.status, 500)
     
 if __name__ == '__main__':
     unittest2.main()
