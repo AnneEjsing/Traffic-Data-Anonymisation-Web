@@ -1,10 +1,12 @@
+import sys
+import os
+sys.path.append(os.getcwd() + '/..')
 import dbresolver
 import camera
 import unittest2
 import psycopg2
 import testing.postgresql
 import aiounittest
-import os
 
 class request:
     dic = {}
