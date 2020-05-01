@@ -41,10 +41,19 @@ class MyTest(aiounittest.AsyncTestCase):
     async def test_get(self):
         dbresolver.connection_func = lambda: psycopg2.connect(**self.postgresql.dsn())
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
-        
+
         response = await access_right.right_get(req)
 
         self.assertEqual(response.body, b'[{"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"}]')
+
+    @asyncio.coroutine
+    async def test_get_wrong_uid(self):
+        dbresolver.connection_func = lambda: psycopg2.connect(**self.postgresql.dsn())
+        req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
+        
+        response = await access_right.right_get(req)
+
+        self.assertEqual(response.body, b'[]')
     
 
 if __name__ == '__main__':
