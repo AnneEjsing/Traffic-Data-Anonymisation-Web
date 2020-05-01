@@ -44,6 +44,9 @@ def execute_query(query,*inputs):
     except errors.InvalidDatetimeFormat as e:
         error = "The data time format is invalid. An example of a correct date is: '2020-04-30 11:06:50'."
     
+    except errors.ForeignKeyViolation as e:
+        error = e.diag.message_detail
+    
     
     finally:
         # close the cursor object to avoid memory leaks
