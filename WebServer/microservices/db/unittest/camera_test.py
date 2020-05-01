@@ -15,21 +15,25 @@ class request:
     async def json(self):
         return self.dic
 
+def initailise_database(postgresql):
+    with psycopg2.connect(**postgresql.dsn()) as conn:
+        with conn.cursor() as cursor:
+            with open("test_data.sql","r") as f:
+                cursor.execute(f.read())
+        conn.commit()
+
+    os.environ['POSTGRES_DB'] = postgresql.dsn()['database']
+    os.environ['POSTGRES_USER'] = postgresql.dsn()['user']
+    os.environ['POSTGRES_HOST'] = postgresql.dsn()['host']
+    os.environ["POSTGRES_PASSWORD"] = ""
+    os.environ["POSTGRES_PORT"] = str(postgresql.dsn()['port'])
+
+
 class CamearaGetCreateTests(aiounittest.AsyncTestCase):
     @classmethod
     def setUpClass(cls):
         cls.postgresql = testing.postgresql.Postgresql(port=7654)
-        with psycopg2.connect(**cls.postgresql.dsn()) as conn:
-            with conn.cursor() as cursor:
-                with open("test_data.sql","r") as f:
-                    cursor.execute(f.read())
-            conn.commit()
-
-        os.environ['POSTGRES_DB'] = cls.postgresql.dsn()['database']
-        os.environ['POSTGRES_USER'] = cls.postgresql.dsn()['user']
-        os.environ['POSTGRES_HOST'] = cls.postgresql.dsn()['host']
-        os.environ["POSTGRES_PASSWORD"] = ""
-        os.environ["POSTGRES_PORT"] = str(cls.postgresql.dsn()['port'])
+        initailise_database(cls.postgresql)
 
     @classmethod
     def tearDownClass(cls):
