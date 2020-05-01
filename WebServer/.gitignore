@@ -1,3 +1,4 @@
 videodata/*.mp4
 secrets.env
 *.sif 
+__pycache__
