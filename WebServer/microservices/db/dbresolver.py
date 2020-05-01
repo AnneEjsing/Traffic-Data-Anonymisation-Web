@@ -36,25 +36,19 @@ def execute_query(query,*inputs):
         results = cursor.fetchall()
 
     except errors.InvalidTextRepresentation as e:
-        print("Invalid")
-        print("Invavlid: "+ query)
-        print("Invalid: "+ e.diag.message_detail)
-        error = e.diag.message_detail
+        error = str(e)
 
     except errors.UniqueViolation as e:
-        error = e.diag.message_detail 
+        error = str(e)
 
     except errors.InvalidDatetimeFormat as e:
         error = "The data time format is invalid. An example of a correct date is: '2020-04-30 11:06:50'."
     
     except errors.ForeignKeyViolation as e:
-        error = e.diag.message_detail
+        error = str(e)
     
     except errors.UndefinedFunction as e:
-        print("Undefined")
-        print("Undefined: " + query)
-        print("Undefined: " + e.diag.message_detail)
-        error = e.diag.message_detail
+        error = str(e)
     
     
     finally:
