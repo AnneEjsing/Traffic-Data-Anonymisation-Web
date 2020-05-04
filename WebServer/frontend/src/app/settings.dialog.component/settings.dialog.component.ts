@@ -38,7 +38,7 @@ export class SettingsDialog {
         });
     }
 
-    onNoClick(): void {
+    onClose(): void {
         this.dialogRef.close();
     }
 
