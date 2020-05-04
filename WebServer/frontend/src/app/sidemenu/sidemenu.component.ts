@@ -4,7 +4,6 @@ import { StreamMessageService, IMediaStream } from "../_services/streamMessage.s
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../_services/auth.service';
 import { ProfileService } from '../_services/profile.service';
-import { Rights } from "../_models/user";
 import { SettingsDialog } from '../settings.dialog.component/settings.dialog.component';
 import { CameraDialog } from '../add-camera/add-camera.component';
 import { recording_info } from '../_models/video';

@@ -3,7 +3,6 @@ import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
 import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service";
 import { AuthService } from '../_services/auth.service';
-import { VideoService } from '../_services/video.service';
 import { recording_info } from '../_models/video';
 import { RecordService } from '../_services/record.service';
 
