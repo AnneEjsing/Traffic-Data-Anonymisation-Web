@@ -116,12 +116,12 @@ class RecordingsCreateTests(aiounittest.AsyncTestCase):
     async def test_create_fail_wrong_input(self):
         req = request({'camera_id':'a0eebc99-9c0b-4ef8-bb6d-XXXXXXXX', 'user_id':'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', 'recording_time':'7000', 'recording_intervals':'7'})
         res = await recordings.insert(req)
-        self.assertEquals(res.status, 500)
+        self.assertEqual(res.status, 500)
 
     async def test_create_fail_missing_input(self):
         req = request({'user_id':'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', 'recording_time':'7000', 'recording_intervals':'7'})
         res = await recordings.insert(req)
-        self.assertEquals(res.status, 500)
+        self.assertEqual(res.status, 500)
 
 class RecordingsDeleteTests(aiounittest.AsyncTestCase):
     @classmethod
