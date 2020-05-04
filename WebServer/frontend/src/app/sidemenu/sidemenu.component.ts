@@ -4,9 +4,10 @@ import { StreamMessageService, IMediaStream } from "../_services/streamMessage.s
 import { MatDialog } from '@angular/material/dialog';
 import { AuthService } from '../_services/auth.service';
 import { ProfileService } from '../_services/profile.service';
-import { recording_info } from '../_models/video';
+import { recording_info, recorded_video } from '../_models/video';
 import { RecordService } from '../_services/record.service';
 import { CameraDialog } from '../add-camera/add-camera.component'
+import { VideoService } from '../_services/video.service';
 
 
 @Component({
@@ -19,6 +20,7 @@ import { CameraDialog } from '../add-camera/add-camera.component'
 export class SidemenuComponent implements OnInit {
   currentStream: IMediaStream;
   streams: IMediaStream[];
+  recorded_videos: recorded_video[];
 
   loggedIn: boolean = false;
   email: string;
@@ -30,9 +32,13 @@ export class SidemenuComponent implements OnInit {
     private profileService: ProfileService,
     private recordService: RecordService,
     private auth: AuthService,
+    private videoService: VideoService,
   ) { }
 
   ngOnInit() {
+    this.videoService.list_recorded_videos().then(result => {
+      this.recorded_videos = result;
+    });
 
     if (localStorage.getItem('session_token')) {
       this.profileService.listStreams().then(
