@@ -45,7 +45,7 @@ class VideoSettingsGetTests(aiounittest.AsyncTestCase):
         cls.postgresql.stop()
 
     async def test_video_settings_get(self):
-        expect = b'{"recording_limit": 18000}'
+        expect = b'{"recording_limit": 18000, "keep_days": 1}'
         res = await video_settings.get(request({}))
         self.assertEqual(res.body, expect)
 
@@ -61,8 +61,8 @@ class VideoSettingsCreateTests(aiounittest.AsyncTestCase):
         cls.postgresql.stop()
 
     async def test_video_settings_update_pass(self):
-        req = request({'recording_limit': '20000'})
-        expect = b'{"recording_limit": 20000}'
+        req = request({'recording_limit': '20000', 'keep_days':1})
+        expect = b'{"recording_limit": 20000, "keep_days": 1}'
         res = await video_settings.update(req)
         self.assertEqual(res.body, expect)
 
@@ -72,7 +72,7 @@ class VideoSettingsCreateTests(aiounittest.AsyncTestCase):
         self.assertEqual(res.status, 500)
 
     async def test_video_settings_update_fail_wrong_input(self):         
-        req = request({'recording_limit': 'hej'})         
+        req = request({'recording_limit': 'hej','keep_days':1})      
         res = await video_settings.update(req)         
         self.assertEqual(res.status, 500)
 
