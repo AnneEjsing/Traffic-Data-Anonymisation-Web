@@ -98,5 +98,10 @@ VALUES (
 
 INSERT INTO recorded_videos (video_thumbnail, camera_id, user_id, save_time)
 VALUES (
-    'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', NOW()
+    'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', '2020-06-22 19:10:25-07'
+) RETURNING *;
+
+INSERT INTO recordings (camera_id, user_id, start_time, recording_time, recording_intervals)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', '2020-06-22 19:10:25-07', '7000', '7'
 ) RETURNING *;
