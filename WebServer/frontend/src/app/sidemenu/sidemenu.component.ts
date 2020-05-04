@@ -45,10 +45,10 @@ export class SidemenuComponent implements OnInit {
         }
       }).catch(error => { });
 
-      this.auth.getRole().toPromise().then(rights => {
-        if (rights) {
+      this.auth.getRole().toPromise().then(role => {
+        if (role) {
           this.loggedIn = true;
-          this.role = rights;
+          this.role = role;
 
           this.profileService.getUser().then(user => {
             this.email = user.email;
