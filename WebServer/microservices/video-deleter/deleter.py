@@ -55,17 +55,7 @@ def periodically_delete(delay):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description='Deletes videos and video entries.'
-    )
-    parser.add_argument('--delay',
-                        default=300,
-                        metavar='integer',
-                        required=False,
-                        help='The interval in seconds between removing old videos from the database')
-    
-    args = parser.parse_args()
-    delay = args.delay
+    delay = 300
     
     logger.add("error.log", retention="10 days")
     periodically_delete(delay)

@@ -18,7 +18,7 @@ async def video_update(request):
 @routes.post('/video/settings/update')
 async def update(request):
     data = await request.json()
-    f = fieldCheck(['recording_limit', 'keep_days'], data)
+    f = dbresolver.field_check(['recording_limit', 'keep_days'], data)
     if f != None : return f
 
     limit = data['recording_limit']
@@ -30,6 +30,6 @@ async def update(request):
     RETURNING *;
     """
 
-    result, error = dbresolver.executeQuery(query, limit, keep_days)
+    result, error = dbresolver.execute_query(query, limit, keep_days)
     if error: return web.Response(text=str(error), status=500)
     return dbresolver.has_one_result(result, "An error occurred", 404)
