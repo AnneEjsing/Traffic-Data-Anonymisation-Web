@@ -45,7 +45,7 @@ async def user_update(request):
     return dbresolver.has_one_result(result, "There is no user with that id.", 404)
 
 @routes.get('/user/get')
-async def user_get(request):
+async def user_get_id(request):
     data = await request.json()
     f = dbresolver.field_check(['id'], data)
     if f != None: return f
@@ -62,7 +62,7 @@ async def user_get(request):
     return dbresolver.has_one_result(result, "No user with that id.", 404)
 
 @routes.get('/user/get/email')
-async def user_get(request):
+async def user_get_email(request):
     data = await request.json()
     f = dbresolver.field_check(['email'], data)
     if f != None: return f
@@ -113,7 +113,7 @@ async def user_signup(request):
     """
     result, error = dbresolver.execute_query(query,email,rights,password)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=json.dumps(result, default=str), status=200)
+    return dbresolver.has_one_result(result, "There is already a user with this mail.", 409)
 
 @routes.get('/user/list')
 def user_list(request):

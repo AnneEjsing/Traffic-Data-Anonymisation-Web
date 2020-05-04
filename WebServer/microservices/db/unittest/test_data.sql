@@ -44,8 +44,8 @@ ALTER TABLE ONLY public.access_rights
     ADD CONSTRAINT access_rights_pkey PRIMARY KEY (camera_id,user_id);
 
 CREATE TABLE public.recordings (
-    camera_id uuid NOT NULL REFERENCES public.cameras(camera_id),
-    user_id uuid NOT NULL REFERENCES public.users(user_id),
+    camera_id uuid NOT NULL REFERENCES public.cameras(camera_id) ON DELETE CASCADE,
+    user_id uuid NOT NULL REFERENCES public.users(user_id) ON DELETE CASCADE,
     start_time timestamp NOT NULL,
     recording_time integer NOT NULL,
     recording_intervals integer NOT NULL
