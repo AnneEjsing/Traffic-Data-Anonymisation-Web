@@ -9,11 +9,22 @@ import { RecordService } from '../_services/record.service';
 import { CameraDialog } from '../add-camera/add-camera.component'
 import { VideoService } from '../_services/video.service';
 import { SettingsDialog } from '../settings.dialog.component/settings.dialog.component';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import * as fileSaver from 'file-saver';
 
 @Component({
   selector: 'app-sidemenu',
   templateUrl: './sidemenu.component.html',
-  styleUrls: ['./sidemenu.component.scss']
+  styleUrls: ['./sidemenu.component.scss'],
+  animations: [
+    trigger('indicatorRotate', [
+      state('collapsed', style({ transform: 'rotate(0deg)' })),
+      state('expanded', style({ transform: 'rotate(180deg)' })),
+      transition('expanded <=> collapsed',
+        animate('225ms cubic-bezier(0.4,0.0,0.2,1)')
+      ),
+    ])
+  ]
 })
 
 
@@ -21,6 +32,7 @@ export class SidemenuComponent implements OnInit {
   currentStream: IMediaStream;
   streams: IMediaStream[];
   recorded_videos: recorded_video[];
+  showRecordings: boolean = false;
 
   role: string;
   loggedIn: boolean = false;
@@ -39,6 +51,7 @@ export class SidemenuComponent implements OnInit {
   ngOnInit() {
     this.videoService.list_recorded_videos().then(result => {
       this.recorded_videos = result;
+      console.log(result);
     });
 
     if (localStorage.getItem('session_token')) {
@@ -66,6 +79,23 @@ export class SidemenuComponent implements OnInit {
         }
       });
     }
+  }
+
+  list_recordings() {
+    this.showRecordings = !this.showRecordings;
+  }
+
+  toShortDate(date: Date) {
+    return new Date(date).toDateString();
+  }
+
+  downloadVideo(videoId: string) {
+    this.videoService.downloadFile(videoId).subscribe(response => {
+      let blob: any = new Blob([response.blob()], { type: 'video/mp4' });
+      fileSaver.saveAs(blob, 'video.mp4');
+    }), error => console.log('Error downloading the file'),
+      () => console.info('File downloaded successfully');
+
   }
 
   openSettings() {

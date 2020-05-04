@@ -19,6 +19,24 @@
             <button mat-button (click)=openSettings()> Global settings </button>
         </li>
     </div>
+    <div mat-list-item class="menu-list-item" *ngIf="recorded_videos && recorded_videos.length > 0">
+        <li class="list-group-item line" style="justify-content: space-between;">
+            Recorded Videos
+            <mat-icon style="cursor:pointer" [@indicatorRotate]="showRecordings ? 'expanded': 'collapsed'"
+                (click)=list_recordings()>
+                expand_more
+            </mat-icon>
+        </li>
+        <div *ngIf="showRecordings">
+            <li class="list-group-item line" *ngFor="let recording of recorded_videos">
+                {{ recording.label }}
+                <br>
+                {{ toShortDate(recording.save_time) }}
+                <br>
+                <button class="btn btn-primary" (click)="downloadVideo(recording.video_id)">Download</button>
+            </li>
+        </div>
+    </div>
 
     <app-menu-list-item style="cursor: pointer;" *ngFor="let stream of streams" [item]="stream"
         [isRecording]="isRecording(stream.camera_id)" (changeStream)="onClickStream($event)"

@@ -1,8 +1,9 @@
 import json
 import requests
-from aiohttp import web, BasicAuth, ClientSession
+from aiohttp import web, BasicAuth, ClientSession, MultipartWriter
 import asyncio
 import aiohttp_cors
+from os import listdir
 
 # Used for token creation and Verification
 from authToken import create_token, verify_credentials, verify_token, get_user_id, authenticate, get_rights
@@ -213,7 +214,13 @@ async def list_video_recordings_user_id(request):
         return await get_query_async(video_service + "/video/list/user_id",{"user_id": user_id}) 
     else:
         return web.Response(status=status_code)
-    
+
+@routes.get('/video/download/{video_id}')
+async def download_video(request):
+    video_id = request.match_info['video_id']
+    file_path = "/var/lib/videodata/" + video_id + ".mp4"
+    return web.FileResponse(file_path)
+
 
 # Model changer
 @routes.post("/model/upload")
