@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { IMediaStream } from '../_services/streamMessage.service'
 import { CameraService } from '../_services/camera.service'
@@ -7,7 +7,6 @@ import { MatDialog } from "@angular/material/dialog";
 import { ShareStreamComponent } from "../share-stream/share-stream.component";
 import { AuthService } from "../_services/auth.service";
 import { ModelChangerComponent } from '../model-changer/model-changer.component';
-
 
 @Component({
   selector: 'app-menu-list-item',
@@ -28,7 +27,9 @@ export class MenuListItemComponent implements OnInit {
   admin: boolean;
   @HostBinding("attr.aria-expanded") ariaExpanded = this.expanded;
   @Input() item: IMediaStream;
-  @Input() isRecording: boolean;
+  @Input() isRecording: Boolean;
+  @Output() changeStream: EventEmitter<IMediaStream> = new EventEmitter<IMediaStream>();
+
 
   constructor(
     public dialog: MatDialog,
@@ -49,6 +50,10 @@ export class MenuListItemComponent implements OnInit {
 
   onItemSelected() {
     this.expanded = !this.expanded;
+  }
+
+  public streamClick() {
+    this.changeStream.emit(this.item);
   }
 
   async delete() {

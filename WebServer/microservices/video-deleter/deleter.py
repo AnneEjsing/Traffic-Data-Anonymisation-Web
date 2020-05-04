@@ -10,14 +10,19 @@ from loguru import logger
 dbr = "http://dbresolver:1337/"
 path = "/var/lib/videodata/"
 
-def periodically_delete(delay,days):
+def periodically_delete(delay):
     query_string = dbr + "video/list"
     while True:
         #Query the database
         response = requests.get(query_string)
         if response.status_code != 200:
             logger.error(f"Could not query database: {response.status_code} {response.content.decode('utf-8')}. Query: {query_string}")
-        
+
+        settings_response = requests.get(dbr + 'video/settings/get')
+        if (response.status_code != 200):
+            logger.error("Could not retrive the settings from the database")
+        days = settings_response.json()['keep_days']
+
         #Decode response
         videos = response.json()
 
@@ -50,23 +55,7 @@ def periodically_delete(delay,days):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description='Deletes videos and video entries.'
-    )
-    parser.add_argument('--delay',
-                        default=300,
-                        metavar='integer',
-                        required=False,
-                        help='The interval in seconds between removing old videos from the database')
-    parser.add_argument('--days',
-                        default=7,
-                        metavar='integer',
-                        required=False,
-                        help='Number of days to store videos before deleting them.')
-
-    args = parser.parse_args()
-    delay = args.delay
-    days = args.days
+    delay = 300
     
     logger.add("error.log", retention="10 days")
-    periodically_delete(delay,days)
+    periodically_delete(delay)

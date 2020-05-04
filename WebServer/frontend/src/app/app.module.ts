@@ -28,6 +28,7 @@ import { CameraService } from './_services/camera.service'
 import { MenuListItemComponent } from './menu-list-item/menu-list-item.component';
 import { ShareStreamComponent } from './share-stream/share-stream.component';
 import { ModelChangerComponent } from './model-changer/model-changer.component'
+import { SettingsDialog } from './settings.dialog.component/settings.dialog.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +38,7 @@ import { ModelChangerComponent } from './model-changer/model-changer.component'
     SidemenuComponent,
     VideoUtilsComponent,
     LoginDialog,
+    SettingsDialog,
     TopbarComponent,
     AboutComponent,
     CameraDialog,

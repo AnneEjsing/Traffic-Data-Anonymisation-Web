@@ -38,7 +38,8 @@ CREATE TABLE public.cameras (
 );
 
 CREATE TABLE public.video_settings (
-    recording_limit integer NOT NULL
+    recording_limit integer NOT NULL, -- seconds
+    keep_days integer NOT NULL -- How old a video can be, before deleted
 );
 
 CREATE TABLE public.recorded_videos (
@@ -77,7 +78,7 @@ ALTER TABLE public.video_settings OWNER TO postgres;
 ALTER TABLE public.recordings OWNER TO postgres;
 
 -- Start up data
-INSERT INTO public.video_settings(recording_limit) VALUES (18000);
+INSERT INTO public.video_settings(recording_limit, keep_days) VALUES (18000, 1);
 
 
 INSERT INTO users (user_id,email,role,password)
