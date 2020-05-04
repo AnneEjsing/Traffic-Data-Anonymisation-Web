@@ -96,9 +96,9 @@ VALUES (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11'
 ) RETURNING *;
 
-INSERT INTO recorded_videos (video_thumbnail, camera_id, user_id, save_time)
+INSERT INTO recorded_videos (video_id, video_thumbnail, camera_id, user_id, save_time)
 VALUES (
-    'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', '2020-06-22 19:10:25-07'
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380c11', 'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', '2020-06-22 19:10:25-07'
 ) RETURNING *;
 
 INSERT INTO recordings (camera_id, user_id, start_time, recording_time, recording_intervals)
