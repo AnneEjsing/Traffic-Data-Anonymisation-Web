@@ -1,5 +1,6 @@
 export class videoSettings {
     recording_limit: number;
+    keep_days: number;
 }
 
 export class recording_info {

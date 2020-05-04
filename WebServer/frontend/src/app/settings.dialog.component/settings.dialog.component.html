@@ -1,0 +1,29 @@
+<h1 mat-dialog-title>Settings</h1>
+
+<div *ngIf="error" mat-dialog-content>
+    <p style="color: red;">Sorry... Could not save your settings... Please try again later, whenever you feel like it.
+        Thanks for your patiance</p>
+</div>
+
+<div mat-dialog-content *ngIf="settings">
+    <div class="form-group">
+        <ngb-timepicker [formControl]="ctrl" required></ngb-timepicker>
+
+        <label style="height: fit-content; align-self: center; margin-left: 1rem;">Recording limit</label>
+    </div>
+</div>
+
+<div mat-dialog-content *ngIf="settings">
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Keep days</span>
+        </div>
+        <input [value]="settings.keep_days" min="0" (change)="days_change($event)" type="number" class="form-control"
+            placeholder="Number of days" aria-label="Username" aria-describedby="basic-addon1">
+    </div>
+</div>
+
+<div mat-dialog-actions>
+    <button mat-button (click)="onClose()">Close</button>
+    <button mat-button (click)="updateSettings()">Save</button>
+</div>

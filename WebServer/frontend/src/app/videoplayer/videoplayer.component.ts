@@ -3,9 +3,7 @@ import { VgHLS, BitrateOption, VgAPI } from "ngx-videogular";
 import { Subscription, timer } from "rxjs";
 import { StreamMessageService, IMediaStream } from "../_services/streamMessage.service";
 import { AuthService } from '../_services/auth.service';
-import { VideoService } from '../_services/video.service';
-import { videoSettings, recording_info } from '../_models/video';
-import { FormControl } from '@angular/forms';
+import { recording_info } from '../_models/video';
 import { RecordService } from '../_services/record.service';
 
 @Component({
@@ -26,20 +24,10 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
 
   role: string;
   user_id: string;
-  ctrl = new FormControl('', (control: FormControl) => {
-    const value = control.value;
-
-    if (!value) {
-      return null;
-    }
-
-    return null;
-  });
 
   constructor(
     private streamService: StreamMessageService,
     private auth: AuthService,
-    private videoService: VideoService,
     private recordService: RecordService,
   ) {
     this.auth.getRole().subscribe(role => {
@@ -47,9 +35,7 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
     });
   }
 
-  ngOnInit() {
-
-  }
+  ngOnInit() { }
 
   onPlayerReady(api: VgAPI) {
     this.api = api;
@@ -97,13 +83,5 @@ export class VideoplayerComponent implements AfterViewInit, OnInit {
 
   setBitrate(option: BitrateOption) {
     this.vgHls.setBitrate(option);
-  }
-
-  SetRecordingLimit() {
-    var newSettings: videoSettings = {
-      recording_limit: (((this.ctrl.value.hour * 60) + this.ctrl.value.minute) * 60) + this.ctrl.value.second
-    }
-
-    this.videoService.updateSettings(newSettings).then(response => { });
   }
 }

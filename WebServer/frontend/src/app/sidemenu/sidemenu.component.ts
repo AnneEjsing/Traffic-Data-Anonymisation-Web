@@ -8,7 +8,7 @@ import { recording_info, recorded_video } from '../_models/video';
 import { RecordService } from '../_services/record.service';
 import { CameraDialog } from '../add-camera/add-camera.component'
 import { VideoService } from '../_services/video.service';
-
+import { SettingsDialog } from '../settings.dialog.component/settings.dialog.component';
 
 @Component({
   selector: 'app-sidemenu',
@@ -22,6 +22,7 @@ export class SidemenuComponent implements OnInit {
   streams: IMediaStream[];
   recorded_videos: recorded_video[];
 
+  role: string;
   loggedIn: boolean = false;
   email: string;
   recordings: Array<recording_info> = [];
@@ -41,26 +42,34 @@ export class SidemenuComponent implements OnInit {
     });
 
     if (localStorage.getItem('session_token')) {
-      this.profileService.listStreams().then(
-        response => {
-          this.streams = response;
-          if (this.streams.length == 0)
-            this.currentStream = this.streamService.defaultStream;
-          else {
-            this.streamService.changeStream(this.streams[0])
-            this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
-          }
-        },
-        error => { })
+      this.profileService.listStreams().then(response => {
+        this.streams = response;
+        if (this.streams.length == 0)
+          this.currentStream = this.streamService.defaultStream;
+        else {
+          this.streamService.changeStream(this.streams[0])
+          this.streamService.selectedStream.subscribe(selectedStream => this.currentStream = selectedStream)
+        }
+      }).catch(error => { });
 
-      this.auth.getId().subscribe(id => {
-        if (id) {
-          this.recordService.listRecordings(id).then(recordings => {
-            this.recordings = recordings;
+      this.auth.getRole().toPromise().then(role => {
+        if (role) {
+          this.loggedIn = true;
+          this.role = role;
+
+          this.profileService.getUser().then(user => {
+            this.email = user.email;
+            this.recordService.listRecordings(user.user_id).then(recordings => {
+              this.recordings = recordings;
+            });
           });
         }
       });
     }
+  }
+
+  openSettings() {
+    this.dialog.open(SettingsDialog);
   }
 
   isRecording(camera_id) {
