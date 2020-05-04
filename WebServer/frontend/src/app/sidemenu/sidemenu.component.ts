@@ -51,7 +51,6 @@ export class SidemenuComponent implements OnInit {
   ngOnInit() {
     this.videoService.list_recorded_videos().then(result => {
       this.recorded_videos = result;
-      console.log(result);
     });
 
     if (localStorage.getItem('session_token')) {
@@ -93,8 +92,7 @@ export class SidemenuComponent implements OnInit {
     this.videoService.downloadFile(videoId).subscribe(response => {
       let blob: any = new Blob([response.blob()], { type: 'video/mp4' });
       fileSaver.saveAs(blob, 'video.mp4');
-    }), error => console.log('Error downloading the file'),
-      () => console.info('File downloaded successfully');
+    }), error => console.log('Error downloading the file');
 
   }
 
