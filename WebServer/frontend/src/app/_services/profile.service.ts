@@ -13,11 +13,7 @@ export class ProfileService {
     readonly dispatcherUrl = global.dispatcherUrl;
 
     async getUser(): Promise<user> {
-        return this.http.get<user>(this.dispatcherUrl + 'get/user', {headers: this.constructHttpOptions()}).toPromise();
-    }
-
-    async getAdmin(): Promise<user> {
-        return this.http.get<user>(this.dispatcherUrl + 'get/admin', {headers: this.constructHttpOptions()}).toPromise();
+        return this.http.get<user>(this.dispatcherUrl + 'get/user', { headers: this.constructHttpOptions() }).toPromise();
     }
 
     async listUsers(): Promise<string> {
@@ -46,9 +42,9 @@ export class ProfileService {
     }
 
     constructHttpOptions() {
-        const httpOptions =  new HttpHeaders({
-                'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('session_token')
+        const httpOptions = new HttpHeaders({
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('session_token')
         });
 
         return httpOptions;
