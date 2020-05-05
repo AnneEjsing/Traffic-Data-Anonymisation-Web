@@ -122,6 +122,5 @@ async def camera_userlist(request):
     WHERE access_rights.user_id = %s;
     """
     result, error = dbresolver.execute_query(query,user)
-    print(error)
     if error: return web.Response(text=error,status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)
