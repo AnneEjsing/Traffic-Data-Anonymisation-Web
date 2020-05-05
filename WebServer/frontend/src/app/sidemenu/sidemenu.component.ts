@@ -88,10 +88,11 @@ export class SidemenuComponent implements OnInit {
     return new Date(date).toDateString();
   }
 
-  downloadVideo(videoId: string) {
-    this.videoService.downloadFile(videoId).subscribe(response => {
+  downloadVideo(video: recorded_video) {
+    this.videoService.downloadFile(video.video_id).subscribe(response => {
       let blob: any = new Blob([response.blob()], { type: 'video/mp4' });
-      fileSaver.saveAs(blob, 'video.mp4');
+      var file_name = video.label + "-" + this.toShortDate(video.save_time);
+      fileSaver.saveAs(blob, file_name);
     }), error => console.log('Error downloading the file');
 
   }
