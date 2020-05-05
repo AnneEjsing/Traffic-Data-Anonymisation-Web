@@ -113,7 +113,7 @@ async def user_signup(request):
     """
     result, error = dbresolver.execute_query(query,email,rights,password)
     if error: return web.Response(text=str(error),status=500)
-    return dbresolver.has_one_result(result, "There is already a user with this mail.", 409)
+    return dbresolver.has_one_result(result, "None or too many results are returned from the database to the database handler.", 500)
 
 @routes.get('/user/list')
 def user_list(request):
