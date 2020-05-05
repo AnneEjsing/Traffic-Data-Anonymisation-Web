@@ -1,6 +1,6 @@
 import json
 import requests
-from aiohttp import web, BasicAuth, ClientSession, MultipartWriter
+from aiohttp import web, BasicAuth, ClientSession
 import asyncio
 import aiohttp_cors
 from os import listdir
