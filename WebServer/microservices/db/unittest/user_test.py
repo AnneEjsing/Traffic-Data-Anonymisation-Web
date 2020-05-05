@@ -96,6 +96,12 @@ class UserGetUpdateTests(aiounittest.AsyncTestCase):
         res = await user.user_login(req)
         self.assertEqual(expect,res.status)
 
+    async def test_user_login_wrong_password(self):
+        req = request({"email":"notadmin@notadmin.no","password":"notpasspass"})
+        expect = 401
+        res = await user.user_login(req)
+        self.assertEqual(expect,res.status)
+
     ## GET ALL
     def test_user_get_all_pass(self):
         expect = [{"user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11", "email": "notadmin@notadmin.no", "role": "user"}, {"user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12", "email": "admin@admin.no", "role": "admin"}]
