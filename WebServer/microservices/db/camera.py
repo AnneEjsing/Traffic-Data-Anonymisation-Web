@@ -99,7 +99,7 @@ async def camera_create(request):
     """
     result, error = dbresolver.execute_query(query,owner,description,ip,label,source)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=json.dumps(result, default=str),status=200)
+    return dbresolver.has_one_result(result, "Internal error in database handler",500)
 
 @routes.get('/camera/adminlist')
 def camera_list(request):
