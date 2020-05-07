@@ -58,4 +58,4 @@ async def right_create(request):
 
     result, error = dbresolver.execute_query(query,camera_id,user_id)
     if error: return web.Response(text=str(error),status=409)
-    return web.Response(text=json.dumps(result, default=str), status=200)
+    return dbresolver.has_one_result(result,"Something went wrong",500)
