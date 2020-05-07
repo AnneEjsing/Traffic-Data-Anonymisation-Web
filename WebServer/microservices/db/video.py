@@ -99,7 +99,6 @@ async def video_list_user_id(request):
     if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str),status=200)
 
-
 @routes.get('/video/list')
 def video_list(request):
     query = "SELECT * FROM recorded_videos;"
