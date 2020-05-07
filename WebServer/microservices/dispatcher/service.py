@@ -160,6 +160,20 @@ async def create_access(request):
         return web.Response(text="User must be logged in with administrative privileges to allow another user to access a camera", status=401)
 
 
+@routes.post('/stream/start')
+async def start_stream_on_device(request):
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
+    is_authorised = authenticate(token)
+    if is_authorised and get_rights(token) == 'admin':
+        data = await request.json()
+        endpoint = data['device'] + ':5000'
+        endpoint = endpoint + '/start'
+        print(endpoint)
+        return await post_query_async(endpoint, data)
+    else:
+        return web.Response(text="User must be logged in with administrative privileges to start streams on devices")
+
+
 # Authenticate endpoint
 @routes.get("/auth/authenticate")
 async def authenticator(request):
