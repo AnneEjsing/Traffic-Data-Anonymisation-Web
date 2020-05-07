@@ -102,5 +102,5 @@ async def insert(request):
 
     result, error = dbresolver.execute_query(query,user_id, camera_id, recording_time, recording_intervals)
     if error: return web.Response(text=str(error),status=500)
-    return web.Response(text=json.dumps(result, default=str), status=200)
+    return dbresolver.has_one_result(result, "Something went wrong.", 500)
 

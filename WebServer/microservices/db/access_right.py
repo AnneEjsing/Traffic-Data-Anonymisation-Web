@@ -38,7 +38,6 @@ async def right_delete(request):
     """
     result, error = dbresolver.execute_query(query, camera_id, user_id)
     if error: return web.Response(text=str(error),status=500)
-    
     return dbresolver.has_one_result(result, "There are no access for that user and camera.", 404)
 
 @routes.post('/access/create')
@@ -56,13 +55,7 @@ async def right_create(request):
     )
     RETURNING *;
     """
+
     result, error = dbresolver.execute_query(query,camera_id,user_id)
     if error: return web.Response(text=str(error),status=409)
-    return web.Response(text=json.dumps(result, default=str), status=200)
-
-@routes.get('/access/list')
-def right_list(request):
-    query = "SELECT * FROM access_rights;"
-    result, error = dbresolver.execute_query(query)
-    if error: return web.Response(text=str(error),status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)

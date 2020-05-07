@@ -5,7 +5,7 @@ import dbresolver
 routes = web.RouteTableDef()
 
 @routes.get('/video/settings/get')
-async def video_update(request):
+async def get(request):
     query = """
     SELECT *
     FROM video_settings
