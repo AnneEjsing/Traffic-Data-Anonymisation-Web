@@ -21,7 +21,7 @@ def verify_credentials(email, pwd):
         return (False, "", "")
 
 
-def is_not_expiered(token):
+def is_not_expired(token):
     if ((not '.' in token) or len(token.split('.')) < 3):
         return False
     header, payload, signature = token.split('.')
@@ -38,15 +38,15 @@ def authenticate(token):
     new_signature = encode(create_signature(header, payload))
 
     if (new_signature == signature):
-        return is_not_expiered(token)
+        return is_not_expired(token)
     else:
         return False
 
 
-def verify_token(token, desired_role):
+def verify_token(token, desired_rights):
     is_success = authenticate(token)
     if (is_success):
-        is_auth = is_authorized(token, desired_role)
+        is_auth = is_authorized(token, desired_rights)
         if (is_auth):
             return True, 200
         else:
@@ -55,10 +55,10 @@ def verify_token(token, desired_role):
         return False, 401
 
 
-def is_authorized(token, desired_role):
+def is_authorized(token, desired_rights):
     header, payload, signature = token.split('.')
     id, subject, role, expiration = get_payload_info(payload)
-    return role == desired_role
+    return role == desired_rights
 
 
 def get_user_id(token):
@@ -82,7 +82,7 @@ def get_payload_info(payload):
 
 
 def create_token(user_id, rights):
-    header = encode(create_header())
+    header = encode(json.dumps({"alg": "HS512", "type": "JWT"}))
     payload = encode(create_payload(user_id, rights))
     signature = encode(create_signature(header, payload))
     return '.'.join([header, payload, signature])
@@ -98,10 +98,6 @@ def encode(encoding_input):
     b64 = base64.urlsafe_b64encode(byte)
     res = b64.decode('utf-8')
     return res.replace('=', '')
-
-
-def create_header():
-    return json.dumps({"alg": "HS512", "type": "JWT"})
 
 
 def create_payload(user_id, rights):

@@ -1,17 +1,3 @@
--- Initial settings
-
-SET statement_timeout = 0;
-SET lock_timeout = 0;
-SET idle_in_transaction_session_timeout = 0;
-SET client_encoding = 'UTF8';
-SET standard_conforming_strings = on;
-SELECT pg_catalog.set_config('search_path', '', false);
-SET check_function_bodies = false;
-SET xmloption = content;
-SET client_min_messages = warning;
-SET row_security = off;
-
-\connect "traffic_annonymisation_db"
 
 -- Access type
 CREATE TYPE rights AS ENUM ('user', 'admin');
@@ -41,6 +27,7 @@ CREATE TABLE public.video_settings (
     recording_limit integer NOT NULL, -- seconds
     keep_days integer NOT NULL -- How old a video can be, before deleted
 );
+
 
 CREATE TABLE public.recorded_videos (
     video_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
@@ -78,7 +65,7 @@ ALTER TABLE public.video_settings OWNER TO postgres;
 ALTER TABLE public.recordings OWNER TO postgres;
 
 -- Start up data
-INSERT INTO public.video_settings(recording_limit, keep_days) VALUES (18000, 1);
+INSERT INTO public.video_settings(recording_limit,keep_days) VALUES (18000,1);
 
 
 INSERT INTO users (user_id,email,role,password)
@@ -111,7 +98,12 @@ VALUES (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11'
 ) RETURNING *;
 
-INSERT INTO recorded_videos (video_thumbnail, camera_id, user_id, save_time)
+INSERT INTO recorded_videos (video_id, video_thumbnail, camera_id, user_id, save_time)
 VALUES (
-    'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', NOW()
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380c11', 'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', '2020-06-22 19:10:25-07'
+) RETURNING *;
+
+INSERT INTO recordings (camera_id, user_id, start_time, recording_time, recording_intervals)
+VALUES (
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', '2020-06-22 19:10:25-07', '7000', '7'
 ) RETURNING *;
