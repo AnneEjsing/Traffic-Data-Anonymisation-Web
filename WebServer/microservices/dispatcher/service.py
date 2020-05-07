@@ -5,7 +5,7 @@ import asyncio
 import aiohttp_cors
 
 # Used for token creation and Verification
-from authToken import create_token, verify_credentials, verify_token, get_user_id, authenticate, get_rights
+from auth_token import create_token, verify_credentials, verify_token, get_user_id, authenticate, get_rights
 
 routes = web.RouteTableDef()
 
