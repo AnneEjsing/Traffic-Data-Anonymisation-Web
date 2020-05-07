@@ -80,3 +80,10 @@ async def video_create(request):
     result, error = dbresolver.execute_query(query, user_id, camera_id, video_thumbnail)
     if error: return web.Response(text=str(error),status=500)
     return dbresolver.has_one_result(result, "Something went wrong", 500)
+
+@routes.get('/video/list')
+def video_list(request):
+    query = "SELECT * FROM recorded_videos;"
+    result, error = executeQuery(query)
+    if error: return web.Response(text=str(error),status=500)
+    return web.Response(text=json.dumps(result, default=str),status=200)
