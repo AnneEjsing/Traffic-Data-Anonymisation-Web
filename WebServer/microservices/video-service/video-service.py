@@ -9,7 +9,7 @@ db_url = "http://dbresolver:1337/"
 
 @routes.get('/get')
 async def login(request):
-    return await send_request("video/settings/get", await request.json(), requests.get)
+    return await send_request("video/settings/get", {}, requests.get)
 
 @routes.post('/update')
 async def update(request):
