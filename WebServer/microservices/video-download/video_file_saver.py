@@ -84,12 +84,12 @@ def work(data):
         record(stream,fps,rest_time,filepath,interval_times)
 
     # Queries the database with the video entry.
-    response = requests.post(dbr+"video/create", headers=headers,json={"user_id":user_id,"camera_id":camera_id,"video_thumbnail":""})
+    response = requests.post(dbr+"video/create", headers=headers,json={"user_id":user_id,"camera_id":camera_id})
     if response.status_code != 200:
         logger.error(f"Could not query database: {response.content.decode('utf-8')}. Userid: {user_id}, cameraid: {camera_id}")
     
     # Gets the ID of the video entry created
-    v_id = response.json()[0]['video_id']
+    v_id = response.json()['video_id']
     
     # Concatenates the video segments and deletes the temporary files
     create_final_video(filepath,path,v_id)

@@ -29,7 +29,12 @@
         </li>
         <div *ngIf="showRecordings">
             <li class="list-group-item line" *ngFor="let recording of recorded_videos">
-                {{ recording.label }}
+                <div *ngIf="recording.camera_id != null">
+                    {{ recording.label }}
+                </div>
+                <div *ngIf="recording.camera_id == null">
+                    DELETED CAMERA
+                </div>
                 <br>
                 {{ toShortDate(recording.save_time) }}
                 <br>

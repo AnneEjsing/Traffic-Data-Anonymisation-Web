@@ -15,4 +15,5 @@ export class recorded_video {
     label: string;
     video_id: string;
     save_time: Date;
+    camera_id: string;
 }
