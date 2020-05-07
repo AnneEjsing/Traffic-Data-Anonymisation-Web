@@ -14,6 +14,5 @@ export class recording_info {
 export class recorded_video {
     label: string;
     video_id: string;
-    video_thumbnail: string;
     save_time: Date;
 }

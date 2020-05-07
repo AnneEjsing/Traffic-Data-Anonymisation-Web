@@ -90,7 +90,7 @@ async def video_list_user_id(request):
     user_id = data['user_id']
 
     query = """
-    SELECT cameras.label, recorded_videos.video_id, recorded_videos.save_time, recorded_videos.video_thumbnail
+    SELECT cameras.label, recorded_videos.video_id, recorded_videos.save_time
     FROM recorded_videos, cameras
     WHERE recorded_videos.user_id = %s
     AND recorded_videos.camera_id = cameras.camera_id;
