@@ -47,7 +47,7 @@ export class ModelChangerComponent implements OnInit {
     if (type == "Face") {
       this.type = "face";
     }
-    else if (type == "Licens") {
+    else if (type == "License plate") {
       this.type = "license_plate";
     }
   }
