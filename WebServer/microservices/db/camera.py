@@ -127,23 +127,42 @@ async def camera_userlist(request):
     if error: return web.Response(text=error,status=500)
     return web.Response(text=json.dumps(result, default=str), status=200)
 
-@routes.put('/camera/update_models')
+@routes.put('/camera/update_models/face')
 async def camera_update_model(request):
     data = await request.json()
-    f = dbresolver.field_check(['id', 'model_face', 'model_licens'], data)
+    f = dbresolver.field_check(['id', 'model_face'], data)
     if f != None: return f
 
     id = data['id']
     model_face = data['model_face']
-    model_licens = data['model_licens']
     
     query = """
     UPDATE cameras 
-    SET model_face = %s, model_licens = %s
+    SET model_face = %s
     WHERE camera_id = %s
     RETURNING *;
     """
 
-    result, error = dbresolver.execute_query(query,model_face, model_licens, id)
+    result, error = dbresolver.execute_query(query,model_face, id)
+    if error: return web.Response(text=error,status=500)
+    return dbresolver.has_one_result(result, "There is no camera with that id.", 404)
+
+@routes.put('/camera/update_models/licens')
+async def camera_update_model(request):
+    data = await request.json()
+    f = dbresolver.field_check(['id', 'model_licens'], data)
+    if f != None: return f
+
+    id = data['id']
+    model_licens = data['model_licens']
+    
+    query = """
+    UPDATE cameras 
+    SET model_licens = %s
+    WHERE camera_id = %s
+    RETURNING *;
+    """
+
+    result, error = dbresolver.execute_query(query, model_licens, id)
     if error: return web.Response(text=error,status=500)
     return dbresolver.has_one_result(result, "There is no camera with that id.", 404)
