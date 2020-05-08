@@ -8,6 +8,7 @@ import { VideoplayerComponent } from './videoplayer/videoplayer.component';
 import { VgCoreModule, VgControlsModule, VgStreamingModule, VgOverlayPlayModule, VgBufferingModule } from 'ngx-videogular';
 import { ProfileService } from './_services/profile.service';
 import { HttpClientModule } from "@angular/common/http";
+import { HttpModule } from '@angular/http';
 import { RecordService } from './_services/record.service';
 import { SidemenuComponent } from './sidemenu/sidemenu.component';
 import { StreamMessageService } from './_services/streamMessage.service';
@@ -60,7 +61,8 @@ import { SettingsDialog } from './settings.dialog.component/settings.dialog.comp
     VgBufferingModule,
     VgStreamingModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
+    HttpModule
   ],
   providers: [
     ProfileService,

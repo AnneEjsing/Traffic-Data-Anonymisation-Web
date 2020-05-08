@@ -23,6 +23,10 @@ async def get_recording_info(request):
 async def get_recording_info(request):
     return await send_request("recordings/list/user_id", await request.json(), requests.get)
 
+@routes.get('/video/list/user_id')
+async def list_recorded_videos_user_id(request):
+    return await send_request("video/list/user_id", await request.json(), requests.get)
+
 async def send_request(path, json, query_function):
     response = query_function(db_url + path,headers={'Content-type': 'application/json'}, json=(json))
     return web.Response(text=response.text, status=response.status_code)

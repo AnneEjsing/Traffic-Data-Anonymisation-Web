@@ -83,6 +83,26 @@ class VideoGetTests(aiounittest.AsyncTestCase):
         expect = 404
         res = await video.video_get(req)
         self.assertEqual(expect,res.status)
+
+    async def test_video_list_user(self):
+        req = request({"user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
+        expect = [{'label': 'open cam', 'video_id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380c11', 'save_time': '2020-06-22 19:10:25', 'camera_id': 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11'}]
+        res = await video.video_list_user_id(req)
+        res = json.loads(res.body.decode("utf-8"))
+        self.assertEqual(res,expect)
+
+    async def test_video_list_user_wrong_input(self):
+        req = request({"use_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
+        expect = 500
+        res = await video.video_list_user_id(req)
+        self.assertEqual(res.status,expect)
+
+    async def test_video_list_user_wrong_uuid(self):
+        req = request({"user_id":"a0eebc99-9c0b-4ef8-b6d-6bb9bd380b11"})
+        expect = 500
+        res = await video.video_list_user_id(req)
+        self.assertEqual(res.status,expect)    
+
     
 
 class VideoCreateTests(aiounittest.AsyncTestCase):
@@ -97,8 +117,8 @@ class VideoCreateTests(aiounittest.AsyncTestCase):
 
     ## Create video
     async def test_create_video_pass(self):
-        req = request({"video_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380c12","video_thumbnail":"new thumb","camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12","user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11","save_time":"2020-06-22 19:10:25"})
-        expect = {"user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11", "camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "video_thumbnail": "new thumb"}
+        req = request({"video_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380c12","camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12","user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11","save_time":"2020-06-22 19:10:25"})
+        expect = {"user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11", "camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12"}
         res = await video.video_create(req)
         res = json.loads(res.body.decode("utf-8"))
         self.assertDictContainsSubset(expect,res)
