@@ -21,8 +21,8 @@ CREATE TABLE public.cameras (
     source text UNIQUE NOT NULL,
     last_sign_of_life timestamp,
     owner uuid NOT NULL REFERENCES public.users(user_id),
-    model_licens,
-    model_face
+    model_licens text,
+    model_face text
 );
 
 CREATE TABLE public.video_settings (
