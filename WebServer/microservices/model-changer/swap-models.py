@@ -14,10 +14,6 @@ async def remote_change_ml(request):
     response = requests.get(dbresolver+'camera/get', headers={'Content-type': 'application/json'}, json={'id': camera_id})
     ip = response.json()['ip']
 
-    model_face = model.filename
-    model_licens = "Updated"
-    requests.put(dbresolver + "camera/update_models", headers={'Content-type': 'application/json'}, json={'id': camera_id,'model_face': model_face, 'model_licens': model_licens})
-
     # File extension .pb is for SSD models, and extension .m5 is for retinanet models.
     extension = model.filename.split('.')[1]
     if extension != "pb" and extension != "h5":
