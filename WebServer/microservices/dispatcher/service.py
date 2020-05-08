@@ -168,7 +168,7 @@ async def start_stream_on_device(request):
         data = await request.json()
         endpoint = data['device'] + ':5000'
         endpoint = endpoint + '/start'
-        print(endpoint)
+        
         return await post_query_async(endpoint, data)
     else:
         return web.Response(text="User must be logged in with administrative privileges to start streams on devices")
