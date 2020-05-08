@@ -46,7 +46,6 @@ CREATE TABLE public.recorded_videos (
     video_id uuid DEFAULT public.gen_random_uuid() NOT NULL PRIMARY KEY,
     user_id uuid REFERENCES public.users(user_id) ON DELETE CASCADE,
     camera_id uuid REFERENCES public.cameras(camera_id) ON DELETE SET NULL,
-    video_thumbnail text,
     save_time timestamp NOT NULL
 );
 

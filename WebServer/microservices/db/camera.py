@@ -65,9 +65,11 @@ async def camera_get(request):
 
 @routes.delete('/camera/delete')
 async def camera_delete(request):
-    f = dbresolver.field_check(['id'], request.query)
+    data = await request.json()
+    f = dbresolver.field_check(['id'], data)
     if f != None: return f
-    id = request.query['id']
+    
+    id = data['id']
     query = """
     DELETE FROM cameras
     WHERE camera_id = %s

@@ -63,23 +63,41 @@ async def video_delete(request):
 @routes.post('/video/create')
 async def video_create(request):
     data = await request.json()
-    f = dbresolver.field_check(['user_id', 'camera_id', 'video_thumbnail'], data)
+    f = dbresolver.field_check(['user_id', 'camera_id'], data)
     if f != None: return f
     
     user_id = data['user_id']
     camera_id = data['camera_id']
-    video_thumbnail = data['video_thumbnail']
 
     query = """
-    INSERT INTO recorded_videos (user_id, camera_id, video_thumbnail, save_time)
+    INSERT INTO recorded_videos (user_id, camera_id, save_time)
     VALUES (
-        %s, %s, %s, NOW()
+        %s, %s, NOW()
     )
     RETURNING *;
     """
-    result, error = dbresolver.execute_query(query, user_id, camera_id, video_thumbnail)
+    result, error = dbresolver.execute_query(query, user_id, camera_id)
     if error: return web.Response(text=str(error),status=500)
     return dbresolver.has_one_result(result, "Something went wrong", 500)
+
+@routes.get('/video/list/user_id')
+async def video_list_user_id(request):
+    data = await request.json()
+    f = dbresolver.field_check(['user_id'], data)
+    if f != None: return f
+    
+    user_id = data['user_id']
+
+    query = """
+    SELECT cameras.label, recorded_videos.video_id, recorded_videos.save_time, recorded_videos.camera_id
+    FROM recorded_videos, cameras
+    WHERE recorded_videos.user_id = %s
+    AND (recorded_videos.camera_id = cameras.camera_id OR recorded_videos.camera_id IS NULL);
+    """
+    
+    result, error = dbresolver.execute_query(query, user_id)
+    if error: return web.Response(text=str(error),status=500)
+    return web.Response(text=json.dumps(result, default=str),status=200)
 
 @routes.get('/video/list')
 def video_list(request):

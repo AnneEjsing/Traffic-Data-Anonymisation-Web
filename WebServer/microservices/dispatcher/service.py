@@ -3,6 +3,7 @@ import requests
 from aiohttp import web, BasicAuth, ClientSession
 import asyncio
 import aiohttp_cors
+from os import listdir
 
 # Used for token creation and Verification
 from auth_token import create_token, verify_credentials, verify_token, get_user_id, authenticate, get_rights
@@ -11,7 +12,7 @@ routes = web.RouteTableDef()
 
 video_download_service = "http://videodownloader:1336"
 profile_service = "http://profileservice:1338"
-video_settings_service = "http://videoservice:1342"
+video_service = "http://videoservice:1342"
 model_changer_service = "http://modelchanger:1341"
 camera_service = "http://cameraservice:1340"
 split_at_bearer = 'Bearer '
@@ -196,25 +197,44 @@ async def record_continuous(request):
 ###### Video endpoints
 @routes.get('/settings/get')
 async def get_settings(request):
-    return await get_query_async(video_settings_service + "/get", { })
+    return await get_query_async(video_service + "/get", { })
 
 @routes.post('/settings/update')
 async def update_settings(request):
     token = request.headers['Authorization'].split(split_at_bearer)[1]
     is_authorised, status_code = verify_token(token, "admin")
     if(is_authorised):
-        string = video_settings_service + "/update"
+        string = video_service + "/update"
         return await post_query_async(string, (await request.json()))
     else:
         return web.Response(status=status_code)
 
 @routes.post('/get/recording')
 async def get_recording_info(request):
-    return await get_query_async(video_settings_service + "/get/recording", (await request.json()))
+    return await get_query_async(video_service + "/get/recording", (await request.json()))
 
 @routes.post('/recordings/list/user_id')
 async def get_recording_info(request):
-    return await get_query_async(video_settings_service + "/recordings/list/user_id", (await request.json()))
+    return await get_query_async(video_service + "/recordings/list/user_id", (await request.json()))
+
+
+@routes.get('/video/list/user_id')
+async def list_video_recordings_user_id(request):
+    token = request.headers['Authorization'].split(split_at_bearer)[1]
+    user_id = get_user_id(token)
+    rights = get_rights(token)
+    is_authorised, status_code = verify_token(token, rights)
+    if is_authorised:
+        return await get_query_async(video_service + "/video/list/user_id",{"user_id": user_id}) 
+    else:
+        return web.Response(status=status_code)
+
+@routes.get('/video/download/{video_id}')
+async def download_video(request):
+    video_id = request.match_info['video_id']
+    file_path = "/var/lib/videodata/" + video_id + ".mp4"
+    return web.FileResponse(file_path)
+
 
 # Model changer
 @routes.post("/model/upload")
