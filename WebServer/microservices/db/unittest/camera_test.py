@@ -165,20 +165,17 @@ class CamearaDeleteTests(aiounittest.AsyncTestCase):
         cls.postgresql.stop()
 
     async def test_camera_delete_pass(self):
-        req = request({})
-        req.query={"id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"}
+        req = request({"id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"})
         response = await camera.camera_delete(req)
         self.assertEqual(response.status, 200)
 
-    async def test_camera_delete_fail_invalid_uuid(self):
-        req = request({})
-        req.query={"id": "00000000-9c0b-4ef8-bb6d-6bb9bd380a11"}
+    async def test_camera_delete_fail_uuid_not_found(self):
+        req = request({"id": "00000000-9c0b-4ef8-bb6d-6bb9bd380a11"})
         response = await camera.camera_delete(req)
         self.assertEqual(response.status, 404)
 
     async def test_camera_delete_fail_missing_input(self):
         req = request({})
-        req.query={}
         response = await camera.camera_delete(req)
         self.assertEqual(response.status, 500)
 
