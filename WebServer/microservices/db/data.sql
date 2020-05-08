@@ -110,7 +110,7 @@ VALUES (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11'
 ) RETURNING *;
 
-INSERT INTO recorded_videos (video_thumbnail, camera_id, user_id, save_time)
+INSERT INTO recorded_videos (camera_id, user_id, save_time)
 VALUES (
-    'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', NOW()
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', NOW()
 ) RETURNING *;
