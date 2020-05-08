@@ -34,7 +34,9 @@ CREATE TABLE public.cameras (
     ip text,
     source text UNIQUE NOT NULL,
     last_sign_of_life timestamp,
-    owner uuid NOT NULL REFERENCES public.users(user_id)
+    owner uuid NOT NULL REFERENCES public.users(user_id),
+    model_licens text,
+    model_face text
 );
 
 CREATE TABLE public.video_settings (
@@ -90,19 +92,19 @@ VALUES (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12','admin@admin.no', 'admin', crypt('passpass', gen_salt('bf'))
 ) RETURNING *;
 
-INSERT INTO cameras (camera_id,owner,label,description,ip,source)
+INSERT INTO cameras (camera_id,owner,label,description,ip,source, model_licens, model_face)
 VALUES (
-    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'open cam', 'This is a description for the open cam', '0.0.0.0','https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8'
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'open cam', 'This is a description for the open cam', '0.0.0.0','https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8', 'Default', 'Default'
 ) RETURNING *;
 
-INSERT INTO cameras (camera_id,owner,label,description,ip,source)
+INSERT INTO cameras (camera_id,owner,label,description,ip,source, model_licens, model_face)
 VALUES (
-    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'closed cam', 'This is a very elaborate description of the camera closed to the public. Much exclusive, such rare, wow.', '0.0.0.0', 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8'
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'closed cam', 'This is a very elaborate description of the camera closed to the public. Much exclusive, such rare, wow.', '0.0.0.0', 'https://bitdash-a.akamaihd.net/content/MI201109210084_1/m3u8s/f08e80da-bf1d-4e3d-8899-f0f6155f6efa.m3u8', 'Default', 'Default'
 ) RETURNING *;
 
-INSERT INTO cameras (camera_id,owner,label,description,ip,source)
+INSERT INTO cameras (camera_id,owner,label,description,ip,source, model_licens, model_face)
 VALUES (
-    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'Best movie', 'This is not a live stream. However it is a good movie, so you should watch it', '0.0.0.0','https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8'
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12', 'Best movie', 'This is not a live stream. However it is a good movie, so you should watch it', '0.0.0.0','https://bitdash-a.akamaihd.net/content/sintel/hls/playlist.m3u8', 'Default', 'Default'
 ) RETURNING *;
 
 INSERT INTO access_rights (camera_id, user_id)
