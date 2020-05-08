@@ -59,4 +59,23 @@ export class CameraService {
 
         return httpHeader;
     }
+
+    async postStreamStart(deviceUrl: string, streamEndpoint: string): Promise<number> {
+        const headers = this.constructHttpHeader();
+
+        var data = {
+            device: "http://" + deviceUrl,
+            reciever: streamEndpoint
+        };
+
+        let res = await this.http.post(
+        this.dispatcherUrl + "stream/start",
+        data,
+        {headers, responseType: 'text'})
+        .toPromise().then(
+            data => { return 200 },
+            error => { return error.status }
+        )
+        return res;
+    }
 }
