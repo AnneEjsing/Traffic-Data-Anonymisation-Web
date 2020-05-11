@@ -20,7 +20,7 @@ CREATE TABLE public.cameras (
     ip text,
     source text UNIQUE NOT NULL,
     last_sign_of_life timestamp,
-    owner uuid NOT NULL REFERENCES public.users(user_id)
+    owner uuid REFERENCES public.users(user_id) ON DELETE SET NULL
 );
 
 CREATE TABLE public.video_settings (

@@ -64,7 +64,7 @@ class AccessRightGetCreateTests(aiounittest.AsyncTestCase):
     async def test_create_pass(self):
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_create(req)
-        self.assertEqual(response.body, b'[{"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"}]')
+        self.assertEqual(response.body, b'{"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"}')
         
     async def test_create_fail_wrong_user_uuid(self):
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "user_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
