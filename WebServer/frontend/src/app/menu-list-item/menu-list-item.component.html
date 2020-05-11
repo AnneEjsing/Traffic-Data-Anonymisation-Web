@@ -16,6 +16,15 @@
   </li>
 
   <ul class="list-group" *ngIf="expanded && admin">
+    <li class="list-group-item" *ngIf="item.model_face" style="cursor: default;">
+      <div class="pl-3">
+        <b>Model info:</b>
+        <br>
+        <a>License plate: {{ item.model_licens }}</a>
+        <br>
+        <a>Face: {{ item.model_face }}</a>
+      </div>
+    </li>
     <li class="list-group-item">
       <button mat-button (click)=delete()> Delete Stream </button>
     </li>

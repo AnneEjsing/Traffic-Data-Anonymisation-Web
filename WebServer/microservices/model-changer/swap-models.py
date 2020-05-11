@@ -11,6 +11,7 @@ async def remote_change_ml(request):
     data = await request.post()
     camera_id = data['camera_id']
     model = data['file']
+    model_type = data['type']
     response = requests.get(dbresolver+'camera/get', headers={'Content-type': 'application/json'}, json={'id': camera_id})
     ip = response.json()['ip']
 
@@ -24,7 +25,16 @@ async def remote_change_ml(request):
 
     # Sends file to specified url
     files = {'file': (model.filename, model.file, model.content_type, model.headers)}
-    response = requests.post(url, files=files)
+    response = requests.post(url, files=files, data={ 'type': model_type})
+
+    if (response.status_code == 200):
+        # The model has been updated on the nano. Now update in database
+        if (model_type == 'face'):
+            model_face = model.filename
+            requests.put(dbresolver + "camera/update_models/face", headers={'Content-type': 'application/json'}, json={'id': camera_id,'model_face': model_face})
+        elif (model_type == 'license_plate'):
+            model_licens = model.filename
+            requests.put(dbresolver + "camera/update_models/licens", headers={'Content-type': 'application/json'}, json={'id': camera_id,'model_licens': model_licens})
 
     # Returns status code recevied from nano
     return web.Response(status=response.status_code)
