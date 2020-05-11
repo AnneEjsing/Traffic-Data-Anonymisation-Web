@@ -34,7 +34,7 @@ CREATE TABLE public.cameras (
     ip text,
     source text UNIQUE NOT NULL,
     last_sign_of_life timestamp,
-    owner uuid NOT NULL REFERENCES public.users(user_id),
+    owner uuid REFERENCES public.users(user_id) ON DELETE SET NULL,
     model_licens text,
     model_face text
 );
@@ -112,7 +112,7 @@ VALUES (
     'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11'
 ) RETURNING *;
 
-INSERT INTO recorded_videos (video_thumbnail, camera_id, user_id, save_time)
+INSERT INTO recorded_videos (camera_id, user_id, save_time)
 VALUES (
-    'new vid', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', NOW()
+    'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11', NOW()
 ) RETURNING *;

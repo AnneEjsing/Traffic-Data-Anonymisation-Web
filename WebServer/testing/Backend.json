@@ -1,0 +1,988 @@
+{
+	"info": {
+		"_postman_id": "0724f09b-755c-40c6-b87c-2226897a6f54",
+		"name": "Backend endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Camera-service",
+			"item": [
+				{
+					"name": "update camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cec63502-c981-4e51-9791-7e25f1a95e31",
+								"exec": [
+									"pm.test(\"update test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.label).to.eql(\"open cam2\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"camera_id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\",\n\t\"source\":\"https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8\",\n\t\"description\":\"This is a description for the open cam\",\n\t\"ip\":\"0.0.0.0\",\n\t\"label\":\"open cam2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1340/camera/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1340",
+							"path": [
+								"camera",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0c508236-755e-460e-8457-545d55fdbbe2",
+								"exec": [
+									"pm.test(\"get test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.ip).to.eql(\"0.0.0.0\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1340/camera/get",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1340",
+							"path": [
+								"camera",
+								"get"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "44c6dbcc-95f3-4f91-b492-56de3de7a1d3",
+								"exec": [
+									"pm.test(\"delete test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.ip).to.eql(\"0.0.0.0\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1340/camera/delete?id=a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1340",
+							"path": [
+								"camera",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c02b9791-f294-4cbb-8703-14138ed4d9dc",
+								"exec": [
+									"pm.test(\"create test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.label).to.eql(\"open cam3\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"owner\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12\",\n\t\"source\":\"anden sovs2\",\n\t\"description\":\"This is a description for the open cam3\",\n\t\"ip\":\"0.0.0.1\",\n\t\"label\":\"open cam3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1340/camera/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1340",
+							"path": [
+								"camera",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adminlist camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "f03a1541-5cc2-4f80-a401-b993ff2dead6",
+								"exec": [
+									"pm.test(\"adminlist test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.responseSize == 3;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1340/camera/adminlist",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1340",
+							"path": [
+								"camera",
+								"adminlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userlist camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d8e5ffd-531c-4a19-a07d-a4bde66b1fa5",
+								"exec": [
+									"pm.test(\"userlist test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.responseSize == 1;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1340/camera/userlist",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1340",
+							"path": [
+								"camera",
+								"userlist"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create access",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9111577e-d6cf-45f5-81a9-0b2e99fc6b90",
+								"exec": [
+									"pm.test(\"create access test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11\");",
+									"    pm.expect(jsonData.camera_id).to.eql(\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"camera_id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13\",\n\t\"email\":\"notadmin@notadmin.no\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1340/access/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1340",
+							"path": [
+								"access",
+								"create"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Video service",
+			"item": [
+				{
+					"name": "get video settings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5711c573-a37a-40a8-b306-3165de666b24",
+								"exec": [
+									"pm.test(\"get video settings test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recording_limit).to.eql(18000);",
+									"    pm.expect(jsonData.keep_days).to.eql(1);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1342/get",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1342",
+							"path": [
+								"get"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update video settings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "3a617211-3155-4c2a-9efb-55e0c44433b2",
+								"exec": [
+									"pm.test(\"update video settings test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recording_limit).to.eql(20000);",
+									"    pm.expect(jsonData.keep_days).to.eql(2);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"recording_limit\" : \"20000\",\n\t\"keep_days\" : \"2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1342/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1342",
+							"path": [
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get recording",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e3e76d93-71a6-435d-a8c1-7789e7f2050a",
+								"exec": [
+									"pm.test(\"get recording test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.start_time).to.eql(\"2020-06-22 19:10:25-07\");",
+									"    pm.expect(jsonData.recording_time).to.eql(7000);",
+									"    pm.expect(jsonData.recording_intervals).to.eql(7)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"user_id\" : \"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11\",\n\t\"camera_id\" : \"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1342/get/recording",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1342",
+							"path": [
+								"get",
+								"recording"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all recordings for user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1d4e8252-543a-4319-9af2-187cd20e39f5",
+								"exec": [
+									"pm.test(\"get all recordings for user test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.responseSize == 1;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"user_id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1342/recordings/list/user_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1342",
+							"path": [
+								"recordings",
+								"list",
+								"user_id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "video list userid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1d28f0eb-1d91-4697-af41-1464e5462161",
+								"exec": [
+									"pm.test(\"create access test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.responseSize == 1;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"user_id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1342/video/list/user_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1342",
+							"path": [
+								"video",
+								"list",
+								"user_id"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Video download",
+			"item": [
+				{
+					"name": "record interval",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "4620144d-b6e7-4b0c-b129-b535980787fc",
+								"exec": [
+									"pm.test(\"record interval test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"url\":\"https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8\",\n\t\"length\":4,\n\t\"user_id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11\",\n\t\"camera_id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\",\n\t\"recording_intervals\":4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1336/record/interval",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1336",
+							"path": [
+								"record",
+								"interval"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Model changer",
+			"item": [
+				{
+					"name": "change model",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "905c7abf-9d07-43d5-af3e-ea6ccf966523",
+								"exec": [
+									"pm.test(\"change model test\", function() {",
+									"    pm.response.to.have.status(500);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/anneejsing/Traffic-Data-Anonymisation-Object-Dectection/tensorflow-ssd/fine_tuned_model/face/saved_model/saved_model.pb"
+								},
+								{
+									"key": "camera_id",
+									"value": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1341/model/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1341",
+							"path": [
+								"model",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change model wrong extension",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e806725c-08a7-48b8-bffb-6f1018f7d521",
+								"exec": [
+									"pm.test(\"change model with wrong extension test\", function() {",
+									"    pm.response.to.have.status(500);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/anneejsing/Desktop/babyjedi.jpg"
+								},
+								{
+									"key": "camera_id",
+									"value": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1341/model/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1341",
+							"path": [
+								"model",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		},
+		{
+			"name": "Profile service",
+			"item": [
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0416695c-108b-4879-b3c5-7ef63b0aa961",
+								"exec": [
+									"pm.test(\"login profile service test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"admin@admin.no\",\n\t\"password\":\"passpass\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1338/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1338",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "c9565db3-c49c-4bdf-9e2b-465558c4ecb8",
+								"exec": [
+									"pm.test(\"update profile service test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.email).to.eql(\"admin@admin.dk\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12\",\n\t\"email\":\"admin@admin.dk\", \n\t\"password\":\"newpasspass\", \n\t\"rights\":\"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1338/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1338",
+							"path": [
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "05489d03-360e-481e-b3df-eb208e27f7c6",
+								"exec": [
+									"pm.test(\"get user test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.email).to.eql(\"admin@admin.dk\");",
+									"    pm.expect(jsonData.role).to.eql(\"admin\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1338/get",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1338",
+							"path": [
+								"get"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "40e80654-a475-4c69-88c1-acdde2637742",
+								"exec": [
+									"pm.test(\"delete user test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1338/delete",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1338",
+							"path": [
+								"delete"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signup user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "75747852-f399-4e82-939b-8cc0270bfcea",
+								"exec": [
+									"pm.test(\"sign up profile service test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.email).to.eql(\"admin@admin.no\");",
+									"    pm.expect(jsonData.role).to.eql(\"admin\")",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"admin@admin.no\", \n\t\"password\":\"passpass\", \n\t\"rights\":\"admin\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:1338/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1338",
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "7e31bdc4-feba-4a65-b925-5981c2f5b54a",
+								"exec": [
+									"pm.test(\"get userlist test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.responseSize == 2;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:1338/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1338",
+							"path": [
+								"list"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}
