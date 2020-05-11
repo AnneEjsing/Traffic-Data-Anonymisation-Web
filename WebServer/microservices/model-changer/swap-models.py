@@ -25,7 +25,7 @@ async def remote_change_ml(request):
 
     # Sends file to specified url
     files = {'file': (model.filename, model.file, model.content_type, model.headers)}
-    response = requests.post(url, files=files, type=model_type)
+    response = requests.post(url, files=files, data={ 'type': model_type})
 
     if (response.status_code == 200):
         # The model has been updated on the nano. Now update in database
