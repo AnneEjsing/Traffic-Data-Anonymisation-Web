@@ -10,6 +10,9 @@ import os
 
 secretKey = os.getenv("SECRET_KEY")
 
+def valid_token(token):
+    return ('.' in token) and len(token.split('.')) == 3
+
 def verify_credentials(email, pwd):
     data = {"email": email, "password": pwd}
     resp = requests.request(method='get', url='http://profileservice:1338/login', headers={'content-type': 'text/json'}, json=data)
@@ -22,7 +25,7 @@ def verify_credentials(email, pwd):
 
 
 def is_not_expired(token):
-    if ((not '.' in token) or len(token.split('.')) < 3):
+    if not valid_token(token):
         return False
     header, payload, signature = token.split('.')
     id, subject, role, expiration = get_payload_info(payload)
@@ -34,6 +37,8 @@ def is_not_expired(token):
 
 
 def authenticate(token):
+    if not valid_token(token):
+        return False
     header, payload, signature = token.split('.')
     new_signature = encode(create_signature(header, payload))
 
@@ -56,17 +61,23 @@ def verify_token(token, desired_rights):
 
 
 def is_authorized(token, desired_rights):
+    if not valid_token(token):
+        return False
     header, payload, signature = token.split('.')
     id, subject, role, expiration = get_payload_info(payload)
     return role == desired_rights
 
 
 def get_user_id(token):
+    if not valid_token(token):
+        return None
     header, payload, signature = token.split('.')
     id, subject, role, expiration = get_payload_info(payload)
     return subject
 
 def get_rights(token):
+    if not valid_token(token):
+        return None
     header, payload, signature = token.split('.')
     id, subject, role, expiration = get_payload_info(payload)
     return role
