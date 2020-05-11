@@ -148,8 +148,8 @@ class CamearaUpdateTests(aiounittest.AsyncTestCase):
         self.assertEqual(res["model_face"], expect)
 
     async def test_camera_update_face_wrong_id(self):
-        req = request({"id":"a0eebc99-9c0b-4ef8-bb6d-6bb9cd380a12", "model_face":"new face"})
-        expect = 404
+        req = request({"id":"a0eebc99-9cb-4ef8-bb6d-6bb9cd380a12", "model_face":"new face"})
+        expect = 500
         response = await camera.camera_update_model_face(req)
         self.assertEqual(response.status, expect)
 
@@ -168,8 +168,8 @@ class CamearaUpdateTests(aiounittest.AsyncTestCase):
         self.assertEqual(res["model_licens"], expect)
 
     async def test_camera_update_license_wrong_id(self):
-        req = request({"id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bc380a12", "model_licens":"new license"})
-        expect = 404
+        req = request({"id":"a0eebc99-9c0b-4ef8-bb6d-6bbbc380a12", "model_licens":"new license"})
+        expect = 500
         response = await camera.camera_update_model_license_plate(req)
         self.assertEqual(response.status, expect)
 
@@ -186,7 +186,7 @@ class CamearaUpdateTests(aiounittest.AsyncTestCase):
         self.assertEqual(response.status, 200)
 
     async def test_camera_update_lsol_fail_wrong_id(self):
-        req = request({"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12"})
+        req = request({"camera_id": 9})
         response = await camera.camera_updatelsol(req)
         self.assertEqual(response.status, 500)
 
@@ -211,9 +211,9 @@ class CamearaDeleteTests(aiounittest.AsyncTestCase):
         self.assertEqual(response.status, 200)
 
     async def test_camera_delete_fail_uuid_not_found(self):
-        req = request({"id": "00000000-9c0b-4ef8-bb6d-6bb9bd380a11"})
+        req = request({"id": "00000000-9c0b-4ef8-b6d-6bb9bd380a11"})
         response = await camera.camera_delete(req)
-        self.assertEqual(response.status, 404)
+        self.assertEqual(response.status, 500)
 
     async def test_camera_delete_fail_missing_input(self):
         req = request({})
