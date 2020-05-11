@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "0724f09b-755c-40c6-b87c-2226897a6f54",
+		"_postman_id": "5e532bd2-c1b3-4087-99b1-432a74b0e3d6",
 		"name": "Backend endpoints",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -14,7 +14,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "cec63502-c981-4e51-9791-7e25f1a95e31",
+								"id": "0666f4b8-ccfe-4c83-a8bc-610025f292c1",
 								"exec": [
 									"pm.test(\"update test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -59,7 +59,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0c508236-755e-460e-8457-545d55fdbbe2",
+								"id": "d4583c68-b58e-41cb-983b-6d6b390eadf9",
 								"exec": [
 									"pm.test(\"get test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -107,7 +107,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "44c6dbcc-95f3-4f91-b492-56de3de7a1d3",
+								"id": "d4fbd40e-7fe0-4ea1-b524-819f457109c7",
 								"exec": [
 									"pm.test(\"delete test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -149,7 +149,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c02b9791-f294-4cbb-8703-14138ed4d9dc",
+								"id": "44c2e23d-1044-4bc1-9c07-aa9f50819989",
 								"exec": [
 									"pm.test(\"create test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -194,7 +194,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "f03a1541-5cc2-4f80-a401-b993ff2dead6",
+								"id": "e6d765f0-ab5a-488e-9119-cac746e0d3d7",
 								"exec": [
 									"pm.test(\"adminlist test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -229,7 +229,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5d8e5ffd-531c-4a19-a07d-a4bde66b1fa5",
+								"id": "b64d37e2-27fd-452f-89c1-8096c5217b3c",
 								"exec": [
 									"pm.test(\"userlist test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -276,7 +276,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "9111577e-d6cf-45f5-81a9-0b2e99fc6b90",
+								"id": "881e7a8b-5df3-4e8f-b4db-9f3d1e652dd2",
 								"exec": [
 									"pm.test(\"create access test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -315,6 +315,90 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Change licens model name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5824845e-02a7-4518-b2b4-a230da48f745",
+								"exec": [
+									"pm.test(\"update test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.model_licens).to.eql(\"Updated\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": \"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\",\n\t\"model_licens\": \"Updated\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:1337/camera/update_models/licens",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"camera",
+								"update_models",
+								"licens"
+							]
+						},
+						"description": "Change the model name of licens_plates"
+					},
+					"response": []
+				},
+				{
+					"name": "Change face model name",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "a4fb063f-cdb6-4b70-9336-600dea8e9aae",
+								"exec": [
+									"pm.test(\"update test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.model_face).to.eql(\"Updated\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\": \"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\",\n\t\"model_face\": \"Updated\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:1337/camera/update_models/face",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "1337",
+							"path": [
+								"camera",
+								"update_models",
+								"face"
+							]
+						},
+						"description": "Change the model name of licens_plates"
+					},
+					"response": []
 				}
 			],
 			"protocolProfileBehavior": {}
@@ -328,7 +412,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "5711c573-a37a-40a8-b306-3165de666b24",
+								"id": "4f72a042-90dc-44aa-90f7-101288ffb9ac",
 								"exec": [
 									"pm.test(\"get video settings test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -364,7 +448,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "3a617211-3155-4c2a-9efb-55e0c44433b2",
+								"id": "3d30ea20-cd00-4cc4-8742-a110628580dd",
 								"exec": [
 									"pm.test(\"update video settings test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -409,7 +493,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e3e76d93-71a6-435d-a8c1-7789e7f2050a",
+								"id": "9a4b8e85-767a-4d90-8090-d791af358701",
 								"exec": [
 									"pm.test(\"get recording test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -459,7 +543,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "1d4e8252-543a-4319-9af2-187cd20e39f5",
+								"id": "69c14291-d300-4d51-ba85-40c1373b3c02",
 								"exec": [
 									"pm.test(\"get all recordings for user test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -507,7 +591,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "1d28f0eb-1d91-4697-af41-1464e5462161",
+								"id": "f2120e65-bc7e-4b98-8b2d-d54bfc9829f1",
 								"exec": [
 									"pm.test(\"create access test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -564,7 +648,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "4620144d-b6e7-4b0c-b129-b535980787fc",
+								"id": "232d592e-56d5-4ae7-8588-bf4495f653c4",
 								"exec": [
 									"pm.test(\"record interval test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -613,7 +697,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "905c7abf-9d07-43d5-af3e-ea6ccf966523",
+								"id": "a5cea0d0-1024-4f97-8b60-322985c5b12d",
 								"exec": [
 									"pm.test(\"change model test\", function() {",
 									"    pm.response.to.have.status(500);",
@@ -665,7 +749,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "e806725c-08a7-48b8-bffb-6f1018f7d521",
+								"id": "f608f3e7-5b80-44fe-b679-c3d8f9f84171",
 								"exec": [
 									"pm.test(\"change model with wrong extension test\", function() {",
 									"    pm.response.to.have.status(500);",
@@ -723,7 +807,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "0416695c-108b-4879-b3c5-7ef63b0aa961",
+								"id": "e8280e65-4bc6-418b-8229-2ff3d51a24c3",
 								"exec": [
 									"pm.test(\"login profile service test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -771,7 +855,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "c9565db3-c49c-4bdf-9e2b-465558c4ecb8",
+								"id": "103a4a73-5665-4bb2-bb7e-a68634e02f35",
 								"exec": [
 									"pm.test(\"update profile service test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -815,7 +899,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "05489d03-360e-481e-b3df-eb208e27f7c6",
+								"id": "9174a757-d6a4-49a0-adfd-b5559dcabd33",
 								"exec": [
 									"pm.test(\"get user test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -863,7 +947,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "40e80654-a475-4c69-88c1-acdde2637742",
+								"id": "fae35e72-3a7c-47ec-abe8-936508c7d1ff",
 								"exec": [
 									"pm.test(\"delete user test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -907,7 +991,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "75747852-f399-4e82-939b-8cc0270bfcea",
+								"id": "65085927-52f5-4ee9-9bfc-4ed8cc228ac7",
 								"exec": [
 									"pm.test(\"sign up profile service test\", function() {",
 									"    pm.response.to.have.status(200);",
@@ -952,7 +1036,7 @@
 						{
 							"listen": "test",
 							"script": {
-								"id": "7e31bdc4-feba-4a65-b925-5981c2f5b54a",
+								"id": "abd68c86-1601-4495-b0b8-5252ca0e570f",
 								"exec": [
 									"pm.test(\"get userlist test\", function() {",
 									"    pm.response.to.have.status(200);",
