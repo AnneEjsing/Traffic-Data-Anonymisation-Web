@@ -128,7 +128,7 @@ async def camera_userlist(request):
     return web.Response(text=json.dumps(result, default=str), status=200)
 
 @routes.put('/camera/update_models/face')
-async def camera_update_model(request):
+async def camera_update_model_face(request):
     data = await request.json()
     f = dbresolver.field_check(['id', 'model_face'], data)
     if f != None: return f
@@ -148,7 +148,7 @@ async def camera_update_model(request):
     return dbresolver.has_one_result(result, "There is no camera with that id.", 404)
 
 @routes.put('/camera/update_models/licens')
-async def camera_update_model(request):
+async def camera_update_model_license_plate(request):
     data = await request.json()
     f = dbresolver.field_check(['id', 'model_licens'], data)
     if f != None: return f

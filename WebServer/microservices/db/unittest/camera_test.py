@@ -7,6 +7,7 @@ import unittest2
 import psycopg2
 import testing.postgresql
 import aiounittest
+import json
 
 # mock request to resemble aiohttp request
 class request:
@@ -137,6 +138,46 @@ class CamearaUpdateTests(aiounittest.AsyncTestCase):
         req = request({"description": "This is a description for the open cam", "label": "open cam", "ip": "0.0.0.0", "source": "https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8", "last_sign_of_life": "null", "owner": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12"})
         response = await camera.camera_update(req)
         self.assertEqual(response.status, 500)
+
+    ## Update face model
+    async def test_camera_update_face_pass(self):
+        req = request({"id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "model_face":"new face"})
+        expect = "new face"
+        response = await camera.camera_update_model_face(req)
+        res = json.loads(response.body.decode('utf-8'))
+        self.assertEqual(res["model_face"], expect)
+
+    async def test_camera_update_face_wrong_id(self):
+        req = request({"id":"a0eebc99-9c0b-4ef8-bb6d-6bb9cd380a12", "model_face":"new face"})
+        expect = 404
+        response = await camera.camera_update_model_face(req)
+        self.assertEqual(response.status, expect)
+
+    async def test_camera_update_face_missing_input(self):
+        req = request({"id":"a0eebc99-9c0b-4ef8-bb6d-6bb9cd380a12", "model_fce":"new face"})
+        expect = 500
+        response = await camera.camera_update_model_face(req)
+        self.assertEqual(response.status, expect)
+
+    ## Update license plate model
+    async def test_camera_update_license_pass(self):
+        req = request({"id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12", "model_licens":"new license"})
+        expect = "new license"
+        response = await camera.camera_update_model_license_plate(req)
+        res = json.loads(response.body.decode('utf-8'))
+        self.assertEqual(res["model_licens"], expect)
+
+    async def test_camera_update_license_wrong_id(self):
+        req = request({"id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bc380a12", "model_licens":"new license"})
+        expect = 404
+        response = await camera.camera_update_model_license_plate(req)
+        self.assertEqual(response.status, expect)
+
+    async def test_camera_update_license_missing_input(self):
+        req = request({"id":"a0eebc99-9c0b-4ef8-bb6d-6bb9cd380a12", "model_lices":"new license"})
+        expect = 500
+        response = await camera.camera_update_model_license_plate(req)
+        self.assertEqual(response.status, expect)
 
     ## UPDATE LAST SIGN OF LIFE
     async def test_camera_update_lsol_pass(self):
