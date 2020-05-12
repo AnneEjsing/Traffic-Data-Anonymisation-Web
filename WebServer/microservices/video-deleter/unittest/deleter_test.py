@@ -29,5 +29,11 @@ class AuthTokenTests(unittest2.TestCase):
         res = not 'test2.mp4' in os.listdir()
         self.assertTrue(res)
 
+    def test_delete_videos_with_no_owner(self):
+        deleter.delete_videos([],0)
+        res = not 'test.mp4' in os.listdir()
+        self.assertTrue(res)
+        
+
 if __name__ == "__main__":
     unittest2.main()
