@@ -1,4 +1,3 @@
-argparse
-requests
-datetime
-loguru
+unittest2==1.1.0
+requests==2.23.0
+loguru==0.4.1
