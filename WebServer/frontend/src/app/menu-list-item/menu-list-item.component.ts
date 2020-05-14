@@ -80,7 +80,6 @@ export class MenuListItemComponent implements OnInit {
     });
 
     ref.afterClosed().subscribe(res => {
-      console.log(res);
       if (res) {
         if (res.type == "face") {
           this.item.model_face = res.name;
