@@ -75,8 +75,19 @@ export class MenuListItemComponent implements OnInit {
   }
 
   async change() {
-    this.dialog.open(ModelChangerComponent, {
+    var ref = this.dialog.open(ModelChangerComponent, {
       data: { camera_id: this.item.camera_id },
+    });
+
+    ref.afterClosed().subscribe(res => {
+      if (res) {
+        if (res.type == "face") {
+          this.item.model_face = res.name;
+        }
+        else if (res.type == "license_plate") {
+          this.item.model_licens = res.name;
+        }
+      }
     });
   }
 }
