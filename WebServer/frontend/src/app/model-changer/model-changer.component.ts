@@ -58,7 +58,7 @@ export class ModelChangerComponent implements OnInit {
   }
 
   close() {
-    this.dialogRef.close(null);
+    this.dialogRef.close();
   }
 
   openSnackBar(message: string, action: string) {
