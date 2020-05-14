@@ -35,9 +35,14 @@ export class ModelChangerComponent implements OnInit {
     this.requesting = true;
     let res = await this.fileUploadService.postFile(this.fileToUpload, this.data['camera_id'], this.type);
     this.requesting = false;
+
     if (res === 200) {
       this.canUpload = false;
-      this.dialogRef.close();
+      var result = {
+        type: this.type,
+        name: this.fileToUpload.name
+      }
+      this.dialogRef.close(result);
     }
     else this.openSnackBar("An error occured. Try again later", "OK");
   }
@@ -53,7 +58,7 @@ export class ModelChangerComponent implements OnInit {
   }
 
   close() {
-    this.dialogRef.close();
+    this.dialogRef.close(null);
   }
 
   openSnackBar(message: string, action: string) {
