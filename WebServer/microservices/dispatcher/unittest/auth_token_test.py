@@ -3,6 +3,8 @@ import sys
 import os
 sys.path.append(os.getcwd() + '/..')
 import auth_token
+import datetime
+import json
 
 class AuthTokenTests(unittest2.TestCase):
     @classmethod
@@ -31,6 +33,11 @@ class AuthTokenTests(unittest2.TestCase):
         token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiamlkIjoiMTIzIiwicmlnaHRzIjoiYWRtaW4iLCJleHAiOiIyMTIwLTA1LTA0VDIzOjU0OjIzLjIzMjMifQ.deQB3qsSJYzYAeyWlfoX9MIG1sMx1vEo9SHVQuj7_P7Sn655I-93Ng4A0WsdfGrMYY0LV3dQaJjxrXnaojVMPA"
         res = auth_token.authenticate(token)
         self.assertTrue(res)
+
+    def test_authenticate_invalid_token(self):
+        token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiamlkIjoiMTIzIiwicmlnaHRzIjoiYWRtaW4iLCJleHAiOiIyMTIwLTA1LTA0VDIzOjU0OjIzLjIzMjMifQRmEnR7ygkmXGiT6k532Zj3kEHdYfiqPzd7zlRVc3XVqM6XpdT44QwOXqvmoGYmSQ6J81VzpR4mzPBqhGud6bZg"
+        res = auth_token.authenticate(token)
+        self.assertFalse(res)
 
     def test_authenticate_wrong_secret(self):
         token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiamlkIjoiMTIzIiwicmlnaHRzIjoiYWRtaW4iLCJleHAiOiIyMTIwLTA1LTA0VDIzOjU0OjIzLjIzMjMifQ.RmEnR7ygkmXGiT6k532Zj3kEHdYfiqPzd7zlRVc3XVqM6XpdT44QwOXqvmoGYmSQ6J81VzpR4mzPBqhGud6bZg"
@@ -77,13 +84,38 @@ class AuthTokenTests(unittest2.TestCase):
         token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiamlkIjoiMTIzIiwicmlnaHRzIjoidXNlciIsImV4cCI6IjIxMjAtMDUtMDRUMjM6NTQ6MjMuMjMyMyJ9.6VTtr_0f4LAwmiGoHLl43PiXmky82GWT3KSEO3EuQ5jI3Lo1z5GmcgJW2wCiSuFhwz_R8bAGzwXmQl_reNRHNg"
         expected = "1234567890"
         res =  auth_token.get_user_id(token)
-        self.assertEqual(res,expected)        
+        self.assertEqual(res,expected)    
+
+    def test_get_user_id_wrong_token(self):
+        token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiamlkIjoiMTIzIiwicmlnaHRzIjoidXNlciIsImV4cCI6IjIxMjAtMDUtMDRUMjM6NTQ6MjMuMjMyMyJ96VTtr_0f4LAwmiGoHLl43PiXmky82GWT3KSEO3EuQ5jI3Lo1z5GmcgJW2wCiSuFhwz_R8bAGzwXmQl_reNRHNg"
+        expected = None
+        res =  auth_token.get_user_id(token)
+        self.assertEqual(res,expected)
 
     def test_get_rights_pass(self):
         token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiamlkIjoiMTIzIiwicmlnaHRzIjoidXNlciIsImV4cCI6IjIxMjAtMDUtMDRUMjM6NTQ6MjMuMjMyMyJ9.6VTtr_0f4LAwmiGoHLl43PiXmky82GWT3KSEO3EuQ5jI3Lo1z5GmcgJW2wCiSuFhwz_R8bAGzwXmQl_reNRHNg"
         expected = "user"
         res =  auth_token.get_rights(token)
         self.assertEqual(res,expected)
+
+    def test_get_rights_wrong_token(self):
+        token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiamlkIjoiMTIzIiwicmlnaHRzIjoidXNlciIsImV4cCI6IjIxMjAtMDUtMDRUMjM6NTQ6MjMuMjMyMyJ96VTtr_0f4LAwmiGoHLl43PiXmky82GWT3KSEO3EuQ5jI3Lo1z5GmcgJW2wCiSuFhwz_R8bAGzwXmQl_reNRHNg"
+        expected = None
+        res =  auth_token.get_rights(token)
+        self.assertEqual(res,expected)
+
+    def test_is_authorized_wrong_token(self):
+        token = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwiamlkIjoiMTIzIiwicmlnaHRzIjoidXNlciIsImV4cCI6IjIxMjAtMDUtMDRUMjM6NTQ6MjMuMjMyMyJ96VTtr_0f4LAwmiGoHLl43PiXmky82GWT3KSEO3EuQ5jI3Lo1z5GmcgJW2wCiSuFhwz_R8bAGzwXmQl_reNRHNg"
+        expected = False
+        res =  auth_token.is_authorized(token,'admin')
+        self.assertEqual(res,expected)
+
+    def test_create_payload(self):
+        now = datetime.datetime.utcnow()
+        res = auth_token.create_payload(1,'admin')
+        res = json.loads(res)
+        dt = datetime.datetime.strptime(res['exp'], '%Y-%m-%dT%H:%M:%S.%f')
+        self.assertTrue(dt > now)
 
     def test_encode_not_bytes(self):
         string = "hej"

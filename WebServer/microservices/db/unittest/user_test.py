@@ -76,6 +76,11 @@ class UserGetUpdateTests(aiounittest.AsyncTestCase):
         res = await user.user_get_email(req)
         self.assertEqual(res.status,500)
 
+    async def test_user_get_by_email_fail_wrong_param_type(self):
+        req = request({"email": 1})
+        res = await user.user_get_email(req)
+        self.assertEqual(res.status,500)
+
     ## Login
     async def test_user_login(self):
         req = request({"email":"notadmin@notadmin.no","password":"passpass"})
@@ -99,6 +104,12 @@ class UserGetUpdateTests(aiounittest.AsyncTestCase):
     async def test_user_login_wrong_password(self):
         req = request({"email":"notadmin@notadmin.no","password":"notpasspass"})
         expect = 401
+        res = await user.user_login(req)
+        self.assertEqual(expect,res.status)
+
+    async def test_user_login_wrong_format(self):
+        req = request({"email":1,"password":2})
+        expect = 500
         res = await user.user_login(req)
         self.assertEqual(expect,res.status)
 

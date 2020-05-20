@@ -58,6 +58,12 @@ class VideoGetTests(aiounittest.AsyncTestCase):
         res = await video.video_update(req)
         self.assertEqual(expect,res.status)
 
+    async def test_update_video_invalid_params(self):
+        req = request({"video_id":"3","video_thumbnail":"new thumb","camera_id":"a0ef8-bb6d-6bb9bd380a11","user_id":"a0eebcbb6d-6bb9bd380b11"})
+        expect = 500
+        res = await video.video_update(req)
+        self.assertEqual(expect,res.status)
+
     async def test_update_video_no_user_id_match(self):
         req = request({"video_id":"a0eebc99-9c0b-4ef8-bb6d-6bb0bd380c11","video_thumbnail":"new thumb","camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11","user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         expect = 404
@@ -71,6 +77,12 @@ class VideoGetTests(aiounittest.AsyncTestCase):
         res = await video.video_get(req)
         res = json.loads(res.body.decode("utf-8"))
         self.assertDictContainsSubset(expect,res)
+
+    async def test_get_video_wrong_params(self):
+        req = request({"video_id":"a0eebcbb6d-6bb9bd380c11"})
+        expect = 500
+        res = await video.video_get(req)
+        self.assertEqual(expect,res.status)
         
     async def test_get_video_wrong_input_names(self):
         req = request({"video_i":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380c11"})
@@ -123,6 +135,11 @@ class VideoCreateTests(aiounittest.AsyncTestCase):
         res = json.loads(res.body.decode("utf-8"))
         self.assertDictContainsSubset(expect,res)
 
+    async def test_create_video_fail_params(self):
+        req = request({"video_id":"a0eebc99-4ef8-bb6d-6bb9bd380c12","camera_id":"a0eebc99-9c0b-4ef8-6bb9bd380a12","user_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11","save_time":"2020-06-22 19:10:25"})
+        res = await video.video_create(req)
+        self.assertEqual(res.status,500)
+
     async def test_create_video_fail_missing_input(self):
         req = request({})
         res = await video.video_create(req)
@@ -144,6 +161,12 @@ class VideoDeleteTests(aiounittest.AsyncTestCase):
         res = await video.video_delete(req)
         res = json.loads(res.body.decode("utf-8"))
         self.assertDictContainsSubset(expect,res)
+        
+    async def test_delete_video_wrong_params(self):
+        req = request({"video_id":"a0eebc99-9c0b-4efd-6bb9bd380c11"})
+        expect = 500
+        res = await video.video_delete(req)
+        self.assertEqual(expect,res.status)
         
     async def test_delete_video_wrong_input_names(self):
         req = request({"video_i":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380c11"})
