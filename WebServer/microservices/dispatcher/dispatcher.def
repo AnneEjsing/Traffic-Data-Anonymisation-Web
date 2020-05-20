@@ -17,10 +17,6 @@ From: python:jessie
     done <secrets.env
     rm secrets.env
 
-    #Overwriting postgres url for Singularity
-    echo "export POSTGRES_HOST=::" >> $SINGULARITY_ENVIRONMENT
-    
-
 %runscript
     cd /
-    python3 dbresolver.py
+    python3 service.py --urls http://*:443

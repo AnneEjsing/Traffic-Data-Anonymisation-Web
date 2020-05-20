@@ -3,3 +3,4 @@ secrets.env
 *.sif 
 __pycache__
 .DS_Store
+singularity_containers
