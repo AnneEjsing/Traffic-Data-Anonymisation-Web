@@ -2,7 +2,6 @@ BootStrap: docker
 From: buildpack-deps:stretch
 
 %help
-    run: mkdir -p singularity_nginx/var && mkdir -p singularity_nginx/etc && mkdir -p singularity_nginx/usr && singularity run --fakeroot -B singularity_nginx/var:/var,singularity_nginx/etc:/etc,singularity_nginx/usr:/usr streamer.sif
     run: mkdir -p singularity_nginx/var && mkdir -p singularity_nginx/hls && mkdir -p singularity_nginx/nginx && singularity run --fakeroot -B singularity_nginx/var:/var,singularity_nginx/hls:/etc/nginx/tmp/hls,singularity_nginx/nginx:/usr/local/nginx streamer.sif
 
 %files
