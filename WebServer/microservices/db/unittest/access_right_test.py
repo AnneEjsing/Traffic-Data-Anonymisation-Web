@@ -45,6 +45,11 @@ class AccessRightGetCreateTests(aiounittest.AsyncTestCase):
         response = await access_right.right_get(req)
         self.assertEqual(response.body, b'[{"camera_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"}]')
 
+    async def test_get_fail_wrong_params(self):
+        req = request({"camera_id":"a0eebc99-9c0b-4b6d-6bb9bd380a11", "user_id":"a0eebc99-9c0b-4ef8-6bb9bd380b11"})
+        response = await access_right.right_get(req)
+        self.assertEqual(response.status, 500)
+
     async def test_get_fail_wrong_user_uuid(self):
         req = request({"camera_id":"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_get(req)
@@ -101,6 +106,11 @@ class AccessRightDeleteTests(aiounittest.AsyncTestCase):
         req = request({"camera_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11", "user_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11"})
         response = await access_right.right_delete(req)
         self.assertEqual(response.status, 404)
+
+    async def test_delete_fail_wrong_param(self):
+        req = request({"camera_id":"b0eebc99-9c0b-bb6d-6bb9bd380a11", "user_id":"b0eebc99-9c0b-4ef8-bb6d-6b80b11"})
+        response = await access_right.right_delete(req)
+        self.assertEqual(response.status, 500)
         
     async def test_delete_fail_input_param(self):
         req = request({"camera_id":"b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"})
