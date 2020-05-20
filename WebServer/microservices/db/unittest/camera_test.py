@@ -186,7 +186,7 @@ class CamearaUpdateTests(aiounittest.AsyncTestCase):
         self.assertEqual(response.status, 200)
 
     async def test_camera_update_lsol_fail_wrong_id(self):
-        req = request({"camera_id": 9})
+        req = request({"id": 9})
         response = await camera.camera_updatelsol(req)
         self.assertEqual(response.status, 500)
 
