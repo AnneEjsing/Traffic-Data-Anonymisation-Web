@@ -1,9 +1,16 @@
 <div mat-dialog-content>
     <h1 mat-dialog-title>Upload new model</h1>
-    <input type="file"
-           id="file"
-           (change)="handleFileInput($event.target.files)"
-           accept=".h2,.pb">
+    <div class="form-group">
+        <label for="types">Chose which model to upload</label>
+        <select class="form-control" id="types" (change)="choseType($event)">
+            <option>Face</option>
+            <option>License plate</option>
+        </select>
+    </div>
+
+    <br>
+
+    <input type="file" id="file" (change)="handleFileInput($event.target.files)" accept=".h5,.pb">
     <button mat-button [disabled]="requesting || !canUpload" (click)="save()">Upload</button>
-    <button mat-button [disabled]="requesting" (click)="close()">Close</button> 
+    <button mat-button [disabled]="requesting" (click)="close()">Close</button>
 </div>

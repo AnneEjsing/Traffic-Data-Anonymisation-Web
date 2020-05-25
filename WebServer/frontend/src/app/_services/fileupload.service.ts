@@ -1,7 +1,6 @@
 import { Injectable } from "@angular/core";
 import { HttpClient, HttpHeaders } from "@angular/common/http";
 import * as global from "./dispatcherConnection.service";
-import { promise } from 'protractor';
 
 @Injectable({
   providedIn: "root"
@@ -9,13 +8,14 @@ import { promise } from 'protractor';
 
 export class FileuploadService {
   readonly dispatcherUrl = global.dispatcherUrl;
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) { }
 
-  async postFile(file: File, camera_id:string): Promise<number> {
-    let formData:FormData = new FormData();
+  async postFile(file: File, camera_id: string, type: string): Promise<number> {
+    let formData: FormData = new FormData();
     formData.append('file', file, file.name);
     formData.append('camera_id', camera_id);
-    
+    formData.append('type', type);
+
     var endpoint: string = this.dispatcherUrl + "model/upload"
     let res = await this.http.post(
       endpoint,

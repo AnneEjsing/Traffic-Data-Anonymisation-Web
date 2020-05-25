@@ -1,0 +1,65 @@
+BootStrap: docker
+From: buildpack-deps:stretch
+
+%help
+    run: mkdir -p singularity_nginx/var && mkdir -p singularity_nginx/hls && mkdir -p singularity_nginx/nginx && singularity run --fakeroot -B singularity_nginx/var:/var,singularity_nginx/hls:/etc/nginx/tmp/hls,singularity_nginx/nginx:/usr/local/nginx streamer.sif
+
+%files
+    nginx.conf /etc/nginx/nginx.conf
+
+%environment
+    NGINX_VERSION=nginx-1.17.9
+    NGINX_RTMP_MODULE_VERSION=1.2.1
+
+    export NGINX_VERSION NGINX_RTMP_MODULE_VERSION
+
+%post
+    # Install dependencies
+    apt-get update
+    apt-get install -y ca-certificates openssl build-essential libpcre3 libpcre3-dev libssl-dev
+
+    # Download and decompress Nginx
+    mkdir -p /tmp/build/nginx
+    cd /tmp/build/nginx
+    wget -O nginx-1.17.9.tar.gz https://nginx.org/download/nginx-1.17.9.tar.gz
+    tar -zxf nginx-1.17.9.tar.gz
+
+    # Download and decompress RTMP module
+    mkdir -p /tmp/build/nginx-rtmp-module
+    cd /tmp/build/nginx-rtmp-module
+    wget -O nginx-rtmp-module-1.2.1.tar.gz https://github.com/arut/nginx-rtmp-module/archive/v1.2.1.tar.gz
+    tar -zxf nginx-rtmp-module-1.2.1.tar.gz
+    cd nginx-rtmp-module-1.2.1
+
+    # Build and install Nginx
+    # The default puts everything under /usr/local/nginx, so it's needed to change
+    # it explicitly. Not just for order but to have it in the PATH 
+    cd /tmp/build/nginx/nginx-1.17.9 && \
+    ./configure \
+        --sbin-path=/usr/local/sbin/nginx \
+        --conf-path=/etc/nginx/nginx.conf \
+        --error-log-path=/var/log/nginx/error.log \
+        --pid-path=/var/run/nginx/nginx.pid \
+        --lock-path=/var/lock/nginx/nginx.lock \
+        --http-log-path=/var/log/nginx/access.log \
+        --http-client-body-temp-path=/tmp/nginx-client-body \
+        --with-http_ssl_module \
+        --with-threads \
+        --with-ipv6 \
+        --add-module=/tmp/build/nginx-rtmp-module/nginx-rtmp-module-1.2.1 && \
+    make -j $(getconf _NPROCESSORS_ONLN) && \
+    make install && \
+    rm -rf /tmp/build
+
+
+%runscript
+    mkdir -p /var/cache/nginx/client_temp
+    mkdir -p /var/log/nginx
+    mkdir -p /var/run/nginx
+    mkdir -p /var/lock/nginx
+    mkdir -p /etc/nginx/tmp/hls
+    touch /var/run/nginx/nginx.pid
+    
+    nginx -v
+    echo "Launching nginx"
+    nginx -g 'daemon off;'

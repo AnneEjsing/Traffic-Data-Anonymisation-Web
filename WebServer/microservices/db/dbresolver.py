@@ -1,13 +1,15 @@
 from psycopg2 import connect, errors
 from psycopg2.extras import RealDictCursor
+import access_right, camera, recordings, user, video_settings, video
 from aiohttp import web
 import asyncio
 import json
-import os 
+import os
+
 
 # Sends a query to the database and returns the response.
 # Inspired by: #https://kb.objectrocket.com/postgresql/python-and-postgresql-docker-container-part-2-1063
-def executeQuery(query,*inputs):
+def execute_query(query,*inputs):
     # declare connection instance
     conn = connect(
         dbname = os.getenv('POSTGRES_DB'),
@@ -34,13 +36,19 @@ def executeQuery(query,*inputs):
         results = cursor.fetchall()
 
     except errors.InvalidTextRepresentation as e:
-        error = e
+        error = str(e)
 
     except errors.UniqueViolation as e:
-        error = e.diag.message_detail 
+        error = str(e)
 
     except errors.InvalidDatetimeFormat as e:
         error = "The data time format is invalid. An example of a correct date is: '2020-04-30 11:06:50'."
+    
+    except errors.ForeignKeyViolation as e:
+        error = str(e)
+    
+    except errors.UndefinedFunction as e:
+        error = str(e)
     
     
     finally:
@@ -56,31 +64,23 @@ def executeQuery(query,*inputs):
 routes = web.RouteTableDef()
 
 ####### Helper functions
-def fieldCheck(requiredFields, data):
-    fieldsNotFound = []
-    for i in requiredFields:
+def field_check(required_fields, data):
+    fields_not_found = []
+    for i in required_fields:
         if i not in data:
-            fieldsNotFound.append(i)
-    if fieldsNotFound: return web.Response(text="Field(s) " + str(fieldsNotFound) + " not found in the request to the database resolver.",status=500)
+            fields_not_found.append(i)
+    if fields_not_found: return web.Response(text="Field(s) " + str(fields_not_found) + " not found in the request to the database resolver.",status=500)
     return None
 
-def hasOneResult(result, errorString, errorCode):
+def has_one_result(result, error_string, error_code):
     if len(result) == 1:
         return web.Response(text=json.dumps(result[0], default=str),status=200)
     else:
-        return web.Response(text=errorString, status=errorCode)
-
-
-####### Endpoints
-exec(open("user.py").read())
-exec(open("camera.py").read())
-exec(open("access-right.py").read())
-exec(open("video.py").read())
-exec(open("video_settings.py").read())
-exec(open("recordings.py").read())
+        return web.Response(text=error_string, status=error_code)
 
 if __name__ == "__main__":
     app = web.Application()
-    app.add_routes(routes)
+    for route_list in [routes,access_right.routes,camera.routes,recordings.routes,user.routes,video_settings.routes,video.routes]:
+        app.add_routes(route_list)
     web.run_app(app, host='0.0.0.0', port=1337)
 

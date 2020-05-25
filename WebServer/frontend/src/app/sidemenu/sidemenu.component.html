@@ -1,13 +1,51 @@
-<h3 style="text-align: center;">Camera</h3>
+<h3 style="text-align: center;">Cameras</h3>
 
-<button mat-button style="width: 100%;" (click)="openCameraDialog()">
-    <mat-icon>add_circle</mat-icon>
-    <b>Add new stream</b>
-</button>
+<ul>
+    <div mat-list-item class="menu-list-item" *ngIf="role && role == 'admin'">
+        <li class="list-group-item line">
+            <span class="material-icons">
+                add_circle
+            </span>
+            <button mat-button (click)="openCameraDialog()">
+                Add new stream
+            </button>
+        </li>
+    </div>
+    <div mat-list-item class="menu-list-item" *ngIf="role && role == 'admin'">
+        <li class="list-group-item line">
+            <span class="material-icons">
+                settings
+            </span>
+            <button mat-button (click)=openSettings()> Global settings </button>
+        </li>
+    </div>
+    <div mat-list-item class="menu-list-item" *ngIf="recorded_videos && recorded_videos.length > 0">
+        <li class="list-group-item line" style="justify-content: space-between;">
+            Recorded Videos
+            <mat-icon style="cursor:pointer" [@indicatorRotate]="showRecordings ? 'expanded': 'collapsed'"
+                (click)=list_recordings()>
+                expand_more
+            </mat-icon>
+        </li>
+        <div *ngIf="showRecordings">
+            <li class="list-group-item line" *ngFor="let recording of recorded_videos">
+                <div *ngIf="recording.camera_id != null">
+                    {{ recording.label }}
+                </div>
+                <div *ngIf="recording.camera_id == null">
+                    DELETED CAMERA
+                </div>
+                <br>
+                {{ toShortDate(recording.save_time) }}
+                <br>
+                <button class="btn btn-primary" style="width: 100%;"
+                    (click)="downloadVideo(recording)">Download</button>
+            </li>
+        </div>
+    </div>
 
-<ul style="padding-left: 0%;">
     <app-menu-list-item style="cursor: pointer;" *ngFor="let stream of streams" [item]="stream"
-        [isRecording]="isRecording(stream.camera_id)" (click)="onClickStream(stream)"
+        [isRecording]="isRecording(stream.camera_id)" (changeStream)="onClickStream($event)"
         [ngClass]="{'selected': currentStream === stream}">{{ stream.label }}>
     </app-menu-list-item>
 </ul>

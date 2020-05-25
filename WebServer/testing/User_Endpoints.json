@@ -1,0 +1,1035 @@
+{
+	"info": {
+		"_postman_id": "bd18b587-1b19-47e4-bb95-8b2a620b82b1",
+		"name": "User endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Dispatcher",
+			"item": [
+				{
+					"name": "login dispatcher",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "606eeb9a-1d4b-41cd-aadd-de5a34a1da31",
+								"exec": [
+									"pm.test(\"login test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "notadmin@notadmin.no",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "passpass",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signup",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "b0eb9680-06ec-4b10-9859-7a81cd82a528",
+								"exec": [
+									"pm.test(\"sign up test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.email).to.eql(\"mail\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"email\":\"mail\",\n\t\"password\":\"pass\",\n\t\"rights\":\"user\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "630e269b-0036-4de1-a950-599a5f4f8719",
+								"exec": [
+									"pm.test(\"delete test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.email).to.eql(\"notadmin@notadmin.no\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjExIiwgInJpZ2h0cyI6ICJ1c2VyIiwgImV4cCI6ICIyMDI4LTA1LTAyVDAzOjI3OjMzLjY4MjU2MCJ9.Mw6KSpIJxsVnct3P6nLrdNtifyVA32ikEq1rgxLbAJ3HHVYk7sotn43cpm1S_p6tLJkh_75gP-z5yENbV-tk7A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:443/get/user",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"get",
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "118d42cf-fa89-45fb-9ca8-e75f1f4edae4",
+								"exec": [
+									"pm.test(\"get userlist dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.responseSize == 2;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:443/user/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"user",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "userlist camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "671445d0-08a1-415f-9adf-878f41ec233d",
+								"exec": [
+									"pm.test(\"userlist dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.responseSize == 1;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjExIiwgInJpZ2h0cyI6ICJ1c2VyIiwgImV4cCI6ICIyMDI4LTA1LTAyVDAzOjI3OjMzLjY4MjU2MCJ9.Mw6KSpIJxsVnct3P6nLrdNtifyVA32ikEq1rgxLbAJ3HHVYk7sotn43cpm1S_p6tLJkh_75gP-z5yENbV-tk7A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/camera/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"camera",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "adminlist camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "cd40a332-7bde-4e63-b592-6cd9aa8a3eb6",
+								"exec": [
+									"pm.test(\"adminlist dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.responseSize == 3;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjEyIiwgInJpZ2h0cyI6ICJhZG1pbiIsICJleHAiOiAiMjAyOC0wNS0wMlQwMzoyOTozNC4wMTQ0MzgifQ.wRMb3nMOyH5qDwbi0KuOIu5SHxcQwkHKjtUSmStdxMys0qlsnHs7BZEO0NaXiVcHMFHh1N1WdhBxmALkihiyrA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:443/camera/list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"camera",
+								"list"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0c414076-01fe-42ac-aed3-3a22932d711b",
+								"exec": [
+									"pm.test(\"get camera dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.ip).to.eql(\"0.0.0.0\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjExIiwgInJpZ2h0cyI6ICJ1c2VyIiwgImV4cCI6ICIyMDI4LTA1LTAyVDAzOjI3OjMzLjY4MjU2MCJ9.Mw6KSpIJxsVnct3P6nLrdNtifyVA32ikEq1rgxLbAJ3HHVYk7sotn43cpm1S_p6tLJkh_75gP-z5yENbV-tk7A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/camera/get?id=a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"camera",
+								"get"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9e7b31b0-a8a6-43a8-b65a-535b8d17b242",
+								"exec": [
+									"pm.test(\"create camera dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.label).to.eql(\"open cam3\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjEyIiwgInJpZ2h0cyI6ICJhZG1pbiIsICJleHAiOiAiMjAyOC0wNS0wMlQwMzoyOTozNC4wMTQ0MzgifQ.wRMb3nMOyH5qDwbi0KuOIu5SHxcQwkHKjtUSmStdxMys0qlsnHs7BZEO0NaXiVcHMFHh1N1WdhBxmALkihiyrA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"owner\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12\",\n\t\"source\":\"anden sovs2\",\n\t\"description\":\"This is a description for the open cam3\",\n\t\"ip\":\"0.0.0.1\",\n\t\"label\":\"open cam3\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/camera/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"camera",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "ac3b2edc-a686-4828-acfa-f48f3833a687",
+								"exec": [
+									"pm.test(\"update dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.label).to.eql(\"open cam2\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjEyIiwgInJpZ2h0cyI6ICJhZG1pbiIsICJleHAiOiAiMjAyOC0wNS0wMlQwMzoyOTozNC4wMTQ0MzgifQ.wRMb3nMOyH5qDwbi0KuOIu5SHxcQwkHKjtUSmStdxMys0qlsnHs7BZEO0NaXiVcHMFHh1N1WdhBxmALkihiyrA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"camera_id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\",\n\t\"source\":\"https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8\",\n\t\"description\":\"This is a description for the open cam\",\n\t\"ip\":\"0.0.0.0\",\n\t\"label\":\"open cam2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/camera/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"camera",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete camera",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "11e36993-ac52-4605-ac55-1331a5b2ed93",
+								"exec": [
+									"pm.test(\"delete dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.ip).to.eql(\"0.0.0.0\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjEyIiwgInJpZ2h0cyI6ICJhZG1pbiIsICJleHAiOiAiMjAyOC0wNS0wMlQwMzoyOTozNC4wMTQ0MzgifQ.wRMb3nMOyH5qDwbi0KuOIu5SHxcQwkHKjtUSmStdxMys0qlsnHs7BZEO0NaXiVcHMFHh1N1WdhBxmALkihiyrA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:443/camera/delete?id=a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"camera",
+								"delete"
+							],
+							"query": [
+								{
+									"key": "id",
+									"value": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "create access",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "0f82d2e1-926e-4089-91a8-3ea11f03cc7a",
+								"exec": [
+									"pm.test(\"create access dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.user_id).to.eql(\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11\");",
+									"    pm.expect(jsonData.camera_id).to.eql(\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13\");",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjEyIiwgInJpZ2h0cyI6ICJhZG1pbiIsICJleHAiOiAiMjAyOC0wNS0wMlQwMzoyOTozNC4wMTQ0MzgifQ.wRMb3nMOyH5qDwbi0KuOIu5SHxcQwkHKjtUSmStdxMys0qlsnHs7BZEO0NaXiVcHMFHh1N1WdhBxmALkihiyrA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"camera_id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13\",\n\t\"email\":\"notadmin@notadmin.no\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/access/create",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"access",
+								"create"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "start stream no access",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "858d5d32-cdb0-4cae-9fe8-fed8eef892ae",
+								"exec": [
+									"pm.test(\"create access dispatcher test\", function() {",
+									"    pm.response.to.have.status(401);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjExIiwgInJpZ2h0cyI6ICJ1c2VyIiwgImV4cCI6ICIyMDI4LTA1LTAyVDAzOjI3OjMzLjY4MjU2MCJ9.Mw6KSpIJxsVnct3P6nLrdNtifyVA32ikEq1rgxLbAJ3HHVYk7sotn43cpm1S_p6tLJkh_75gP-z5yENbV-tk7A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"device\":\"0.0.0.0\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/stream/start",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"stream",
+								"start"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "authenticate",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "51b7efe8-2fbe-447c-93d9-c1b975838837",
+								"exec": [
+									"pm.test(\"Authenticate test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.body == true;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjEyIiwgInJpZ2h0cyI6ICJhZG1pbiIsICJleHAiOiAiMjAyOC0wNS0wMlQwMzoyOTozNC4wMTQ0MzgifQ.wRMb3nMOyH5qDwbi0KuOIu5SHxcQwkHKjtUSmStdxMys0qlsnHs7BZEO0NaXiVcHMFHh1N1WdhBxmALkihiyrA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:443/auth/authenticate",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"auth",
+								"authenticate"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "record interval",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "5d48be27-5273-4c9b-9cd7-3d98dad34fb0",
+								"exec": [
+									"pm.test(\"record interval dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjEyIiwgInJpZ2h0cyI6ICJhZG1pbiIsICJleHAiOiAiMjAyOC0wNS0wMlQwMzoyOTozNC4wMTQ0MzgifQ.wRMb3nMOyH5qDwbi0KuOIu5SHxcQwkHKjtUSmStdxMys0qlsnHs7BZEO0NaXiVcHMFHh1N1WdhBxmALkihiyrA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"url\":\"https://cph-p2p-msl.akamaized.net/hls/live/2000341/test/master.m3u8\",\n\t\"length\":4,\n\t\"user_id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b12\",\n\t\"camera_id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\",\n\t\"recording_intervals\":4\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/record/interval",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"record",
+								"interval"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get video settings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "e6351ad5-0074-4f35-9244-4f3eec4d0498",
+								"exec": [
+									"pm.test(\"get video settings dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recording_limit).to.eql(18000);",
+									"    pm.expect(jsonData.keep_days).to.eql(1);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:443/settings/get",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"settings",
+								"get"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update video settings",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "378f3daf-71b8-4672-a3f0-c0e0a93ca7cf",
+								"exec": [
+									"pm.test(\"update video settings dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.recording_limit).to.eql(20000);",
+									"    pm.expect(jsonData.keep_days).to.eql(2);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjEyIiwgInJpZ2h0cyI6ICJhZG1pbiIsICJleHAiOiAiMjAyOC0wNS0wMlQwMzoyOTozNC4wMTQ0MzgifQ.wRMb3nMOyH5qDwbi0KuOIu5SHxcQwkHKjtUSmStdxMys0qlsnHs7BZEO0NaXiVcHMFHh1N1WdhBxmALkihiyrA",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"recording_limit\" : \"20000\",\n\t\"keep_days\" : \"2\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/settings/update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"settings",
+								"update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get recording",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "1f27157e-55e5-4327-adc1-203f0aa5fe8d",
+								"exec": [
+									"pm.test(\"get recording dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    var jsonData = pm.response.json();",
+									"    pm.expect(jsonData.start_time).to.eql(\"2020-06-22 19:10:25\");",
+									"    pm.expect(jsonData.recording_time).to.eql(7000);",
+									"    pm.expect(jsonData.recording_intervals).to.eql(7)",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"user_id\" : \"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11\",\n\t\"camera_id\" : \"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/get/recording",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"get",
+								"recording"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all recordings for user",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "9f954756-1418-4867-bfa0-25354e0b1f4e",
+								"exec": [
+									"pm.test(\"get all recordings for user dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.responseSize == 1;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"user_id\":\"a0eebc99-9c0b-4ef8-bb6d-6bb9bd380b11\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/recordings/list/user_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"recordings",
+								"list",
+								"user_id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "video list userid",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "06dd44bd-54d1-4b2a-b3c9-b4893829b14f",
+								"exec": [
+									"pm.test(\"create access dispatcher test\", function() {",
+									"    pm.response.to.have.status(200);",
+									"    pm.response.responseSize == 1;",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjExIiwgInJpZ2h0cyI6ICJ1c2VyIiwgImV4cCI6ICIyMDI4LTA1LTAyVDAzOjI3OjMzLjY4MjU2MCJ9.Mw6KSpIJxsVnct3P6nLrdNtifyVA32ikEq1rgxLbAJ3HHVYk7sotn43cpm1S_p6tLJkh_75gP-z5yENbV-tk7A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:443/video/list/user_id",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"video",
+								"list",
+								"user_id"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "change model",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"id": "6dd90f0f-af7f-4124-8e42-788741398077",
+								"exec": [
+									"pm.test(\"update model dispatcher test\", function() {",
+									"    pm.response.to.have.status(500);",
+									"})"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "eyJhbGciOiAiSFM1MTIiLCAidHlwZSI6ICJKV1QifQ.eyJqaWQiOiAiMSIsICJzdWIiOiAiYTBlZWJjOTktOWMwYi00ZWY4LWJiNmQtNmJiOWJkMzgwYjExIiwgInJpZ2h0cyI6ICJ1c2VyIiwgImV4cCI6ICIyMDI4LTA1LTAyVDAzOjI3OjMzLjY4MjU2MCJ9.Mw6KSpIJxsVnct3P6nLrdNtifyVA32ikEq1rgxLbAJ3HHVYk7sotn43cpm1S_p6tLJkh_75gP-z5yENbV-tk7A",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "file",
+									"type": "file",
+									"src": "/Users/anneejsing/Traffic-Data-Anonymisation-Object-Dectection/tensorflow-ssd/fine_tuned_model/face/saved_model/saved_model.pb"
+								},
+								{
+									"key": "camera_id",
+									"value": "a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11",
+									"type": "text"
+								}
+							],
+							"options": {
+								"formdata": {}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:443/model/upload",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "443",
+							"path": [
+								"model",
+								"upload"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"protocolProfileBehavior": {}
+		}
+	],
+	"protocolProfileBehavior": {}
+}

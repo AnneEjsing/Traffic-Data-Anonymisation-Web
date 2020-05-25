@@ -20,8 +20,7 @@ async def get(request):
 
 @routes.delete('/camera/delete')
 async def delete(request):
-    response = requests.delete(url+"camera/delete?id="+request.query['id'])
-    return web.Response(text=response.text, status=response.status_code)
+    return await send_request("camera/delete", {"id":request.query["id"]},requests.delete)
 
 @routes.post('/camera/create')
 async def create(request):
@@ -36,7 +35,7 @@ async def adminlist(request):
     return await send_request("camera/adminlist", '{}', requests.get)
 
 @routes.post('/access/create')
-async def giveAccess(request):
+async def give_access(request):
     data = await request.json()
     response = requests.get(url + "user/get/email",headers={'Content-type': 'application/json'}, json=(data))
     other_data = response.json()

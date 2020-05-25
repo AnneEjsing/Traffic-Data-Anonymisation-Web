@@ -12,17 +12,18 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 export class ModelChangerComponent implements OnInit {
   requesting: boolean;
   fileToUpload: File = null;
-  canUpload: Boolean = false;
+  canUpload: boolean = false;
+  type: string = "face";
 
   constructor(
     public dialogRef: MatDialogRef<string>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
     private fileUploadService: FileuploadService,
     private snackBar: MatSnackBar
-  ) {}
+  ) { }
 
   ngOnInit(): void {
-    
+
   }
 
   handleFileInput(files: FileList) {
@@ -32,13 +33,28 @@ export class ModelChangerComponent implements OnInit {
 
   async save() {
     this.requesting = true;
-    let res = await this.fileUploadService.postFile(this.fileToUpload, this.data['camera_id']);
+    let res = await this.fileUploadService.postFile(this.fileToUpload, this.data['camera_id'], this.type);
     this.requesting = false;
-    if (res === 200) { 
-      this.canUpload = false; 
-      this.dialogRef.close();
+
+    if (res === 200) {
+      this.canUpload = false;
+      var result = {
+        type: this.type,
+        name: this.fileToUpload.name
+      }
+      this.dialogRef.close(result);
     }
     else this.openSnackBar("An error occured. Try again later", "OK");
+  }
+
+  choseType(event) {
+    var type = event.target.value;
+    if (type == "Face") {
+      this.type = "face";
+    }
+    else if (type == "License plate") {
+      this.type = "license_plate";
+    }
   }
 
   close() {

@@ -8,6 +8,7 @@ import { VideoplayerComponent } from './videoplayer/videoplayer.component';
 import { VgCoreModule, VgControlsModule, VgStreamingModule, VgOverlayPlayModule, VgBufferingModule } from 'ngx-videogular';
 import { ProfileService } from './_services/profile.service';
 import { HttpClientModule } from "@angular/common/http";
+import { HttpModule } from '@angular/http';
 import { RecordService } from './_services/record.service';
 import { SidemenuComponent } from './sidemenu/sidemenu.component';
 import { StreamMessageService } from './_services/streamMessage.service';
@@ -28,6 +29,7 @@ import { CameraService } from './_services/camera.service'
 import { MenuListItemComponent } from './menu-list-item/menu-list-item.component';
 import { ShareStreamComponent } from './share-stream/share-stream.component';
 import { ModelChangerComponent } from './model-changer/model-changer.component'
+import { SettingsDialog } from './settings.dialog.component/settings.dialog.component';
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import { ModelChangerComponent } from './model-changer/model-changer.component'
     SidemenuComponent,
     VideoUtilsComponent,
     LoginDialog,
+    SettingsDialog,
     TopbarComponent,
     AboutComponent,
     CameraDialog,
@@ -58,7 +61,8 @@ import { ModelChangerComponent } from './model-changer/model-changer.component'
     VgBufferingModule,
     VgStreamingModule,
     HttpClientModule,
-    NgbModule
+    NgbModule,
+    HttpModule
   ],
   providers: [
     ProfileService,

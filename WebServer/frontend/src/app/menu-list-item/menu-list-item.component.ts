@@ -1,4 +1,4 @@
-import { Component, HostBinding, Input, OnInit } from '@angular/core';
+import { Component, HostBinding, Input, OnInit, Output, EventEmitter } from '@angular/core';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { IMediaStream } from '../_services/streamMessage.service'
 import { CameraService } from '../_services/camera.service'
@@ -7,7 +7,6 @@ import { MatDialog } from "@angular/material/dialog";
 import { ShareStreamComponent } from "../share-stream/share-stream.component";
 import { AuthService } from "../_services/auth.service";
 import { ModelChangerComponent } from '../model-changer/model-changer.component';
-
 
 @Component({
   selector: 'app-menu-list-item',
@@ -29,6 +28,8 @@ export class MenuListItemComponent implements OnInit {
   @HostBinding("attr.aria-expanded") ariaExpanded = this.expanded;
   @Input() item: IMediaStream;
   @Input() isRecording: Boolean;
+  @Output() changeStream: EventEmitter<IMediaStream> = new EventEmitter<IMediaStream>();
+
 
   constructor(
     public dialog: MatDialog,
@@ -51,6 +52,10 @@ export class MenuListItemComponent implements OnInit {
     this.expanded = !this.expanded;
   }
 
+  public streamClick() {
+    this.changeStream.emit(this.item);
+  }
+
   async delete() {
     if (confirm("Are you sure to delete " + this.item.label)) {
       await this.cameraService.deleteCamera(this.item);
@@ -70,8 +75,19 @@ export class MenuListItemComponent implements OnInit {
   }
 
   async change() {
-    this.dialog.open(ModelChangerComponent, {
+    var ref = this.dialog.open(ModelChangerComponent, {
       data: { camera_id: this.item.camera_id },
+    });
+
+    ref.afterClosed().subscribe(res => {
+      if (res) {
+        if (res.type == "face") {
+          this.item.model_face = res.name;
+        }
+        else if (res.type == "license_plate") {
+          this.item.model_licens = res.name;
+        }
+      }
     });
   }
 }

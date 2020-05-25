@@ -9,7 +9,7 @@ db_url = "http://dbresolver:1337/"
 
 @routes.get('/get')
 async def login(request):
-    return await send_request("video/settings/get", await request.json(), requests.get)
+    return await send_request("video/settings/get", {}, requests.get)
 
 @routes.post('/update')
 async def update(request):
@@ -22,6 +22,10 @@ async def get_recording_info(request):
 @routes.get('/recordings/list/user_id')
 async def get_recording_info(request):
     return await send_request("recordings/list/user_id", await request.json(), requests.get)
+
+@routes.get('/video/list/user_id')
+async def list_recorded_videos_user_id(request):
+    return await send_request("video/list/user_id", await request.json(), requests.get)
 
 async def send_request(path, json, query_function):
     response = query_function(db_url + path,headers={'Content-type': 'application/json'}, json=(json))

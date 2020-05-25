@@ -8,14 +8,46 @@ import os
 import threading
 from loguru import logger
 from datetime import date
+import glob
+import ffmpeg
 
 routes = web.RouteTableDef()
+headers = {'Content-type': 'application/json'}
 
 @routes.post("/record/interval")
 async def record_continuous(request):
     data = await request.json()    
     threading.Thread(target=work,args=(data,)).start()
     return web.Response(status=200)
+
+def record(stream, fps, interval, filepath, i):
+    # Command to record "interval" seconds from "stream"
+    out, error = (
+        ffmpeg
+        .input(stream, r=fps,t=str(interval))
+        .output(filepath+str(i)+".mp4")
+        .run(capture_stdout=True, capture_stderr=True)
+    )
+
+    # Write filepath to filepath.txt
+    with open(f'{filepath}.txt', "a") as file:
+        file.write(f'file \'{filepath+str(i)}.mp4\'')
+        file.write("\n")
+
+def create_final_video(filepath, path, v_id):
+    # Command to concatenate all temp files from filepath.txt
+    out, error = (
+        ffmpeg
+        .input(f'{filepath}.txt', f='concat', safe=0)
+        .output(f'{path}{v_id}.mp4', c='copy')
+        .overwrite_output()
+        .run(capture_stdout=True, capture_stderr=True)
+    )
+
+    # Command to delete all temp files
+    files = glob.glob(f'{filepath}*')
+    for f in files:
+        os.remove(f)
 
 def work(data):
     stream = data['url']
@@ -33,7 +65,7 @@ def work(data):
     rest_time = seconds % interval
 
     #Inserts into recordings in database
-    insert_response = requests.post(dbr + 'recordings/insert', headers={'Content-type': 'application/json'},json={
+    insert_response = requests.post(dbr + 'recordings/insert', headers=headers,json={
         "user_id":user_id,
         "camera_id":camera_id,
         "recording_time": seconds,
@@ -45,29 +77,25 @@ def work(data):
     # Creates video segments of length interval.
     if interval_times:
         for i in range(interval_times):
-            sp.call("ffmpeg -i " + stream + " -r " + fps + " -t " + str(interval) +" " + filepath+str(i)+".mp4;", shell=True)
-            sp.call("echo file \'" + filepath+str(i) + ".mp4\' >>  " + filepath + ".txt", shell=True)
+            record(stream,fps,interval,filepath,i)
     
     # Creates video segment of length under interval
     if rest_time and rest_time > 0:
-        sp.call("ffmpeg -i "+ stream + " -r " + fps + " -t " + str(rest_time) + " " + filepath+str(interval_times)+".mp4;", shell=True)
-        sp.call("echo file \'" + filepath + str(interval_times) + ".mp4\' >>  " + filepath + ".txt", shell=True)
+        record(stream,fps,rest_time,filepath,interval_times)
 
     # Queries the database with the video entry.
-    response = requests.post(dbr+"video/create", headers={'Content-type': 'application/json'},json={"user_id":user_id,"camera_id":camera_id,"video_thumbnail":""})
-
+    response = requests.post(dbr+"video/create", headers=headers,json={"user_id":user_id,"camera_id":camera_id})
     if response.status_code != 200:
         logger.error(f"Could not query database: {response.content.decode('utf-8')}. Userid: {user_id}, cameraid: {camera_id}")
     
     # Gets the ID of the video entry created
-    v_id = response.json()[0]['video_id']
+    v_id = response.json()['video_id']
     
     # Concatenates the video segments and deletes the temporary files
-    sp.call("ffmpeg -y -f concat -safe 0 -i '"+ filepath +".txt' -c copy '" + path + v_id + ".mp4'" ,shell=True)
-    sp.call("rm "+ filepath + "*", shell=True)
+    create_final_video(filepath,path,v_id)
 
     # Remove the recording in database:
-    delete_response = requests.delete(dbr+"recordings/delete", headers={'Content-type': 'application/json'},json={"user_id":user_id,"camera_id":camera_id})
+    delete_response = requests.delete(dbr+"recordings/delete", headers=headers,json={"user_id":user_id,"camera_id":camera_id})
     if (delete_response.status_code != 200):
         logger.error(f"Could not delete recording for userid: {user_id}, cameraid: {camera_id}. failed with error: {delete_response.text}")
 

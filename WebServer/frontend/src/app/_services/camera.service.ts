@@ -42,10 +42,10 @@ export class CameraService {
         return await this.http.get<CameraData>(this.dispatcherUrl + "camera/get" + id, { headers, responseType: 'json' }).toPromise();
     }
 
-    async createAccessRights(data: {[key: string]: string})
+    async createAccessRights(access: {[key: string]: string})
     {
         const headers = this.constructHttpHeader();
-        return await this.http.post(this.dispatcherUrl + "access/create", data, {headers, responseType: 'text'}).toPromise().then(
+        return await this.http.post(this.dispatcherUrl + "access/create", access, {headers, responseType: 'text'}).toPromise().then(
             data => { return 200; },
             error => { return error.status; }
         );
@@ -58,5 +58,24 @@ export class CameraService {
         });
 
         return httpHeader;
+    }
+
+    async postStreamStart(deviceUrl: string, streamEndpoint: string): Promise<number> {
+        const headers = this.constructHttpHeader();
+
+        var data = {
+            device: "http://" + deviceUrl,
+            reciever: streamEndpoint
+        };
+
+        let res = await this.http.post(
+        this.dispatcherUrl + "stream/start",
+        data,
+        {headers, responseType: 'text'})
+        .toPromise().then(
+            data => { return 200 },
+            error => { return error.status }
+        )
+        return res;
     }
 }
