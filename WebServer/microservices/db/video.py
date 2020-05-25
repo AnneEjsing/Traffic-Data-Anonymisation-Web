@@ -43,6 +43,14 @@ async def video_get(request):
     return dbresolver.has_one_result(result, "There is no video with that id.", 404)
 
 
+@routes.get('/video/list')
+def video_list(request):
+    query = "SELECT * FROM recorded_videos;"
+    result, error = dbresolver.execute_query(query)
+    if error: return web.Response(text=str(error),status=500)
+    return web.Response(text=json.dumps(result, default=str),status=200)
+
+
 @routes.delete('/video/delete')
 async def video_delete(request):
     data = await request.json()
