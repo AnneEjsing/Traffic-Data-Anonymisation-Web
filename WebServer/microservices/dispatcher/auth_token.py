@@ -112,7 +112,7 @@ def encode(encoding_input):
 
 
 def create_payload(user_id, rights):
-    return json.dumps({'jid': '1', 'sub': user_id, 'rights': rights, 'exp': generate_token_exp_time()})
+    return json.dumps({'sub': user_id, 'rights': rights, 'exp': generate_token_exp_time()})
 
 
 def create_signature(header, payload):
