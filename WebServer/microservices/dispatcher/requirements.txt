@@ -1,4 +1,4 @@
 requests==2.20.0
-aiohttp==3.6.2
+aiohttp==3.7.4
 unittest2==1.1.0
 aiohttp_cors==0.7.0
